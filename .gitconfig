@@ -1,0 +1,66 @@
+[user]
+	name = Philip Harrison
+	email = philip@mailharrison.com
+
+[core]
+	editor = mate -w
+	excludesfile = ~/.gitignore
+	autocrlf = input
+	safecrlf = true
+	
+[push]
+  default = current
+	
+[color]
+	ui = auto
+
+[color "branch"]
+	current = cyan bold
+	local = yellow bold
+	remote = green bold
+
+[color "diff"]
+	meta = blue bold
+	frag = cyan bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+
+[color "status"]
+	added = green bold
+	changed = yellow bold
+	untracked = cyan bold
+
+[alias]
+	a  = add .
+	b  = checkout -b
+	c  = commit
+	d  = difftool
+	ds = difftool --staged
+	cam  = commit -am
+	amend  = commit --amend
+	w  = commit -am 'wip'
+	s = status -sb
+	r  = reset
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	l = log --topo-order --decorate
+	br = branch
+	co = checkout
+	rb = rebase master
+	up = pull --tags origin master
+	pu = push origin master
+	put  = push -u origin master
+	addp = add --patch
+	mr = merge --no-ff
+	unstage = reset HEAD
+	grep = grep -nw
+
+[difftool "Kaleidoscope"]
+[difftool]
+[diff]
+[difftool "Kaleidoscope"]
+	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false
+[diff]
+	tool = Kaleidoscope
