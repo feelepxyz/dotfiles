@@ -3,7 +3,6 @@
 	email = philip@mailharrison.com
 
 [core]
-	editor = mate -w
 	excludesfile = ~/.gitignore
 	autocrlf = input
 	safecrlf = true
@@ -44,6 +43,7 @@
 	r  = reset
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	l = log --topo-order --decorate
+  lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 	br = branch
 	co = checkout
 	rb = rebase master
@@ -55,9 +55,6 @@
 	unstage = reset HEAD
 	grep = grep -nw
 
-[difftool "Kaleidoscope"]
-[difftool]
-[diff]
 [difftool "Kaleidoscope"]
 	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
 [difftool]
