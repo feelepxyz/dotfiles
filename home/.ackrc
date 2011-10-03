@@ -1,0 +1,16 @@
+--type-add=ruby=.haml
+--type-add=css=.scss
+--type-add=js=.coffee
+--type-set=plaintext=.md,.mdown,.markdown,.mkdn,.textile,.rst,.txt
+--type-set=gettext=.pot,.po
+--type-set=xcode=.pbxproj,.pbxuser,.perspectivev3
+--type-set=nib=.xib
+--type-set=plist=.plist
+--type-set=tmstuff=.tmproj,.tm_build_errors
+
+--nonib
+--notmstuff
+--noxcode
+
+--smart-case
+--follow

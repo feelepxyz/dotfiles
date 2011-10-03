@@ -1,0 +1,55 @@
+termcapinfo xterm* ti@:te@
+caption always "%0=%{+b rk}%H %{bk}| %0L=%{mk}%>%-Lw%{= BW}%n%f* %t%{-}%+Lw%L>%?(%u)%? %{bk}|%>%=%{Yk} %=%C%a %Y.%m.%d %{bk}%100="
+hardstatus on
+hardstatus alwayslastline "%0=%{kB}| %{kw}%h %{kB}|%=%{kR}Load: %l%100="
+hardstatus string '%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%< %=%H %c:%s'
+
+setenv SHELL /usr/local/bin/zsh
+shell                 zsh
+
+startup_message       off             # default: on
+vbell                 on
+defscrollback         10000            # default: 100
+silencewait           15              # default: 30
+hardcopydir           $HOME/.hardcopy
+
+
+# no annoying audible bell, please
+vbell on
+
+# detach on hangup
+autodetach on
+
+termcapinfo xterm* OL=10000
+
+
+################
+#
+# 256 colours
+#
+# ... http://frexx.de/xterm-256-notes/
+#
+
+# terminfo and termcap for nice 256 color terminal
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+# tell screen how to set colors. AB = background, AF=foreground
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# erase background with current bg color
+defbce "on"
+
+#term "screen-256color"
+#term "screen-88color-bce"
+#term "screen-256color-bce"
+#term xterm
+
+################
+#
+# ssh-agent support
+#
+# http://www.jukie.net/~bart/blog/screen-ssh-agent
+#
+
+unsetenv SSH_AUTH_SOCK
+setenv SSH_AUTH_SOCK "$HOME/.screen/ssh-auth-sock.$HOSTNAME"
+
