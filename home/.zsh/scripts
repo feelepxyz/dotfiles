@@ -1,0 +1,32 @@
+# need the host name set sometimes
+    [ -z "$HOSTNAME" ] && export HOSTNAME=$(hostname)
+
+    # preserve the X environment variables
+    store_display() {
+            export | grep '\(DISPLAY\|XAUTHORITY\)=' > ~/.display.${HOSTNAME}
+    }
+
+    # read out the X environment variables
+    update_display() {
+            [ -r ~/.display.${HOSTNAME} ] && source ~/.display.${HOSTNAME}
+    }
+
+    # WINDOW is set when we are in a screen session
+    if [ -n "$WINDOW" ] ; then 
+            # update the display variables right away
+            update_display
+
+            # setup the preexec function to update the variables before each command
+            preexec () {
+                    update_display
+            }
+    fi
+
+    # this will reset the ssh-auth-sock link and screen display file before we run screen
+    _screen_prep() {
+            if [ "$SSH_AUTH_SOCK" != "$HOME/.screen/ssh-auth-sock.$HOSTNAME" ] ; then
+                    ln -fs "$SSH_AUTH_SOCK" "$HOME/.screen/ssh-auth-sock.$HOSTNAME"
+            fi
+            store_display
+    }
+    alias screen='_screen_prep ; screen'

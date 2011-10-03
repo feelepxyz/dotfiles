@@ -5,7 +5,9 @@
 [core]
 	excludesfile = ~/.gitignore
 	autocrlf = input
-	safecrlf = true
+	safecrlf = false
+	pager = cat
+	quotepath = false
 	
 [push]
   default = current
@@ -30,8 +32,15 @@
 	changed = yellow bold
 	untracked = cyan bold
 
+[apply]
+	whitespace = fix
+
+[rerere]
+	enabled = true
+	
 [alias]
 	a  = add .
+	au = add -u .
 	b  = checkout -b
 	c  = commit
 	d  = difftool
@@ -39,7 +48,10 @@
 	cam  = commit -am
 	amend  = commit --amend
 	w  = commit -am 'wip'
+	what = whatchanged
 	s = status -sb
+	sub = submodule
+	pullsub = submodule foreach git pull origin master
 	r  = reset
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	l = log --topo-order --decorate
@@ -54,10 +66,18 @@
 	mr = merge --no-ff
 	unstage = reset HEAD
 	grep = grep -nw
+	prune-all = !git remote | xargs -n 1 git remote prune
+	rank = shortlog -sn --no-merges
+	browse = !hub browse
+	bv= !git branch --color -v | cut -c1-100
 
-[difftool "Kaleidoscope"]
-	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
+[help]
+  browser = open
+[difftool "opendiff"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 [difftool]
 	prompt = false
 [diff]
-	tool = Kaleidoscope
+	tool = opendiff
+[merge]
+	tool = opendiff

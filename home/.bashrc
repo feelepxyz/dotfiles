@@ -1,10 +1,7 @@
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:$PATH
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-export NODE_PATH="/usr/local/lib/node"
 export EDITOR="mate -w"
 export GIT_EDITOR='mate -wl1'
-
-source resty
 
 alias v="mvim"
 alias es="open -a Espresso"
@@ -22,8 +19,6 @@ alias code="cd ~/code"
 
 alias gadd="git add -A && git status -sb"
 alias gwip="git commit -am 'wip'"
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
 ## Custom prompt
 # Colors
