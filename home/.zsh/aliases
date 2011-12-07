@@ -9,6 +9,8 @@ alias sizes='du -h -d1'
 alias flush="dscacheutil -flushcache"
 alias reload!='. ~/.zshrc'
 
+alias pow="ln -s ${PWD} ~/.pow/${PWD##*/}"
+
 alias hackz='cat /dev/urandom | hexdump -C | grep "ca fe"'
 
 alias home="cd ~/"

@@ -1,3 +1,3 @@
 source $HOME/.bashrc
-eval "$(rbenv init -)"
-export PATH="$HOME/.rbenv/bin:$PATH"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function

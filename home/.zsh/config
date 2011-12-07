@@ -5,4 +5,4 @@ export CURL_CA_BUNDLE=/usr/share/curl/ca-bundle.crt
 export ENABLE_LAVENT=1
 export RAILS_ENV=development
 
-eval "$(rbenv init -)"
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
