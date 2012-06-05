@@ -1,7 +1,6 @@
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-export EDITOR="mate -w"
-export GIT_EDITOR='mate -wl1'
+export EDITOR="vim"
 
 alias v="mvim"
 alias es="open -a Espresso"
@@ -42,3 +41,5 @@ LIGHTNING_BOLT="⚡"
        RECYCLE="♺"
         MIDDOT="•"
      PLUSMINUS="±"
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
