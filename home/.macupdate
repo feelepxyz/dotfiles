@@ -1,8 +1,11 @@
 #!/bin/bash
 
 echo "Doing homebrew magic"
-brew update
-brew upgrade
+brew update && brew upgrade
 
-echo "npm shizzaz"
-npm update
+echo "npm update global"
+npm update -g npm
+npm update -g
+
+echo "npm get head"
+rvm get head
