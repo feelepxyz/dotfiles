@@ -2,7 +2,6 @@ export PATH=$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$PATH
 
 export CURL_CA_BUNDLE=/usr/share/curl/ca-bundle.crt
 
-export ENABLE_LAVENT=1
-export RAILS_ENV=development
+export EDITOR="vim"
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
