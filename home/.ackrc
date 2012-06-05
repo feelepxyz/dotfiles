@@ -1,5 +1,6 @@
 --type-add=ruby=.haml
---type-add=css=.scss
+--type-add=html=.hbs
+--type-add=css=.scss,.less,.styl
 --type-add=js=.coffee
 --type-set=plaintext=.md,.mdown,.markdown,.mkdn,.textile,.rst,.txt
 --type-set=gettext=.pot,.po
