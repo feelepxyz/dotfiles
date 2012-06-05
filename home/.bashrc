@@ -10,15 +10,6 @@ alias mkdir="mkdir -vp"
 alias sizes='du -h -d1'
 alias flush="dscacheutil -flushcache"
 
-alias hackz='cat /dev/urandom | hexdump -C | grep "ca fe"'
-
-alias home="cd ~/"
-alias desk="cd ~/Desktop"
-alias code="cd ~/code"
-
-alias gadd="git add -A && git status -sb"
-alias gwip="git commit -am 'wip'"
-
 ## Custom prompt
 # Colors
        RED="\[\033[0;31m\]"
