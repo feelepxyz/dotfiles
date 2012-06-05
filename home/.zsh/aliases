@@ -6,25 +6,6 @@ alias r="rails"
 alias l="ls -GlAFh"
 alias mkdir="mkdir -vp"
 alias sizes='du -h -d1'
-alias flush="dscacheutil -flushcache"
 alias reload!='. ~/.zshrc'
 
-alias pow="ln -s ${PWD} ~/.pow/${PWD##*/}"
-
-alias hackz='cat /dev/urandom | hexdump -C | grep "ca fe"'
-
-alias home="cd ~/"
-alias desk="cd ~/Desktop"
-alias code="cd ~/code"
-
-alias gadd="git add -A && git status -sb"
-alias gwip="git commit -am 'wip'"
-
-alias linode="ssh root@178.79.152.140"
-alias lal="ssh ubuntu@likealittle.com"
-
 alias openports="sudo lsof -i -P | grep -i "listen""
-
-alias ras="rails s thin"
-alias s4="ssh ubuntu@maux4"
-alias vps="ssh root@212.117.171.199"
