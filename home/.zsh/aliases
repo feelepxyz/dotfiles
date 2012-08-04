@@ -9,3 +9,6 @@ alias sizes='du -h -d1'
 alias reload!='. ~/.zshrc'
 
 alias openports="sudo lsof -i -P | grep -i "listen""
+
+alias chromedev='/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary \
+--js-flags="--trace-opt --trace-deopt --trace-bailout" --allow-file-access --remote-debugging-port=9222'
