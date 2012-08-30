@@ -15,3 +15,5 @@
 
 --smart-case
 --follow
+
+--ignore-dir=tmp
