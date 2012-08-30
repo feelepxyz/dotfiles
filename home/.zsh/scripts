@@ -11,6 +11,12 @@ update_display() {
         [ -r ~/.display.${HOSTNAME} ] && source ~/.display.${HOSTNAME}
 }
 
+. .zsh/plugins/z.sh
+function precmd () {
+  _z --add "$(pwd -P)"
+}
+
+
 # WINDOW is set when we are in a screen session
 if [ -n "$WINDOW" ] ; then
         # update the display variables right away
