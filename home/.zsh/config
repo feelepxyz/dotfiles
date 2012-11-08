@@ -1,7 +1,5 @@
-export PATH=$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$PATH
-
-#export CURL_CA_BUNDLE=/usr/share/curl/ca-bundle.crt
+export PATH=$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:.bundle/binstubs:$PATH
 
 export EDITOR="vim"
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
+if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi

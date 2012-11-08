@@ -1,6 +1,16 @@
 # need the host name set sometimes
 [ -z "$HOSTNAME" ] && export HOSTNAME=$(hostname)
 
+be() {
+    if [ -e ./Gemfile ] ; then
+        echo "bundle exec $@"
+        bundle exec $@
+    else
+        echo "$@"
+        $@
+    fi
+}
+
 # preserve the X environment variables
 store_display() {
         export | grep '\(DISPLAY\|XAUTHORITY\)=' > ~/.display.${HOSTNAME}
@@ -9,11 +19,6 @@ store_display() {
 # read out the X environment variables
 update_display() {
         [ -r ~/.display.${HOSTNAME} ] && source ~/.display.${HOSTNAME}
-}
-
-. .zsh/plugins/z.sh
-function precmd () {
-  _z --add "$(pwd -P)"
 }
 
 

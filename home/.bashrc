@@ -32,5 +32,3 @@ LIGHTNING_BOLT="⚡"
        RECYCLE="♺"
         MIDDOT="•"
      PLUSMINUS="±"
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

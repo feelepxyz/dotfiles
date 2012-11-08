@@ -81,3 +81,5 @@
 	tool = opendiff
 [merge]
 	tool = opendiff
+[credential]
+	helper = osxkeychain
