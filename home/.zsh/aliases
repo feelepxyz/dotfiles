@@ -9,7 +9,7 @@ alias sizes='du -h -d1'
 alias reload!='. ~/.zshrc'
 alias rake='noglob rake'
 
-alias openports='sudo lsof -i -P | grep -i 'listen'
+alias openports='sudo lsof -i -P | grep -i "listen"'
 alias ngrep='ngrep -q -W byline'
 alias getgrep='ngrep -q -W byline "^(GET|POST) .*"'
 
