@@ -8,10 +8,10 @@
 	safecrlf = false
 	pager = cat
 	quotepath = false
-	
+
 [push]
   default = current
-	
+
 [color]
 	ui = auto
 
@@ -37,7 +37,7 @@
 
 [rerere]
 	enabled = true
-	
+
 [alias]
 	a  = add .
 	au = add -u .
@@ -81,5 +81,3 @@
 	tool = opendiff
 [merge]
 	tool = opendiff
-[credential]
-	helper = osxkeychain
