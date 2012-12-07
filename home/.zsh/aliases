@@ -1,16 +1,17 @@
 alias ..='cd ..'
-alias v="mvim"
-alias es="open -a Espresso"
-alias g="hub"
-alias r="rails"
-alias l="ls -GlAFh"
-alias mkdir="mkdir -vp"
+alias v='mvim'
+alias es='open -a Espresso'
+alias g='hub'
+alias r='rails'
+alias l='ls -GlAFh'
+alias mkdir='mkdir -vp'
 alias sizes='du -h -d1'
 alias reload!='. ~/.zshrc'
+alias rake='noglob rake'
 
-alias openports="sudo lsof -i -P | grep -i "listen""
-alias ngrep="ngrep -q -W byline"
-alias getgrep="ngrep -q -W byline '^(GET|POST) .*'"
+alias openports='sudo lsof -i -P | grep -i "listen"'
+alias ngrep='ngrep -q -W byline'
+alias getgrep='ngrep -q -W byline "^(GET|POST) .*"'
 
 alias chromedev='/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary \
 --js-flags="--trace-opt --trace-deopt --trace-bailout" --allow-file-access --remote-debugging-port=9222'
