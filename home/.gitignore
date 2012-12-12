@@ -3,4 +3,6 @@
 *.tmproj
 *.rbc
 .rvmrc
+.rbenv-version
+.bundle/
 *.esproj
