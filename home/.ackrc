@@ -1,5 +1,5 @@
 --type-add=ruby=.haml
---type-add=html=.hbs
+--type-add=html=.hbs,.erb
 --type-add=css=.scss,.less,.styl
 --type-add=js=.coffee
 --type-set=plaintext=.md,.mdown,.markdown,.mkdn,.textile,.rst,.txt
@@ -18,4 +18,6 @@
 
 --ignore-dir=tmp
 --ignore-dir=.bundle
+--ignore-dir=dist
+--ignore-dir=build
 --ignore-dir=node_modules
