@@ -10,5 +10,7 @@ export GC_AUTH_SERVICE="/Users/Philip/gc/auth-service"
 export GC_GOCARDLESS="/Users/Philip/gc/gocardless"
 export GC_PAYMENTS_SERVICE="/Users/Philip/gc/payments-service"
 export GC_DASHBOARD_CLIENT="/Users/Philip/gc/dashboard-client"
+export GC_CUSTOMER_CLIENT="/Users/Philip/gc/customer-client"
+export GC_ACCOUNT_CLIENT="/Users/Philip/gc/account-client"
 
 source ~/.keys
