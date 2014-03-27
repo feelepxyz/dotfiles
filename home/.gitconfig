@@ -1,74 +1,74 @@
 [user]
-	name = Philip Harrison
-	email = philip@mailharrison.com
+    name = Philip Harrison
+    email = philip@mailharrison.com
 
 [core]
-	excludesfile = ~/.gitignore
-	autocrlf = input
-	safecrlf = false
-	pager = cat
-	quotepath = false
+    excludesfile = ~/.gitignore
+    autocrlf = false
+    safecrlf = false
+    pager = cat
+    quotepath = false
 
 [push]
-	default = simple
+    default = simple
 
 [color]
-	ui = auto
+    ui = auto
 
 [color "branch"]
-	current = cyan bold
-	local = yellow bold
-	remote = green bold
+    current = cyan bold
+    local = yellow bold
+    remote = green bold
 
 [color "diff"]
-	meta = blue bold
-	frag = cyan bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
+    meta = blue bold
+    frag = cyan bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
 
 [color "status"]
-	added = green bold
-	changed = yellow bold
-	untracked = cyan bold
+    added = green bold
+    changed = yellow bold
+    untracked = cyan bold
 
 [apply]
-	whitespace = fix
+    whitespace = fix
 
 [rerere]
-	enabled = true
+    enabled = true
 
 [alias]
-	a  = add --all
-	b  = checkout -b
-	c  = commit
-	d  = difftool
-	ds = difftool --staged
-	amend  = commit --amend
-	what = whatchanged
-	s = status -sb
-	sub = submodule
-	pullsub = submodule foreach git pull origin master
-	r  = reset
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-	l = log --topo-order --decorate
-	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	co = checkout
-	mr = merge --no-ff
-	unstage = reset HEAD
-	grep = grep -nw
-	prune-all = !git remote | xargs -n 1 git remote prune
-	rank = shortlog -sn --no-merges
-	bv = !git branch --color -v | cut -c1-100
+    a  = add --all
+    b  = checkout -b
+    c  = commit
+    d  = difftool
+    ds = difftool --staged
+    amend  = commit --amend
+    what = whatchanged
+    s = status -sb
+    sub = submodule
+    pullsub = submodule foreach git pull origin master
+    r  = reset
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    l = log --topo-order --decorate
+    lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    co = checkout
+    mr = merge --no-ff
+    unstage = reset HEAD
+    grep = grep -nw
+    prune-all = !git remote | xargs -n 1 git remote prune
+    rank = shortlog -sn --no-merges
+    bv = !git branch --color -v | cut -c1-100
 
 [help]
-	browser = open
+    browser = open
 [difftool "opendiff"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 [difftool]
-	prompt = false
+    prompt = false
 [mergetool]
-	prompt = false
+    prompt = false
 [filter "media"]
-	clean = git-media-clean %f
-	smudge = git-media-smudge %f
+    clean = git-media-clean %f
+    smudge = git-media-smudge %f
