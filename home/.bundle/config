@@ -1,2 +1,5 @@
+---
 BUNDLE_PATH: .bundle
 BUNDLE_BIN: .bundle/binstubs
+BUNDLE_BUILD__CHARLOCK_HOLMES: --with-icu-dir=/usr/local/opt/icu4c
+BUNDLE_JOBS: 7

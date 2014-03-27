@@ -10,7 +10,7 @@
 	quotepath = false
 
 [push]
-  default = current
+	default = simple
 
 [color]
 	ui = auto
@@ -39,52 +39,36 @@
 	enabled = true
 
 [alias]
-	a  = add .
-	au = add -u .
+	a  = add --all
 	b  = checkout -b
 	c  = commit
 	d  = difftool
 	ds = difftool --staged
-	cam  = commit -am
 	amend  = commit --amend
-	w  = commit -am 'wip'
 	what = whatchanged
 	s = status -sb
 	sub = submodule
 	pullsub = submodule foreach git pull origin master
 	r  = reset
-  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	l = log --topo-order --decorate
-  lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	br = branch
+	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 	co = checkout
-	rb = rebase master
-	up = pull --tags origin master
-	pu = push origin master
-	put  = push -u origin master
-	addp = add --patch
 	mr = merge --no-ff
 	unstage = reset HEAD
 	grep = grep -nw
 	prune-all = !git remote | xargs -n 1 git remote prune
 	rank = shortlog -sn --no-merges
-	browse = !hub browse
-	bv= !git branch --color -v | cut -c1-100
+	bv = !git branch --color -v | cut -c1-100
 
 [help]
-  browser = open
+	browser = open
 [difftool "opendiff"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 [difftool]
 	prompt = false
-[diff]
-	tool = Kaleidoscope
-[merge]
-	tool = Kaleidoscope
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
 [mergetool]
 	prompt = false
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f

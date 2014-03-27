@@ -1,14 +1,21 @@
-if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
-
 PATH=$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$PATH
+
+eval "$(rbenv init - zsh)"
+
 PATH=.bundle/binstubs:$PATH
 PATH=node_modules/.bin:$PATH
 
 export EDITOR="vim"
 
+export JAVA_HOME="$(/usr/libexec/java_home)"
+
 export GC_AUTH_SERVICE="/Users/Philip/gc/auth-service"
 export GC_GOCARDLESS="/Users/Philip/gc/gocardless"
 export GC_PAYMENTS_SERVICE="/Users/Philip/gc/payments-service"
 export GC_DASHBOARD_CLIENT="/Users/Philip/gc/dashboard-client"
+export GC_ACCOUNT_CLIENT="/Users/Philip/gc/account-client"
+export GC_CUSTOMER_CLIENT="/Users/Philip/gc/customer-client"
 
-source ~/.keys
+export GC_OPSCODE_USER=phil
+
+source ~/.config/credentials/keys

@@ -1,6 +1,14 @@
 # need the host name set sometimes
 [ -z "$HOSTNAME" ] && export HOSTNAME=$(hostname)
 
+sknife() {
+    KNIFE_ENV=staging knife $@
+}
+
+pknife() {
+    KNIFE_ENV=production knife $@
+}
+
 be() {
     if [ -e ./Gemfile ] ; then
         echo "bundle exec $@"
