@@ -8,6 +8,8 @@ PATH=node_modules/.bin:$PATH
 export EDITOR="vim"
 
 export JAVA_HOME="$(/usr/libexec/java_home)"
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
 
 export GC_AUTH_SERVICE="/Users/Philip/gc/auth-service"
 export GC_GOCARDLESS="/Users/Philip/gc/gocardless"

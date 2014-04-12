@@ -20,7 +20,7 @@ export ZSH_THEME="cloud"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(rails3 git ruby bundler cap node npm sublime vagrant knife)
+plugins=(git ruby bundler cap node npm sublime)
 
 # Load zsh massive renamer
 autoload -U zmv
