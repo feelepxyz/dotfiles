@@ -21,3 +21,4 @@ export GC_CUSTOMER_CLIENT="/Users/Philip/gc/customer-client"
 export GC_OPSCODE_USER=phil
 
 source ~/.config/credentials/keys
+source ~/.config/scripts

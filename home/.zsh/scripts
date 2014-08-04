@@ -1,46 +1,6 @@
 # need the host name set sometimes
 [ -z "$HOSTNAME" ] && export HOSTNAME=$(hostname)
 
-sknife() {
-    KNIFE_ENV=staging knife $@
-}
-
-pknife() {
-    KNIFE_ENV=production knife $@
-}
-
-be() {
-    if [ -e ./Gemfile ] ; then
-        echo "bundle exec $@"
-        bundle exec $@
-    else
-        echo "$@"
-        $@
-    fi
-}
-
-# preserve the X environment variables
-store_display() {
-        export | grep '\(DISPLAY\|XAUTHORITY\)=' > ~/.display.${HOSTNAME}
-}
-
-# read out the X environment variables
-update_display() {
-        [ -r ~/.display.${HOSTNAME} ] && source ~/.display.${HOSTNAME}
-}
-
-
-# WINDOW is set when we are in a screen session
-if [ -n "$WINDOW" ] ; then
-        # update the display variables right away
-        update_display
-
-        # setup the preexec function to update the variables before each command
-        preexec () {
-                update_display
-        }
-fi
-
 # this will reset the ssh-auth-sock link and screen display file before we run screen
 _screen_prep() {
         if [ "$SSH_AUTH_SOCK" != "$HOME/.screen/ssh-auth-sock.$HOSTNAME" ] ; then
@@ -54,7 +14,6 @@ alias screen='_screen_prep ; screen'
 function md() {
         mkdir -p "$@" && cd "$@"
 }
-
 
 # find shorthand
 function f() {
@@ -70,12 +29,6 @@ function server() {
         python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
 }
 
-# Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
-# Send a fake UA string for sites that sniff it instead of using the Accept-Encoding header. (Looking at you, ajax.googleapis.com!)
-function httpcompression() {
-        encoding="$(curl -LIs -H 'User-Agent: Mozilla/5 Gecko' -H 'Accept-Encoding: gzip,deflate,compress,sdch' "$1" | grep '^Content-Encoding:')" && echo "$1 is encoded using ${encoding#* }" || echo "$1 is not using any encoding"
-}
-
 # Syntax-highlight JSON strings or files
 function json() {
         if [ -p /dev/stdin ]; then
@@ -85,15 +38,6 @@ function json() {
                 # e.g. `json '{"foo":42}'`
                 python -mjson.tool <<< "$*" | pygmentize -l javascript
         fi
-}
-
-
-# get gzipped size
-function gz() {
-        echo "orig size    (bytes): "
-        cat "$1" | wc -c
-        echo "gzipped size (bytes): "
-        gzip -c "$1" | wc -c
 }
 
 # All the dig info
