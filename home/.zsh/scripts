@@ -3,37 +3,56 @@
 
 # this will reset the ssh-auth-sock link and screen display file before we run screen
 _screen_prep() {
-    if [ "$SSH_AUTH_SOCK" != "$HOME/.screen/ssh-auth-sock.$HOSTNAME" ] ; then
-            ln -fs "$SSH_AUTH_SOCK" "$HOME/.screen/ssh-auth-sock.$HOSTNAME"
-    fi
-    store_display
+        if [ "$SSH_AUTH_SOCK" != "$HOME/.screen/ssh-auth-sock.$HOSTNAME" ] ; then
+                ln -fs "$SSH_AUTH_SOCK" "$HOME/.screen/ssh-auth-sock.$HOSTNAME"
+        fi
+        store_display
 }
 alias screen='_screen_prep ; screen'
 
 # Create a new directory and enter it
-md() {
-    mkdir -p "$@" && cd "$@"
+function md() {
+        mkdir -p "$@" && cd "$@"
 }
 
 # find shorthand
-f() {
+function f() {
     find . -name "$1"
 }
 
 # Start an HTTP server from a directory, optionally specifying the port
-server() {
-    local port="${1:-8000}"
-    open "http://localhost:${port}/"
-    # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
-    # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
-    python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+function server() {
+        local port="${1:-8000}"
+        open "http://localhost:${port}/"
+        # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+        # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+        python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
 }
 
-chrome() {
-    /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary \
-        --js-flags="--trace-opt --trace-deopt --trace-bailout" \
-        --allow-file-access \
-        --disable-web-security \
-        --remote-debugging-port=9222 \
-        --js-flags=--harmony
+# Syntax-highlight JSON strings or files
+function json() {
+        if [ -p /dev/stdin ]; then
+                # piping, e.g. `echo '{"foo":42}' | json`
+                python -mjson.tool | pygmentize -l javascript
+        else
+                # e.g. `json '{"foo":42}'`
+                python -mjson.tool <<< "$*" | pygmentize -l javascript
+        fi
+}
+
+# All the dig info
+function digga() {
+        dig +nocmd "$1" any +multiline +noall +answer
+}
+
+# Escape UTF-8 characters into their 3-byte format
+function escape() {
+        printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
+        echo # newline
+}
+
+# Decode \x{ABCD}-style Unicode escape sequences
+function unidecode() {
+        perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
+        echo # newline
 }

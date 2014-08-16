@@ -1,6 +1,21 @@
 alias ..='cd ..'
+alias v='mvim'
 alias g='git'
 alias r='rails'
 alias l='ls -GlAFh'
+alias mkdir='mkdir -vp'
+alias sizes='du -h -d1'
+alias reload!='source ~/.zshrc && exec $PATH'
 alias e="subl . &"
+
+alias openports='sudo lsof -i -P | grep -i "listen"'
+alias ngrep='ngrep -q -W byline'
+alias getgrep='ngrep -q -W byline "^(GET|POST) .*"'
+
+alias chromedev='/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary \
+    --allow-file-access \
+    --disable-web-security \
+    --remote-debugging-port=9222' \
+    --js-flags=--harmony
+
 alias mmv='noglob zmv -W'
