@@ -1,17 +1,16 @@
-export PATH=$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$PATH
-
 eval "$(rbenv init - zsh)"
-
-export PATH=.bundle/binstubs:$PATH
-export PATH=node_modules/.bin:$PATH
-
-export EDITOR="vim"
 
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/X11/lib/pkgconfig
 export GC_OPSCODE_USER=phil
+export EDITOR="vim"
+
+# Docker Host
+export DOCKER_HOST="tcp://127.0.0.1:2375"
+
+export PATH=node_modules/.bin:.bundle/binstubs:$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$GOPATH/bin:/usr/local/opt/go/libexec/bin:$PATH
 
 source ~/.config/credentials/keys
 source ~/.config/scripts

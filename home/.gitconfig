@@ -8,6 +8,7 @@
     safecrlf = false
     pager = cat
     quotepath = false
+	editor = /usr/bin/vim
 
 [push]
     default = simple

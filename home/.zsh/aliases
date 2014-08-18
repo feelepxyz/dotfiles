@@ -1,6 +1,12 @@
 alias ..='cd ..'
 alias g='git'
 alias r='rails'
-alias l='ls -GlAFh'
+alias l='ls -GlaFh'
 alias e="subl . &"
+alias a="atom . &"
+alias vi="vim"
 alias mmv='noglob zmv -W'
+alias dir="mkdir -p $1 && cd $1"
+
+# Python
+alias py="python -B"
