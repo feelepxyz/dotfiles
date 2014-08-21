@@ -6,6 +6,7 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/X11/lib/pkgconfig
 export GC_OPSCODE_USER=phil
 export EDITOR="vim"
+export GIT_EDITOR="vim"
 
 # Docker Host
 export DOCKER_HOST="tcp://127.0.0.1:2375"
