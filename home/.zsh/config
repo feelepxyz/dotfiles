@@ -1,5 +1,11 @@
 eval "$(rbenv init - zsh)"
 
+export NVM_DIR=~/.nvm
+
+source $(brew --prefix nvm)/nvm.sh
+
+export NODE_PATH=`which node`
+
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export GOPATH=$HOME/go
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
@@ -8,10 +14,12 @@ export GC_OPSCODE_USER=phil
 export EDITOR="vim"
 export GIT_EDITOR="vim"
 
-# Docker Host
-export DOCKER_HOST="tcp://127.0.0.1:2375"
+# Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
 
-export PATH=node_modules/.bin:.bundle/binstubs:$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$GOPATH/bin:/usr/local/opt/go/libexec/bin:$PATH
+PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+
+export PATH=bin:node_modules/.bin:.bundle/binstubs:$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$GOPATH/bin:/usr/local/opt/go/libexec/bin:$PATH
 
 source ~/.config/credentials/keys
 source ~/.config/scripts

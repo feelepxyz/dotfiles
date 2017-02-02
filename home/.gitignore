@@ -1,8 +1,26 @@
+# Customs
+.env
+
+# Folders
 .DS_Store
-*.DS_Store
-*.tmproj
-*.rbc
-.rvmrc
-.rbenv-version
-.bundle/
-*.esproj
+.AppleDouble
+.LSOverride
+.bundle/cache
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk

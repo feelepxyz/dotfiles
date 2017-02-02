@@ -7,10 +7,6 @@
 
 [core]
     excludesfile = ~/.gitignore
-    autocrlf = false
-    safecrlf = false
-    pager = cat
-    quotepath = false
     editor = /usr/bin/vim
 
 [push]
@@ -19,105 +15,17 @@
 [color]
     ui = auto
 
-[color "branch"]
-    current = red
-    local = yellow
-    remote = green
-
-[color "diff"]
-    meta = cyan
-    frag = magenta
-    old = red bold
-    new = green bold
-
-[color "status"]
-    added = green
-    changed = yellow
-    untracked = cyan
-
-[apply]
-    whitespace = fix
-
-[rerere]
-    enabled = true
-
 [alias]
-    a  = add --all
     c  = commit
-    d  = diff
-    ds = diff --staged
     s = status -sb
-    amend  = commit --amend
-    what = whatchanged
-    today = diff @{yesterday}.. --stat
-    wdiff = diff --word-diff=color
-    wshow = show --word-diff=color
-    sub = submodule
-    pullsub = submodule foreach git pull origin master
     co = checkout
-    mr = merge --no-ff
+    l = log --topo-order --decorate
+    lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
     unstage = reset HEAD
     grep = grep -nw
-    prune-all = !git remote | xargs -n 1 git remote prune
-    rank = shortlog -sn --no-merges
     bv = !git branch --color -v | cut -c1-100
-    lasttag = describe --tags --abbrev=0
-    branches = branch -vv
-    getbranch = "!x() { git co origin/$1 -b $1; }; x"
-    g = "!x() { b=`git symbolic-ref -q --short HEAD` && git rebase --onto $b master $1 && git diff --stat $b && git checkout $b; }; x"
-    autotrack = "!x() { b=`git symbolic-ref -q --short HEAD` && git branch -u \"origin/$b\" || echo \"error: not a branch\"; }; x"
-    slog = log --pretty=format:"%C(auto,yellow)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%cn%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)]"
-    glog = log --graph --pretty=format:"%C(auto,yellow)%h%C(auto)%d\\ %C(auto,reset)%s\\ \\ [%C(auto,blue)%cn%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)]"
-    gflog = log -p --cc --graph --decorate
-    wtf = log --pretty=format:"%C(auto,yellow)%h%C(auto)%d%C(auto,reset)\\ by\\ %C(auto,blue)%cn%C(auto,reset),\\ %C(auto,cyan)%ar%C(auto,reset)%n\\ %s%n" --stat
-    unci = reset HEAD^
-    uncommit = reset HEAD^
-    ls = ls-files
-    rup = !git remote update `git rev-parse --symbolic-full-name HEAD@{u}|cut -d/ -f3`
-    in = !git wtf HEAD..HEAD@{u}
-    out = !git wtf HEAD@{u}..HEAD
-    killbranches = !git branch | grep -v '\\bmaster\\b' | xargs git branch -d 2> /dev/null
-    sync = !git pull --rebase && git push
-    down = "!git remote update; git pull --ff-only"
-    comerge = "!x() { target=`git symbolic-ref HEAD`; git co $1; git merge $target; }; x"
-    pill = pull
-    ours = "!f() { git checkout --ours -- $@ && git add -- $@; }; f"
-    theirs = "!f() { git checkout --theirs -- $@ && git add -- $@; }; f"
-    assume = update-index --assume-unchanged
-    unassume = update-index --no-assume-unchanged
-    unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
-    assumed = "!git ls-files -v | grep ^h | cut -c 3-"
-    authors = shortlog -sn
-    serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
-    serveall = daemon --verbose --export-all --base-path=. --reuseaddr .
-    addpr = "!f() { git fetch origin pull/$1/head:pr/$1; }; f"
-    addprx = "!f() { b=`git symbolic-ref -q --short HEAD` && \
-        echo \"Making branch for pull request #$1 [pr/$1]\" && \
-        git fetch origin pull/$1/head:pr/$1 && \
-        echo \"Rebasing pr/$1 onto $b...\" && \
-        git fetch -q -f origin pull/$1/merge:refs/PR_MERGE_HEAD && \
-        git rebase -q --onto $b PR_MERGE_HEAD^ pr/$1 && \
-        git checkout -q $b && echo && \
-        git diff --stat $b..pr/$1 && echo && \
-        git log --oneline $b..pr/$1; \
-        git update-ref -d refs/PR_MERGE_HEAD; \
-        }; f"
-
-[help]
-    browser = open
-
-[difftool "opendiff"]
-    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-
-[difftool]
-    prompt = false
-
-[mergetool]
-    prompt = false
-
-[filter "media"]
-    clean = git-media-clean %f
-    smudge = git-media-smudge %f
-
-[instaweb]
-        httpd=webrick
+    prune-remote = !git remote | xargs -n 1 git remote prune
+    prune-local = !git branch --merged | tr -d '*' | grep -v dev | xargs -n1 git branch -d
+    undo = reset HEAD~1 --mixed
+    pf = push --force-with-lease

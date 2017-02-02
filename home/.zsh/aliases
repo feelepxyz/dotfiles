@@ -2,11 +2,11 @@ alias ..='cd ..'
 alias g='git'
 alias r='rails'
 alias l='ls -GlaFh'
-alias e="subl . &"
+alias e="atom . &"
 alias a="atom . &"
 alias vi="vim"
 alias mmv='noglob zmv -W'
 alias dir="mkdir -p $1 && cd $1"
-
-# Python
-alias py="python -B"
+alias senv="source .env"
+alias cleardns="sudo killall -HUP mDNSResponder"
+alias git=hub

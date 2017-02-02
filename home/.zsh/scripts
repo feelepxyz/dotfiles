@@ -12,7 +12,7 @@ alias screen='_screen_prep ; screen'
 
 # Create a new directory and enter it
 md() {
-    mkdir -p "$@" && cd "$@"
+    mkdir -p "$1" && cd "$1"
 }
 
 # find shorthand
@@ -36,4 +36,28 @@ chrome() {
         --disable-web-security \
         --remote-debugging-port=9222 \
         --js-flags=--harmony
+}
+
+git-rebase-master() {
+    git fetch origin
+    git rebase origin/master --autostash --autosquash --verbose
+}
+
+git-rebase-master-i() {
+    git fetch origin
+    git rebase --interactive --autostash --autosquash origin/master
+}
+
+git-rebase-c() {
+    git add --all
+    git commit --no-edit
+    git rebase --continue
+}
+
+open-port() {
+  lsof -Pn -i4 | grep $1
+}
+
+nvm-load() {
+  source $(brew --prefix nvm)/nvm.sh
 }
