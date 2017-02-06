@@ -1,0 +1,60 @@
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# source: https://github.com/imkira/dotfiles/blob/master/.zsh/colored-man-pages.zsh
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[38;33;246m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[04;38;5;146m'
+
+# Prompt
+ICO_DIRTY="*"
+ICO_AHEAD="↑"
+ICO_BEHIND="↓"
+ICO_DIVERGED="⥮"
+COLOR_ROOT="%F{red}"
+COLOR_USER="%F{cyan}"
+COLOR_NORMAL="%F{white}"
+
+# allow functions in the prompt
+setopt PROMPT_SUBST
+autoload -Uz colors && colors
+
+# colors for permissions
+if [[ "$EUID" -ne "0" ]]
+then  # if user is not root
+	USER_LEVEL="${COLOR_USER}"
+else # root!
+	USER_LEVEL="${COLOR_ROOT}"
+fi
+
+GIT_PROMPT() {
+  is_git_repo=$(git rev-parse --is-inside-work-tree 2> /dev/null)
+  if [ ! "$is_git_repo" ]
+  then
+    return
+  fi
+  ref=$(git name-rev --name-only HEAD | sed 's!remotes/!!' 2> /dev/null)
+  dirty="" && [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && dirty=$ICO_DIRTY
+  stat=$(git status | sed -n 2p)
+  case "$stat" in
+    *ahead*)
+      stat=$ICO_AHEAD
+    ;;
+    *behind*)
+      stat=$ICO_BEHIND
+    ;;
+    *diverged*)
+      stat=$ICO_DIVERGED
+    ;;
+    *)
+      stat=""
+    ;;
+  esac
+
+  echo "${USER_LEVEL}—[${COLOR_NORMAL}"${ref}${dirty}${stat}"${USER_LEVEL}]"
+}
+
+PROMPT='${USER_LEVEL}[${COLOR_NORMAL}%~${USER_LEVEL}]$(GIT_PROMPT) %f'

@@ -1,25 +1,15 @@
-eval "$(rbenv init - zsh)"
+# Load zsh massive renamer
+autoload -U zmv
 
-export NVM_DIR=~/.nvm
+# Turn off all auto correct
+unsetopt correct_all
 
-source $(brew --prefix nvm)/nvm.sh
+export CODE_EDITOR="code"
+export EDITOR="$CODE_EDITOR --wait"
+export GIT_EDITOR="$EDITOR"
+export VISUAL=$EDITOR
 
-export NODE_PATH=`which node`
-
-export JAVA_HOME="$(/usr/libexec/java_home)"
-export GOPATH=$HOME/go
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/X11/lib/pkgconfig
-export GC_OPSCODE_USER=phil
-export EDITOR="vim"
-export GIT_EDITOR="vim"
-
-# Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
-PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-
-export PATH=bin:node_modules/.bin:.bundle/binstubs:$HOME/local/node/bin:/usr/local/bin:/usr/local/sbin:$GOPATH/bin:/usr/local/opt/go/libexec/bin:$PATH
+PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export PATH=$HOME/bin:bin:node_modules/.bin:.bundle/binstubs:/usr/local/bin:/usr/local/sbin:$PATH
 
 source ~/.config/credentials/keys
-source ~/.config/scripts

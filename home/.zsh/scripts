@@ -1,20 +1,3 @@
-# need the host name set sometimes
-[ -z "$HOSTNAME" ] && export HOSTNAME=$(hostname)
-
-# this will reset the ssh-auth-sock link and screen display file before we run screen
-_screen_prep() {
-    if [ "$SSH_AUTH_SOCK" != "$HOME/.screen/ssh-auth-sock.$HOSTNAME" ] ; then
-            ln -fs "$SSH_AUTH_SOCK" "$HOME/.screen/ssh-auth-sock.$HOSTNAME"
-    fi
-    store_display
-}
-alias screen='_screen_prep ; screen'
-
-# Create a new directory and enter it
-md() {
-    mkdir -p "$1" && cd "$1"
-}
-
 # find shorthand
 f() {
     find . -name "$1"
@@ -40,24 +23,16 @@ chrome() {
 
 git-rebase-master() {
     git fetch origin
-    git rebase origin/master --autostash --autosquash --verbose
-}
-
-git-rebase-master-i() {
-    git fetch origin
     git rebase --interactive --autostash --autosquash origin/master
 }
 
-git-rebase-c() {
+git-rebase-continue() {
     git add --all
     git commit --no-edit
     git rebase --continue
 }
 
+# Find processes running on port
 open-port() {
   lsof -Pn -i4 | grep $1
-}
-
-nvm-load() {
-  source $(brew --prefix nvm)/nvm.sh
 }

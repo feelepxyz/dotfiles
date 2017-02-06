@@ -1,0 +1,20 @@
+"*":
+  core:
+    ignoredNames: [
+      ".git"
+      ".hg"
+      ".svn"
+      ".DS_Store"
+    ]
+    telemetryConsent: "no"
+  editor:
+    fontFamily: "PragmataPro"
+    fontSize: 12
+    invisibles: {}
+    preferredLineLength: 90
+    showInvisibles: true
+    tabType: "soft"
+  "exception-reporting":
+    userId: "8d8edf3e-f907-6b5a-3ca6-965e11b2b102"
+  welcome:
+    showOnStartup: false

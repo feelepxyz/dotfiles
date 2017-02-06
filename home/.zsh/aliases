@@ -2,11 +2,12 @@ alias ..='cd ..'
 alias g='git'
 alias r='rails'
 alias l='ls -GlaFh'
-alias e="atom . &"
-alias a="atom . &"
-alias vi="vim"
+alias e="$CODE_EDITOR . &"
 alias mmv='noglob zmv -W'
 alias dir="mkdir -p $1 && cd $1"
+alias git=hub
+
 alias senv="source .env"
 alias cleardns="sudo killall -HUP mDNSResponder"
-alias git=hub
+alias dotfiles-edit='$CODE_EDITOR ~/dotfiles'
+alias dotfiles-inst='cd ~/dotfiles && stow home'

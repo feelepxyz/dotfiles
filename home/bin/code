@@ -1,0 +1,4 @@
+ELECTRON=/Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron
+CLI=/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/out/cli.js
+ELECTRON_RUN_AS_NODE=1 "$ELECTRON" "$CLI" "$@"
+exit $?

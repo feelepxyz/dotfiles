@@ -1,0 +1,48 @@
+cask_args appdir: "/Applications"
+
+tap "homebrew/bundle"
+tap "caskroom/cask"
+
+mas "1Password", id: 443987910
+mas "Sketch", id: 852320343
+mas "Todoist", id: 585829637
+mas "FLACTunes FLAC Converter", id: 517984121
+mas "Xcode", id: 497799835
+mas "Quip", id: 1003160018
+mas "Slack", id: 803453959
+mas "The Unarchiver", id: 425424353
+mas "xScope", id: 889428659
+mas "Copy'em Paste", id: 876540291
+
+brew "zsh"
+brew "git"
+brew "gnu-sed", args: ["with-default-names"]
+brew "stow"
+brew "yarn"
+brew "ack"
+brew "openssl"
+brew "coreutils"
+brew "hub"
+brew "findutils"
+brew "vim"
+brew "zsh-syntax-highlighting"
+brew "nodenv"
+
+cask "google-chrome"
+cask "atom"
+cask "slack"
+cask "transmission"
+cask "vlc"
+cask "firefox"
+cask "firefoxnightly"
+cask "dropbox"
+cask "skype"
+cask "iterm2"
+cask "imageoptim"
+cask "visual-studio-code"
+cask "beamer"
+cask "flux"
+cask "transmit"
+cask "private-internet-access"
+cask "little-snitch"
+cask "soulseek"
