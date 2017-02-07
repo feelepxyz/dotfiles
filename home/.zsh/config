@@ -1,9 +1,19 @@
 # Load zsh massive renamer
 autoload -U zmv
 
-# Turn off all auto correct
+# Turn off auto correct
 unsetopt correct_all
 
+# History
+HISTFILE=~/.zhistory
+setopt APPEND_HISTORY
+HISTSIZE=3600
+SAVEHIST=3000
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt EXTENDED_HISTORY
+setopt SHARE_HISTORY
+
+# Editor
 export CODE_EDITOR="code"
 export EDITOR="$CODE_EDITOR --wait"
 export GIT_EDITOR="$EDITOR"
@@ -12,4 +22,10 @@ export VISUAL=$EDITOR
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export PATH=$HOME/bin:bin:node_modules/.bin:.bundle/binstubs:/usr/local/bin:/usr/local/sbin:$PATH
 
+# Private
 source ~/.config/credentials/keys
+
+# Plugins
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fpath=(/usr/local/share/zsh-completions $fpath)
