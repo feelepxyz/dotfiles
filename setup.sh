@@ -17,7 +17,8 @@ sudo -v
 
 brew update
 brew upgrade
-brew bundle
+brew bundle --file=./home/Brewfile
+brew bundle cleanup --file=./home/Brewfile
 brew cleanup
 
 ###############################################################################
@@ -27,11 +28,17 @@ brew cleanup
 mkdir -p ~/.config/credentials
 touch ~/.config/credentials/keys
 
-# Assumes dotfiles are already cloned
-cd ~/dotfiles
+# Update dotfiles
 git pull
+
+# Symlink dotfiles
 stow home -t ~/
-cd ~/
+
+###############################################################################
+# Mac
+###############################################################################
+
+./install/mac.sh
 
 ###############################################################################
 # zsh & iterm
@@ -41,17 +48,5 @@ if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
   sudo dscl . -create /Users/$USER UserShell $(which zsh)
 fi
 
-# Don’t display the annoying prompt when quitting iTerm
-defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
-# Reload zsh settings
-source ~/.zshrc
-
 # Install the Solarized Dark theme for iTerm
-open "${HOME}/dotfiles/iterm/Solarized Dark.itermcolors"
-
-###############################################################################
-# Mac
-###############################################################################
-
-./install/mac.sh
+# open "${HOME}/dotfiles/iterm/Solarized Dark.itermcolors"
