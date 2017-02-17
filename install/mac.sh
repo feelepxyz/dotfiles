@@ -102,6 +102,12 @@ sudo scutil --set ComputerName "pmph.local" && \
 sudo scutil --set HostName "pmph.local" && \
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "pmph.local"
 
+# Enable FileVault
+fdesetup status | grep "On"
+if [ $? -ne 0 ]; then
+  sudo fdesetup enable
+fi
+
 # Uninstalling Google Update
 KSINSTALL=~/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall
 if [ -e $KSINSTALL ]; then

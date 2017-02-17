@@ -1,13 +1,9 @@
-[include]
-    path = .gitconfig.local
-
 [user]
     name = Philip Harrison
     email = philip@mailharrison.com
 
 [core]
     excludesfile = ~/.gitignore
-    editor = /usr/bin/vim
 
 [push]
     default = simple
