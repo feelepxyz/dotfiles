@@ -8,6 +8,7 @@ alias dir="mkdir -p $1 && cd $1"
 alias git=hub
 
 alias senv="source .env"
-alias cleardns="sudo killall -HUP mDNSResponder"
+alias cleardns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
+alias externalip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias dotfiles-edit='$CODE_EDITOR ~/dotfiles'
 alias dotfiles-inst='cd ~/dotfiles && stow home'

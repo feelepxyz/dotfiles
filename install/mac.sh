@@ -8,16 +8,28 @@ defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.Web
 defaults write -g WebKitDeveloperExtras -bool true
 
 # Expand print panel by default
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write -g PMPrintingExpandedStateForPrint -bool true && \
+defaults write -g PMPrintingExpandedStateForPrint2 -bool true
 
 # Expand save panel by default
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write -g NSNavPanelExpandedStateForSaveMode -bool true && \
+defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
+
+# Quit printer app after print jobs complete
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
 # Disable the warning when changing file extensions
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
 # Allow text-selection in Quick Look
 defaults write com.apple.finder QLEnableTextSelection -bool true
+
+# Enable firewall
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+
+# Password on screensaver after 1 minute
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 60
 
 # Show the ~/Library folder.
 chflags nohidden ~/Library
@@ -26,8 +38,14 @@ chflags nohidden ~/Library
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
-# Show hidden files and file extensions by default
-defaults write com.apple.finder AppleShowAllFiles -bool true
+# Show finder path bar
+defaults write com.apple.finder ShowPathbar -bool true
+
+# Set default finder location to home folder
+defaults write com.apple.finder NewWindowTarget -string "PfLo" && \
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}"
+
+# Show file extensions by default
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 # Save screenshots to desktop and disable the horrific drop-shadow.
@@ -45,11 +63,17 @@ defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 # Avoid creating .DS_Store files on network volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 
+# Disable creation of metadata files on USB volumes
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
 # Disable the Ping sidebar in iTunes
 defaults write com.apple.iTunes disablePingSidebar -bool true
 
 # Disable all the other Ping stuff in iTunes
 defaults write com.apple.iTunes disablePing -bool true
+
+# Disable auto-correct
+defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Set language and text formats
 defaults write -g AppleLanguages -array "en" "sv"
@@ -72,6 +96,17 @@ defaults write com.apple.terminal StringEncodings -array 4
 
 # Use current directory as default search scope in Finder
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+# Set computer name/host name
+sudo scutil --set ComputerName "pmph.local" && \
+sudo scutil --set HostName "pmph.local" && \
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "pmph.local"
+
+# Uninstalling Google Update
+KSINSTALL=~/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall
+if [ -e $KSINSTALL ]; then
+  $KSINSTALL --nuke
+fi
 
 # Kill affected applications
 for app in Safari Finder Dock SystemUIServer; do killall "$app" >/dev/null 2>&1; done
