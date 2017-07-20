@@ -25,7 +25,6 @@ brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
 brew "nodenv"
-brew "homebrew/fuse/ntfs-3g
 brew "gpg"
 
 cask "the-unarchiver"
@@ -46,4 +45,3 @@ cask "beamer"
 cask "flux"
 cask "transmit"
 cask "soulseek"
-cask "osxfuse"
