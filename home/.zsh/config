@@ -19,6 +19,8 @@ export EDITOR="$CODE_EDITOR --wait"
 export GIT_EDITOR="$EDITOR"
 export VISUAL=$EDITOR
 
+export GPG_TTY=$(tty)
+
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export PATH=$HOME/bin:bin:node_modules/.bin:.bundle/binstubs:/usr/local/bin:/usr/local/sbin:$PATH
 

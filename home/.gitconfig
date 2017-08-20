@@ -1,6 +1,7 @@
 [user]
     name = Philip Harrison
     email = philip@mailharrison.com
+    signingkey = 0x3474FE3164ADBF30
 
 [core]
     excludesfile = ~/.gitignore
@@ -25,8 +26,6 @@
     prune-local = !git branch --merged | tr -d '*' | grep -v dev | xargs -n1 git branch -d
     undo = reset HEAD~1 --mixed
     pf = push --force-with-lease
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+
+[gpg]
+    program = gpg2
