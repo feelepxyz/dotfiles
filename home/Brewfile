@@ -3,12 +3,13 @@ cask_args appdir: "/Applications"
 tap "homebrew/bundle"
 tap "caskroom/cask"
 
-mas "Sketch", id: 852320343
-mas "Todoist", id: 585829637
-mas "FLACTunes FLAC Converter", id: 517984121
 mas "Xcode", id: 497799835
+mas "iA Writer", id: 775737590
+mas "FLACTunes FLAC Converter", id: 517984121
 mas "xScope", id: 889428659
 mas "Copy'em Paste", id: 876540291
+mas "Paprika Recipe Manager", id: 451907568
+mas "Pocket", id: 568494494
 
 brew "zsh"
 brew "git"
@@ -26,22 +27,36 @@ brew "zsh-autosuggestions"
 brew "zsh-completions"
 brew "nodenv"
 brew "gpg"
+brew "python3"
 
 cask "the-unarchiver"
 cask "quip"
 cask "1password"
 cask "google-chrome"
-cask "atom"
-cask "slack"
 cask "transmission"
 cask "vlc"
 cask "firefox"
-cask "dropbox"
+cask "firefoxnightly"
+cask "firefoxdeveloperedition"
 cask "skype"
 cask "iterm2"
 cask "imageoptim"
 cask "visual-studio-code"
 cask "beamer"
-cask "flux"
-cask "transmit"
 cask "soulseek"
+cask "keybase"
+cask "little-snitch"
+cask "mullvad"
+cask "shrinkit"
+cask "google-backup-and-sync"
+cask "google-chrome-canary"
+cask "rekordbox"
+cask "caption"
+cask "torbrowser"
+cask "anki"
+cask "steam"
+cask "charles"
+cask "fontexplorer-x-pro"
+cask "onyx"
+cask "oversight"
+cask "blockblock"
