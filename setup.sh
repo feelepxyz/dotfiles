@@ -15,15 +15,12 @@
 brew update
 brew upgrade
 brew bundle --file=./home/Brewfile
-brew bundle cleanup --file=./home/Brewfile
+brew bundle cleanup --file=./home/Brewfile --force
 brew cleanup
 
 ###############################################################################
 # Dotfiles
 ###############################################################################
-
-mkdir -p ~/.config/credentials
-touch ~/.config/credentials/keys
 
 # Update dotfiles
 git pull

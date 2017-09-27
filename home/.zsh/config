@@ -4,6 +4,13 @@ autoload -U zmv
 # Turn off auto correct
 unsetopt correct_all
 
+# Setup nodeenv
+eval "$(nodenv init -)"
+
+# Setup direnv
+# - load env variables from .envrc - to enable: `direnv allow .`
+eval "$(direnv hook zsh)"
+
 # History
 HISTFILE=~/.zhistory
 setopt APPEND_HISTORY
@@ -22,10 +29,8 @@ export VISUAL=$EDITOR
 export GPG_TTY=$(tty)
 
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+PATH="$HOME/Library/Python/3.6/bin:$PATH"
 export PATH=$HOME/bin:bin:node_modules/.bin:.bundle/binstubs:/usr/local/bin:/usr/local/sbin:$PATH
-
-# Private
-source ~/.config/credentials/keys
 
 # Plugins
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

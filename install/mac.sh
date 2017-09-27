@@ -98,9 +98,9 @@ defaults write com.apple.terminal StringEncodings -array 4
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Set computer name/host name
-sudo scutil --set ComputerName "pmph.local" && \
-sudo scutil --set HostName "pmph.local" && \
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "pmph.local"
+sudo scutil --set ComputerName "feelepxyz.local" && \
+sudo scutil --set HostName "feelepxyz.local" && \
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "feelepxyz.local"
 
 # Enable FileVault
 fdesetup status | grep "On"

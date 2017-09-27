@@ -2,6 +2,7 @@ cask_args appdir: "/Applications"
 
 tap "homebrew/bundle"
 tap "caskroom/cask"
+tap "caskroom/versions"
 
 mas "Xcode", id: 497799835
 mas "iA Writer", id: 775737590
@@ -15,7 +16,7 @@ brew "zsh"
 brew "git"
 brew "gnu-sed", args: ["with-default-names"]
 brew "stow"
-brew "yarn"
+brew "yarn", args: ["without-node"]
 brew "ack"
 brew "openssl"
 brew "coreutils"
@@ -26,6 +27,7 @@ brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
 brew "nodenv"
+brew "node-build"
 brew "gpg"
 brew "python3"
 
