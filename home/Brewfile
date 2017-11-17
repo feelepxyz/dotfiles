@@ -4,14 +4,7 @@ tap "homebrew/bundle"
 tap "caskroom/cask"
 tap "caskroom/versions"
 
-mas "Xcode", id: 497799835
-mas "iA Writer", id: 775737590
-mas "FLACTunes FLAC Converter", id: 517984121
-mas "xScope", id: 889428659
-mas "Copy'em Paste", id: 876540291
-mas "Paprika Recipe Manager", id: 451907568
-mas "Pocket", id: 568494494
-
+brew "mas"
 brew "zsh"
 brew "git"
 brew "gnu-sed", args: ["with-default-names"]
@@ -30,6 +23,15 @@ brew "nodenv"
 brew "node-build"
 brew "gpg"
 brew "python3"
+brew "direnv"
+
+mas "Xcode", id: 497799835
+mas "iA Writer", id: 775737590
+mas "FLACTunes FLAC Converter", id: 517984121
+mas "xScope", id: 889428659
+mas "Copy'em Paste", id: 876540291
+mas "Paprika Recipe Manager", id: 451907568
+mas "Pocket", id: 568494494
 
 cask "the-unarchiver"
 cask "quip"
@@ -38,8 +40,8 @@ cask "google-chrome"
 cask "transmission"
 cask "vlc"
 cask "firefox"
-cask "firefoxnightly"
-cask "firefoxdeveloperedition"
+cask "caskroom/versions/firefoxnightly"
+cask "caskroom/versions/firefoxdeveloperedition"
 cask "skype"
 cask "iterm2"
 cask "imageoptim"
@@ -51,7 +53,7 @@ cask "little-snitch"
 cask "mullvad"
 cask "shrinkit"
 cask "google-backup-and-sync"
-cask "google-chrome-canary"
+cask "caskroom/versions/google-chrome-canary"
 cask "rekordbox"
 cask "caption"
 cask "torbrowser"
