@@ -26,6 +26,11 @@ git-rebase-master() {
     git rebase --interactive --autostash --autosquash origin/master
 }
 
+git-rebase-develop() {
+    git fetch origin
+    git rebase --interactive --autostash --autosquash origin/develop
+}
+
 git-rebase-continue() {
     git add --all
     git commit --no-edit
