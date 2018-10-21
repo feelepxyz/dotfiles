@@ -41,7 +41,7 @@ sudo softwareupdate -ia
 # zsh & iterm
 ###############################################################################
 
-if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
+if [ $(echo $SHELL) != $(which zsh) ]; then
   sudo dscl . -create /Users/$USER UserShell $(which zsh)
 fi
 

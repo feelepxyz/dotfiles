@@ -15,7 +15,7 @@ brew "openssl"
 brew "coreutils"
 brew "hub"
 brew "findutils"
-brew "vim"
+brew "vim", args: ["with-custom-ruby"]
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
@@ -27,6 +27,17 @@ brew "pyenv"
 brew "readline"
 brew "xz"
 brew "pgcli"
+brew "watchman"
+brew "bash"
+brew "gnupg"
+brew "yubikey-personalization" # yubikey
+brew "ykman" # yubikey
+brew "pinentry-mac" # yubikey
+brew "rbenv"
+brew "postgres"
+brew "curl", args: ["with-openssl"]
+brew "heroku"
+brew "go"
 
 mas "Xcode", id: 497799835
 mas "iA Writer", id: 775737590
@@ -35,6 +46,9 @@ mas "xScope", id: 889428659
 mas "Copy'em Paste", id: 876540291
 mas "Paprika Recipe Manager", id: 451907568
 mas "Pocket", id: 568494494
+mas "Keynote", id: 409183694
+mas "Soulver", id: 413965349
+mas "Todoist", id: 585829637
 
 cask "the-unarchiver"
 cask "quip"
@@ -44,7 +58,6 @@ cask "transmission"
 cask "vlc"
 cask "firefox"
 cask "caskroom/versions/firefox-developer-edition"
-cask "skype"
 cask "iterm2"
 cask "imageoptim"
 cask "visual-studio-code"
@@ -64,13 +77,8 @@ cask "onyx"
 cask "oversight"
 cask "spotify"
 cask "slack"
-cask "react-native-debugger"
-cask "macpass"
 cask "virtualbox"
-cask "fontbase"
 cask "figma"
-cask "notion"
-#cask "audacity"
 cask "kap"
 cask "insomnia"
 cask "sketch"
@@ -79,13 +87,17 @@ cask "tableplus"
 cask "caption"
 cask "mpv"
 cask "lepton"
-#cask "send-to-kindle"
-cask "handbrake"
 cask "max"
 cask "shrinkit"
-cask "expo-xde"
 cask "dropshare"
-cask "android-studio"
-cask "genymotion"
 cask "charles"
 cask "github"
+cask "karabiner-elements"
+cask "signal"
+cask "gpg-suite"
+cask "homebrew/cask-drivers/yubico-yubikey-manager"
+cask "homebrew/cask-drivers/yubico-yubikey-personalization-gui"
+cask "homebrew/cask-drivers/yubico-yubikey-piv-manager"
+cask "discord"
+cask "homebrew/cask-drivers/sonos"
+cask "sensiblesidebuttons"
