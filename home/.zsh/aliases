@@ -1,7 +1,10 @@
-alias ..='cd ..'
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias l='ls -GlaFh'
+alias ls="ls -lh"
 alias g='git'
 alias r='rails'
-alias l='ls -GlaFh'
 alias e="$CODE_EDITOR . &"
 alias mmv='noglob zmv -W'
 alias dir="mkdir -p $1 && cd $1"
