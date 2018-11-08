@@ -19,17 +19,12 @@ chrome() {
         --js-flags=--harmony
 }
 
-git-rebase-master() {
+rebase-master() {
     git fetch origin
     git rebase --interactive --autostash --autosquash origin/master
 }
 
-git-rebase-develop() {
-    git fetch origin
-    git rebase --interactive --autostash --autosquash origin/develop
-}
-
-git-rebase-continue() {
+rebase-continue() {
     git add --all
     git commit --no-edit
     git rebase --continue

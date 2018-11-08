@@ -7,28 +7,41 @@
     excludesfile = ~/.gitignore
 
 [push]
-    default = simple
+    default = current
 
 [color]
     ui = auto
 
 [alias]
-    c  = commit
+    all = add -A
+    c = commit
+    com = commit -m
+    d = diff
+    pu = push
+    puf = push --force-with-lease
+    amd = commit --amend --no-edit
+    amd-all = && commit --amend --no-edit && :
+    amd-puf = commit --amend --no-edit && push --force-with-lease && :
     s = status -sb
     co = checkout
+    cob = checkout -b
     l = log --topo-order --decorate
     lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
     unstage = reset HEAD
+    undo = reset HEAD~1 --mixed
     grep = grep -nw
-    bv = !git branch --color -v | cut -c1-100
+    bra = !git branch --color -v | cut -c1-100
     prune-remote = !git remote | xargs -n 1 git remote prune
     prune-local = !git branch --merged | tr -d '*' | grep -v dev | xargs -n1 git branch -d
-    undo = reset HEAD~1 --mixed
-    pf = push --force-with-lease
 
 [gpg]
     program = gpg2
 
 [commit]
     gpgsign = true
+
+[filter "lfs"]
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
