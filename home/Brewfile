@@ -40,18 +40,15 @@ brew "heroku"
 brew "go"
 
 mas "Xcode", id: 497799835
-mas "iA Writer", id: 775737590
 mas "FLACTunes FLAC Converter", id: 517984121
 mas "xScope", id: 889428659
 mas "Copy'em Paste", id: 876540291
 mas "Paprika Recipe Manager", id: 451907568
-mas "Pocket", id: 568494494
 mas "Keynote", id: 409183694
 mas "Soulver", id: 413965349
-mas "Todoist", id: 585829637
 
 cask "the-unarchiver"
-cask "quip"
+cask "notion"
 cask "1password"
 cask "google-chrome"
 cask "transmission"
@@ -72,26 +69,19 @@ cask "caskroom/versions/google-chrome-canary"
 cask "rekordbox"
 cask "caption"
 cask "torbrowser"
-cask "steam"
 cask "onyx"
 cask "oversight"
-cask "spotify"
 cask "slack"
 cask "virtualbox"
 cask "figma"
-cask "kap"
-cask "insomnia"
 cask "sketch"
 cask "authy"
 cask "tableplus"
 cask "caption"
 cask "mpv"
-cask "lepton"
 cask "max"
 cask "shrinkit"
 cask "dropshare"
-cask "charles"
-cask "github"
 cask "karabiner-elements"
 cask "signal"
 cask "gpg-suite"
