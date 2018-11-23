@@ -1,5 +1,6 @@
 # Customs
 .env
+.envrc
 
 # Folders
 .DS_Store
