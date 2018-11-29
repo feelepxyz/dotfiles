@@ -7,7 +7,7 @@
     excludesfile = ~/.gitignore
 
 [push]
-    default = current
+    default = simple
 
 [color]
     ui = auto
