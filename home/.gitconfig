@@ -17,11 +17,9 @@
     c = commit
     com = commit -m
     d = diff
-    pu = push
-    puf = push --force-with-lease
+    pullr = pull --rebase
+    pushf = push --force-with-lease
     amd = commit --amend --no-edit
-    amd-all = && commit --amend --no-edit && :
-    amd-puf = commit --amend --no-edit && push --force-with-lease && :
     s = status -sb
     co = checkout
     cob = checkout -b
