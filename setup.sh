@@ -14,8 +14,8 @@
 
 brew update
 brew upgrade
-brew bundle --file=./home/Brewfile
 brew bundle cleanup --file=./home/Brewfile --force
+brew bundle --file=./home/Brewfile
 brew cleanup
 
 ###############################################################################
