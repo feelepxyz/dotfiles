@@ -43,9 +43,7 @@ mas "Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
 mas "xScope", id: 889428659
 mas "Copy'em Paste", id: 876540291
-mas "Paprika Recipe Manager", id: 451907568
 mas "Keynote", id: 409183694
-mas "Soulver", id: 413965349
 
 cask "the-unarchiver"
 cask "notion"
@@ -69,7 +67,6 @@ cask "caskroom/versions/google-chrome-canary"
 cask "rekordbox"
 cask "caption"
 cask "torbrowser"
-cask "onyx"
 cask "oversight"
 cask "slack"
 cask "virtualbox"
@@ -91,3 +88,5 @@ cask "homebrew/cask-drivers/yubico-yubikey-piv-manager"
 cask "discord"
 cask "homebrew/cask-drivers/sonos"
 cask "sensiblesidebuttons"
+cask "spotify"
+cask "numi"
