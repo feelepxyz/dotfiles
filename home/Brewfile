@@ -38,6 +38,7 @@ brew "postgres"
 brew "curl", args: ["with-openssl"]
 brew "heroku"
 brew "go"
+brew "wget"
 
 mas "Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
