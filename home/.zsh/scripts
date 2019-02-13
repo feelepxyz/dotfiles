@@ -58,3 +58,15 @@ rspec-master() {
 rspec-upstream() {
   git diff-tree -r --no-commit-id --name-only @\{u\} head | grep '\_spec\.rb$' | xargs rspec
 }
+
+npm-init() {
+  npm init --force --yes
+}
+
+git-init-npm() {
+  git init --quiet
+  touch .gitignore
+  echo "node_modules" >> .gitignore
+  git add -A
+  git commit -m "Initial"
+}

@@ -4,10 +4,10 @@ autoload -U zmv
 # Turn off auto correct
 unsetopt correct_all
 
-eval "$(nodenv init -)"
-
 # Load env variables from .envrc - to enable: `direnv allow .`
 eval "$(direnv hook zsh)"
+
+eval "$(nodenv init -)"
 
 eval "$(pyenv init -)"
 
