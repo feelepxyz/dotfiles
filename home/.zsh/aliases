@@ -7,6 +7,7 @@ alias g="git"
 alias e="$CODE_EDITOR . &"
 alias mmv="noglob zmv -W"
 alias dir="mkdir -p $1 && cd $1"
+alias cop="rubocop"
 
 alias cleardns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
 alias externalip="dig +short myip.opendns.com @resolver1.opendns.com"
