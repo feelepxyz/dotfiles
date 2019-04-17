@@ -1,6 +1,16 @@
 #!/bin/bash
 
 ###############################################################################
+# Dotfiles
+###############################################################################
+
+# Update dotfiles
+# git pull --rebase --autostash
+
+# Symlink dotfiles
+stow home -t ~/
+
+###############################################################################
 # XCode Command Line Tools                                                    #
 ###############################################################################
 
@@ -14,19 +24,9 @@
 
 brew update
 brew upgrade
-brew bundle cleanup --file=./home/Brewfile --force
-brew bundle --file=./home/Brewfile
+brew bundle cleanup --global --force
+brew bundle check --global || brew bundle --global
 brew cleanup
-
-###############################################################################
-# Dotfiles
-###############################################################################
-
-# Update dotfiles
-git pull
-
-# Symlink dotfiles
-stow home -t ~/
 
 ###############################################################################
 # Mac

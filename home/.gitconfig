@@ -3,11 +3,38 @@
     email = philip@mailharrison.com
     signingkey = 0xF6F4212756997CEF
 
+[github]
+    user = feelepxyz
+
 [core]
     excludesfile = ~/.gitignore
 
 [push]
     default = simple
+
+[pull]
+    # Default to rebasing on pulls
+    rebase = true
+
+[fetch]
+    # Always prune when fetching (and pulling).
+    prune = 1
+
+[rerere]
+    # Store and re-use manual conflict resolution changes.
+    enabled = 1
+
+[rebase]
+    # Run `git stash` if needed before a `git rebase`
+    autoStash = true
+    # Auto-add `--autosquash` to `git rebase`
+    autoSquash = true
+
+[diff]
+    # Use the slower but better patience diff algorithm
+    algorithm = patience
+    # Use new diff algorithm to make e.g. function diffs look better.
+    compactionheuristic = true
 
 [color]
     ui = auto
@@ -37,9 +64,29 @@
 
 [commit]
     gpgsign = true
+    # Show the diff as a comment in the commit message template.
+    verbose = true
 
 [filter "lfs"]
     process = git-lfs filter-process
     required = true
     clean = git-lfs clean -- %f
     smudge = git-lfs smudge -- %f
+
+[core]
+    # Exclude everything this file. Used for general exclusions.
+    excludesfile = ~/.gitignore
+    # Set attributes on files. Used for general diff improvements.
+    attributesfile = ~/.gitattributes
+    # Don't prompt for commit messages for merge commits.
+    mergeoptions = --no-edit
+    commitGraph = true
+
+[help]
+    # Autocorrect mistyped commands.
+    autocorrect = 1
+
+[url "git@github.com:"]
+    # Always use GitHub SSH protocol to push.
+    # Allows use of git:// for public repositories with push access
+    pushInsteadOf = git://github.com/

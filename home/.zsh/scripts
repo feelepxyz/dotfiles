@@ -1,33 +1,33 @@
 # find shorthand
 f() {
-    find . -name "$1"
+  find . -name "$1"
 }
 
 # Start an HTTP server from a directory, optionally specifying the port
 server() {
-    local port="${1:-8000}"
-    open "http://localhost:${port}/"
-    python3 -m http.server $port
+  local port="${1:-8000}"
+  open "http://localhost:${port}/"
+  python3 -m http.server $port
 }
 
 chrome() {
-    /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary \
-        --js-flags="--trace-opt --trace-deopt --trace-bailout" \
-        --allow-file-access \
-        --disable-web-security \
-        --remote-debugging-port=9222 \
-        --js-flags=--harmony
+  /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary \
+      --js-flags="--trace-opt --trace-deopt --trace-bailout" \
+      --allow-file-access \
+      --disable-web-security \
+      --remote-debugging-port=9222 \
+      --js-flags=--harmony
 }
 
 rebase-master() {
-    git fetch origin
-    git rebase --interactive --autostash --autosquash origin/master
+  git fetch origin
+  git rebase --interactive --autostash --autosquash origin/master
 }
 
 rebase-continue() {
-    git add --all
-    git commit --no-edit
-    git rebase --continue
+  git add --all
+  git commit --no-edit
+  git rebase --continue
 }
 
 # Find processes running on port
@@ -69,4 +69,11 @@ git-init-npm() {
   echo "node_modules" >> .gitignore
   git add -A
   git commit -m "Initial"
+}
+
+pdf-svg() {
+  pdf_path="$1"
+  svg_path="${1//pdf/svg}"
+  inkscape --without-gui $pdf_path --export-plain-svg=$svg_path
+  svgo $svg_path
 }

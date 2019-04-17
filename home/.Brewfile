@@ -1,8 +1,11 @@
 cask_args appdir: "/Applications"
 
 tap "homebrew/bundle"
+tap "homebrew/cask-versions"
+tap "homebrew/services"
 tap "caskroom/cask"
 tap "caskroom/versions"
+tap "github/bootstrap"
 
 brew "mas"
 brew "zsh"
@@ -34,11 +37,18 @@ brew "yubikey-personalization" # yubikey
 brew "ykman" # yubikey
 brew "pinentry-mac" # yubikey
 brew "rbenv"
-brew "postgres"
+brew "redis", restart_service: true
+brew "postgres", restart_service: true
 brew "curl", args: ["with-openssl"]
 brew "heroku"
 brew "go"
 brew "wget"
+brew "jemalloc"
+brew "icu4c"
+brew "automake"
+brew "cmake"
+brew "docker", link: false
+brew "docker-machine", link: false
 
 mas "Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
@@ -49,6 +59,7 @@ mas "Keynote", id: 409183694
 cask "the-unarchiver"
 cask "notion"
 cask "1password"
+cask "1password-cli"
 cask "google-chrome"
 cask "transmission"
 cask "vlc"
@@ -70,7 +81,6 @@ cask "caption"
 cask "torbrowser"
 cask "oversight"
 cask "slack"
-cask "virtualbox"
 cask "figma"
 cask "sketch"
 cask "authy"
@@ -90,4 +100,5 @@ cask "discord"
 cask "homebrew/cask-drivers/sonos"
 cask "sensiblesidebuttons"
 cask "spotify"
-cask "numi"
+cask "docker"
+cask "zoomus"
