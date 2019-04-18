@@ -5,7 +5,7 @@
 ###############################################################################
 
 # Update dotfiles
-# git pull --rebase --autostash
+git pull --rebase --autostash
 
 # Symlink dotfiles
 stow home -t ~/
@@ -24,9 +24,11 @@ stow home -t ~/
 
 brew update
 brew upgrade
-brew bundle cleanup --global --force
 brew bundle check --global || brew bundle --global
 brew cleanup
+
+# To remove all packages not in .Brewfile run:
+# $ brew bundle cleanup --global --force
 
 ###############################################################################
 # Mac

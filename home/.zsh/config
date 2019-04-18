@@ -23,10 +23,13 @@ setopt EXTENDED_HISTORY
 setopt SHARE_HISTORY
 
 # Editor
-export CODE_EDITOR="code"
-export EDITOR="$CODE_EDITOR --wait"
-export GIT_EDITOR="$EDITOR"
+export EDITOR="code"
+export GIT_EDITOR="$EDITOR --wait"
 export VISUAL=$EDITOR
+
+# Enable colorized output for ls command on MacOS
+export CLICOLOR=1
+export GREP_OPTIONS="--color=auto"
 
 export KEYID=0xF6F4212756997CEF
 export GPG_TTY=$(tty)
@@ -36,6 +39,9 @@ gpg-connect-agent updatestartuptty /bye
 
 export GOPATH=$HOME/go
 
+PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+PATH="/Applications/Xcode.app/Contents/Developer/usr/bin:$PATH"
+PATH="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 PATH="$HOME/Library/Python/3.6/bin:$PATH"
 PATH="$HOME/Library/Android/sdk:$PATH"
@@ -43,7 +49,9 @@ PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
-export PATH=$HOME/bin:bin:node_modules/.bin:vendor/ruby/binstubs:/usr/local/bin:/usr/local/sbin:$PATH
+PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+
+export PATH=$HOME/bin:node_modules/.bin:vendor/ruby/bin:bin:$PATH
 
 # Plugins
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

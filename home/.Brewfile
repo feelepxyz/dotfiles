@@ -1,7 +1,6 @@
 cask_args appdir: "/Applications"
 
 tap "homebrew/bundle"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "caskroom/cask"
 tap "caskroom/versions"
@@ -47,8 +46,14 @@ brew "jemalloc"
 brew "icu4c"
 brew "automake"
 brew "cmake"
+brew "jq"
 brew "docker", link: false
 brew "docker-machine", link: false
+brew "mysql@5.7", restart_service: true
+brew "nginx", restart_service: true
+brew "exa"
+brew "fd"
+brew "hub"
 
 mas "Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
@@ -56,6 +61,9 @@ mas "xScope", id: 889428659
 mas "Copy'em Paste", id: 876540291
 mas "Keynote", id: 409183694
 
+cask "keepingyouawake"
+cask "appcleaner"
+cask "java8"
 cask "the-unarchiver"
 cask "notion"
 cask "1password"
