@@ -11,7 +11,7 @@ brew "zsh"
 brew "git"
 brew "gnu-sed", args: ["with-default-names"]
 brew "stow"
-brew "yarn", args: ["without-node"]
+brew "yarn", args: ["ignore-dependencies"]
 brew "ack"
 brew "openssl"
 brew "coreutils"
@@ -36,6 +36,7 @@ brew "yubikey-personalization" # yubikey
 brew "ykman" # yubikey
 brew "pinentry-mac" # yubikey
 brew "rbenv"
+brew "rbenv-default-gems"
 brew "redis", restart_service: true
 brew "postgres", restart_service: true
 brew "curl", args: ["with-openssl"]
@@ -54,12 +55,16 @@ brew "nginx", restart_service: true
 brew "exa"
 brew "fd"
 brew "hub"
+brew "shellcheck"
 
 mas "Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
 mas "xScope", id: 889428659
 mas "Copy'em Paste", id: 876540291
 mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+#mas "Pixelmator Pro", id: 1289583905
 
 cask "keepingyouawake"
 cask "appcleaner"
