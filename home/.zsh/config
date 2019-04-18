@@ -4,6 +4,9 @@ autoload -U zmv
 # Turn off auto correct
 unsetopt correct_all
 
+# Don't hang up background jobs
+setopt no_hup
+
 # Load env variables from .envrc - to enable: `direnv allow .`
 eval "$(direnv hook zsh)"
 
@@ -14,13 +17,22 @@ eval "$(pyenv init -)"
 eval "$(rbenv init -)"
 
 # History
-HISTFILE=~/.zhistory
-setopt APPEND_HISTORY
-HISTSIZE=3600
-SAVEHIST=3000
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt EXTENDED_HISTORY
-setopt SHARE_HISTORY
+export HISTFILE=~/.zhistory
+export HISTSIZE="100000"
+export SAVEHIST="100000"
+
+setopt append_history
+setopt hist_expire_dups_first
+setopt extended_history
+
+# Don't show duplicate history entires
+setopt hist_find_no_dups
+
+# Remove unnecessary blanks from history
+setopt hist_reduce_blanks
+
+# Share history between instances
+setopt share_history
 
 # Editor
 export EDITOR="code"
@@ -30,6 +42,10 @@ export VISUAL=$EDITOR
 # Enable colorized output for ls command on MacOS
 export CLICOLOR=1
 export GREP_OPTIONS="--color=auto"
+
+# Set to number of cpus
+export MAKEFLAGS="-j4"
+export BUNDLE_JOBS="4"
 
 export KEYID=0xF6F4212756997CEF
 export GPG_TTY=$(tty)
