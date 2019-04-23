@@ -11,7 +11,7 @@ brew "zsh"
 brew "git"
 brew "gnu-sed", args: ["with-default-names"]
 brew "stow"
-brew "yarn", args: ["ignore-dependencies"]
+brew "yarn"
 brew "ack"
 brew "openssl"
 brew "coreutils"

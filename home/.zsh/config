@@ -1,3 +1,6 @@
+# Load env variables from .envrc - to enable: `direnv allow .`
+eval "$(direnv hook zsh)"
+
 # Load zsh massive renamer
 autoload -U zmv
 
@@ -6,15 +9,6 @@ unsetopt correct_all
 
 # Don't hang up background jobs
 setopt no_hup
-
-# Load env variables from .envrc - to enable: `direnv allow .`
-eval "$(direnv hook zsh)"
-
-eval "$(nodenv init -)"
-
-eval "$(pyenv init -)"
-
-eval "$(rbenv init -)"
 
 # History
 export HISTFILE=~/.zhistory
@@ -55,19 +49,26 @@ gpg-connect-agent updatestartuptty /bye
 
 export GOPATH=$HOME/go
 
+PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-PATH="$HOME/Library/Python/3.6/bin:$PATH"
-PATH="$HOME/Library/Android/sdk:$PATH"
-PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
-PATH="$HOME/.local/bin:$PATH"
-PATH="$GOPATH/bin:$PATH"
 PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
-PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+PATH="$GOPATH/bin:$PATH"
+PATH="$HOME/Library/Python/3.6/bin:$PATH"
+PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
 
-export PATH=$HOME/bin:node_modules/.bin:vendor/ruby/bin:bin:$PATH
+# Add shims to $PATH
+eval "$(nodenv init -)"
+eval "$(pyenv init -)"
+eval "$(rbenv init -)"
 
-# Plugins
+# Add relative bins with highest precedent
+PATH="node_modules/.bin:$PATH"
+PATH="vendor/ruby/bin:$PATH"
+export PATH="bin:$PATH"
+
+# Load plugins
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fpath=(/usr/local/share/zsh-completions $fpath)
