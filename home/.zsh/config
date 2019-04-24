@@ -54,7 +54,6 @@ PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
-PATH="$HOME/Library/Python/3.6/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
