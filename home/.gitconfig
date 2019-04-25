@@ -30,11 +30,21 @@
     # Auto-add `--autosquash` to `git rebase`
     autoSquash = true
 
+[merge]
+    tool = vscode
+
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
+
 [diff]
     # Use the slower but better patience diff algorithm
     algorithm = patience
     # Use new diff algorithm to make e.g. function diffs look better.
     compactionheuristic = true
+    tool = vscode
+
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
 
 [color]
     ui = auto
@@ -58,6 +68,7 @@
     bra = !git branch --color -v | cut -c1-100
     prune-remote = !git remote | xargs -n 1 git remote prune
     prune-local = !git branch --merged | tr -d '*' | grep -v dev | xargs -n1 git branch -d
+    fix-conflict = git mergetool
 
 [gpg]
     program = gpg2
