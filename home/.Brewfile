@@ -4,7 +4,9 @@ tap "homebrew/core"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-versions"
+tap "homebrew/cask-drivers"
 tap "homebrew/services"
+tap "mas-cli/tap", pin: true
 
 brew "mas"
 brew "zsh"
@@ -58,14 +60,13 @@ brew "hub"
 brew "shellcheck"
 brew "hivemind"
 
-mas "Xcode", id: 497799835
+mas "com.apple.dt.Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
 mas "xScope", id: 889428659
 mas "Copy'em Paste", id: 876540291
-mas "Keynote", id: 409183694
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-#mas "Pixelmator Pro", id: 1289583905
+mas "com.apple.iWork.Keynote", id: 409183694
+mas "com.apple.iWork.Numbers", id: 409203825
+mas "com.apple.iWork.Pages", id: 409201541
 
 cask "keepingyouawake"
 cask "appcleaner"
@@ -77,7 +78,7 @@ cask "google-chrome"
 cask "transmission"
 cask "vlc"
 cask "firefox"
-cask "caskroom/versions/firefox-developer-edition"
+cask "homebrew/cask-versions/firefox-developer-edition"
 cask "iterm2"
 cask "imageoptim"
 cask "visual-studio-code"
@@ -88,7 +89,7 @@ cask "little-snitch"
 cask "mullvad"
 cask "shrinkit"
 cask "google-drive-file-stream"
-cask "caskroom/versions/google-chrome-canary"
+cask "homebrew/cask-versions/google-chrome-canary"
 cask "rekordbox"
 cask "caption"
 cask "torbrowser"
