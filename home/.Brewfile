@@ -1,9 +1,10 @@
 cask_args appdir: "/Applications"
 
+tap "homebrew/core"
 tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-versions"
 tap "homebrew/services"
-tap "caskroom/cask"
-tap "caskroom/versions"
 
 brew "mas"
 brew "zsh"
@@ -16,7 +17,7 @@ brew "openssl"
 brew "coreutils"
 brew "hub"
 brew "findutils"
-brew "vim", args: ["with-custom-ruby"]
+brew "vim", args: ["with-custom-ruby", "with-override-system-vi"]
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
@@ -55,6 +56,7 @@ brew "exa"
 brew "fd"
 brew "hub"
 brew "shellcheck"
+brew "hivemind"
 
 mas "Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
@@ -114,3 +116,4 @@ cask "zoomus"
 cask "graphiql"
 cask "pretzel"
 cask "skype"
+cask "adoptopenjdk8"
