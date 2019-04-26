@@ -34,7 +34,7 @@
     tool = vscode
 
 [mergetool "vscode"]
-    cmd = code --wait $MERGED
+    cmd = $EDITOR --wait $MERGED
 
 [diff]
     # Use the slower but better patience diff algorithm
@@ -44,7 +44,7 @@
     tool = vscode
 
 [difftool "vscode"]
-    cmd = code --wait --diff $LOCAL $REMOTE
+    cmd = $EDITOR --wait --diff $LOCAL $REMOTE
 
 [color]
     ui = auto
@@ -68,7 +68,7 @@
     bra = !git branch --color -v | cut -c1-100
     prune-remote = !git remote | xargs -n 1 git remote prune
     prune-local = !git branch --merged | tr -d '*' | grep -v dev | xargs -n1 git branch -d
-    fix-conflict = git mergetool
+    fix-conflict = mergetool
 
 [gpg]
     program = gpg2
