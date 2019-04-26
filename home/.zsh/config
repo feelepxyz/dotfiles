@@ -64,7 +64,7 @@ eval "$(rbenv init -)"
 
 # Add relative bins with highest precedent
 PATH="node_modules/.bin:$PATH"
-PATH="vendor/ruby/bin:$PATH"
+PATH=".bundle/bin:$PATH"
 export PATH="bin:$PATH"
 
 # Load plugins
