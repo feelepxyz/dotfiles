@@ -171,9 +171,6 @@ defaults write com.apple.dock tilesize -int 36
 # Change minimize/maximize window effect
 defaults write com.apple.dock mineffect -string "scale"
 
-# Minimize windows into their application’s icon
-defaults write com.apple.dock minimize-to-application -bool true
-
 # Enable spring loading for all Dock items
 defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
 
@@ -187,9 +184,6 @@ defaults write com.apple.dock autohide-time-modifier -float 0
 
 # Automatically hide and show the Dock
 defaults write com.apple.dock autohide -bool true
-
-# Make Dock icons of hidden applications translucent
-defaults write com.apple.dock showhidden -bool true
 
 # Don’t show recent applications in Dock
 defaults write com.apple.dock show-recents -bool false
