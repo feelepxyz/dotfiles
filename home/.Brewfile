@@ -59,6 +59,7 @@ brew "fd"
 brew "hub"
 brew "shellcheck"
 brew "hivemind"
+brew "kafkacat"
 
 mas "com.apple.dt.Xcode", id: 497799835
 mas "FLACTunes FLAC Converter", id: 517984121
