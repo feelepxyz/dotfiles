@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Install extra XCode headers:"
+echo "sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /"
+
 if ! xcode-select --print-path &> /dev/null; then
   # Prompt user to install the XCode Command Line Tools
   xcode-select --install &> /dev/null
