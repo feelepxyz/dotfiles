@@ -7,11 +7,12 @@ tap "homebrew/cask-versions"
 tap "homebrew/cask-drivers"
 tap "homebrew/services"
 tap "mas-cli/tap", pin: true
+tap "heroku/brew"
 
 brew "mas"
 brew "zsh"
 brew "git"
-brew "gnu-sed", args: ["with-default-names"]
+brew "gnu-sed"
 brew "stow"
 brew "yarn"
 brew "ack"
@@ -19,7 +20,7 @@ brew "openssl"
 brew "coreutils"
 brew "hub"
 brew "findutils"
-brew "vim", args: ["with-custom-ruby", "with-override-system-vi"]
+brew "vim"
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
@@ -41,7 +42,7 @@ brew "rbenv"
 brew "rbenv-default-gems"
 brew "redis", restart_service: true
 brew "postgres", restart_service: true
-brew "curl", args: ["with-openssl"]
+brew "curl"
 brew "heroku"
 brew "go"
 brew "wget"
@@ -60,22 +61,24 @@ brew "hub"
 brew "shellcheck"
 brew "hivemind"
 brew "kafkacat"
+brew "pipenv"
+brew "awscli"
+brew "imagemagick"
 
-mas "com.apple.dt.Xcode", id: 497799835
-mas "FLACTunes FLAC Converter", id: 517984121
-mas "xScope", id: 889428659
-mas "Copy'em Paste", id: 876540291
-mas "com.apple.iWork.Keynote", id: 409183694
-mas "com.apple.iWork.Numbers", id: 409203825
-mas "com.apple.iWork.Pages", id: 409201541
-
+cask "1password"
+# cask "1password-cli"
+cask "google-chrome"
+cask "notion"
+cask "docker"
+cask "adoptopenjdk8"
+cask "spotify"
+cask "zoomus"
+cask "graphiql"
+cask "pretzel"
+cask "skype"
 cask "keepingyouawake"
 cask "appcleaner"
 cask "the-unarchiver"
-cask "notion"
-cask "1password"
-cask "1password-cli"
-cask "google-chrome"
 cask "transmission"
 cask "vlc"
 cask "firefox"
@@ -87,13 +90,13 @@ cask "beamer"
 cask "soulseek"
 cask "keybase"
 cask "little-snitch"
-cask "mullvad"
+cask "mullvadvpn"
 cask "shrinkit"
 cask "google-drive-file-stream"
 cask "homebrew/cask-versions/google-chrome-canary"
 cask "rekordbox"
 cask "caption"
-cask "torbrowser"
+cask "tor-browser"
 cask "oversight"
 cask "slack"
 cask "figma"
@@ -112,10 +115,13 @@ cask "homebrew/cask-drivers/yubico-yubikey-manager"
 cask "homebrew/cask-drivers/yubico-yubikey-personalization-gui"
 cask "homebrew/cask-drivers/yubico-yubikey-piv-manager"
 cask "sensiblesidebuttons"
-cask "spotify"
-cask "docker"
-cask "zoomus"
-cask "graphiql"
-cask "pretzel"
-cask "skype"
-cask "adoptopenjdk8"
+
+mas "com.apple.dt.Xcode", id: 497799835
+mas "com.matthewleon.FLACTunes", id: 517984121
+mas "com.iconfactory.mac.xScope", id: 889428659
+mas "Copy-em-Paste", id: 876540291
+mas "com.apple.iWork.Keynote", id: 409183694
+mas "com.apple.iWork.Numbers", id: 409203825
+mas "com.apple.iWork.Pages", id: 409201541
+mas "com.apple.iMovieApp", id: 408981434
+mas "com.acqualia.soulver", id: 413965349
