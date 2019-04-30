@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+docker login -u feelepxyz
+
+mas signin --dialog philip@mailharrison.com
+
+script/extract-onepassword-secrets
