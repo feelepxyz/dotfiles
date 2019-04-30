@@ -1,51 +1,14 @@
 #!/bin/bash
-
-###############################################################################
-# Dotfiles
-###############################################################################
-
-# Update dotfiles
-git pull --rebase --autostash
-
-# Symlink dotfiles
-stow home -t ~/
-
-###############################################################################
-# XCode Command Line Tools                                                    #
-###############################################################################
-
-./install/xcode.sh
-
-###############################################################################
-# Brew
-###############################################################################
-
-./install/brew.sh
-
-brew update
-brew upgrade
-brew bundle check --global || brew bundle --global
-brew cleanup
-
-# To remove all packages not in .Brewfile run:
-# $ brew bundle cleanup --global --force
-
-###############################################################################
-# Mac
-###############################################################################
-
-./install/mac.sh
+set -e
 
 # Install all available software updates
 sudo softwareupdate -ia
 
-###############################################################################
-# zsh & iterm
-###############################################################################
+brew update
+brew upgrade
+brew bundle check --global || brew bundle --global
+mas upgrade
+brew cleanup
 
-if [ $(echo $SHELL) != $(which zsh) ]; then
-  sudo dscl . -create /Users/$USER UserShell $(which zsh)
-fi
-
-# Install the Solarized Dark theme for iTerm
-# open "${HOME}/dotfiles/iterm/Solarized Dark.itermcolors"
+echo "To remove all packages not in .Brewfile run:"
+echo "brew bundle cleanup --global --force"
