@@ -51,8 +51,8 @@ brew "icu4c"
 brew "automake"
 brew "cmake"
 brew "jq"
-brew "docker", link: false
-brew "docker-machine", link: false
+brew "docker"
+brew "docker-machine"
 brew "mysql@5.7", restart_service: true
 brew "nginx", restart_service: true
 brew "exa"
@@ -66,7 +66,7 @@ brew "awscli"
 brew "imagemagick"
 
 cask "1password"
-# cask "1password-cli"
+cask "1password-cli"
 cask "google-chrome"
 cask "notion"
 cask "docker"
@@ -90,7 +90,6 @@ cask "beamer"
 cask "soulseek"
 cask "keybase"
 cask "little-snitch"
-cask "mullvadvpn"
 cask "shrinkit"
 cask "google-drive-file-stream"
 cask "homebrew/cask-versions/google-chrome-canary"
@@ -115,6 +114,10 @@ cask "homebrew/cask-drivers/yubico-yubikey-manager"
 cask "homebrew/cask-drivers/yubico-yubikey-personalization-gui"
 cask "homebrew/cask-drivers/yubico-yubikey-piv-manager"
 cask "sensiblesidebuttons"
+cask "vmware-fusion"
+cask "dash"
+cask "kap"
+cask "rightfont"
 
 mas "com.apple.dt.Xcode", id: 497799835
 mas "com.matthewleon.FLACTunes", id: 517984121

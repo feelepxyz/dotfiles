@@ -1,6 +1,3 @@
-# Load env variables from .envrc - to enable: `direnv allow .`
-eval "$(direnv hook zsh)"
-
 # Load zsh massive renamer
 autoload -U zmv
 
@@ -47,6 +44,9 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye
 
+# Homebrew
+export HOMEBREW_BUNDLE_CASK_SKIP="docker github/bootstrap/zulu8"
+
 export GOPATH=$HOME/go
 
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
@@ -71,3 +71,6 @@ export PATH="bin:$PATH"
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fpath=(/usr/local/share/zsh-completions $fpath)
+
+# Load env variables from .envrc - to enable: `direnv allow .`
+eval "$(direnv hook zsh)"
