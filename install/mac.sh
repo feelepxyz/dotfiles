@@ -83,7 +83,7 @@ defaults write com.apple.screencapture type -string "png"
 defaults write com.apple.screencapture disable-shadow -bool true
 
 # Set a fast keyboard repeat rate & disable press-and-hold
-defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain KeyRepeat -int 4
 defaults write NSGlobalDomain InitialKeyRepeat -int 10
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
@@ -359,6 +359,13 @@ defaults write org.m0k.transmission BlocklistURL -string "http://john.bitsurge.n
 defaults write org.m0k.transmission BlocklistAutoUpdate -bool true
 
 ###############################################################################
+# Transmission.app                                                            #
+###############################################################################
+
+# https://spectrum.chat/figma/general/launching-figma-app-in-srgb-on-a-p3-display~e09dea99-494e-4469-a185-d80efe086686
+defaults write com.figma.Desktop ColorCorrectRendering -bool true
+
+###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
 
@@ -375,6 +382,7 @@ for app in "Activity Monitor" \
 	"Safari" \
 	"SystemUIServer" \
 	"Terminal" \
-	"Transmission"; do
+	"Transmission" \
+	"Figma"; do
 	killall "${app}" &> /dev/null
 done
