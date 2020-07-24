@@ -10,7 +10,7 @@
     excludesfile = ~/.gitignore
 
 [push]
-    default = simple
+    default = current
 
 [pull]
     # Default to rebasing on pulls
@@ -92,10 +92,6 @@
     # Don't prompt for commit messages for merge commits.
     mergeoptions = --no-edit
     commitGraph = true
-
-[help]
-    # Autocorrect mistyped commands.
-    autocorrect = 1
 
 [url "git@github.com:"]
     # Use GitHub SSH protocol instead of HTTPS and GIT

@@ -19,9 +19,38 @@ chrome() {
       --js-flags=--harmony
 }
 
+branch() {
+  if [ ! "$1" ]
+  then
+    echo "You must provide a branch name"
+    return
+  fi
+
+  git checkout master
+  git pull
+  git checkout -b feelepxyz/$1
+}
+
+branch-main() {
+  if [ ! "$1" ]
+  then
+    echo "You must provide a branch name"
+    return
+  fi
+
+  git checkout main
+  git pull
+  git checkout -b feelepxyz/$1
+}
+
 rebase-master() {
   git fetch origin
   git rebase --interactive --autostash --autosquash origin/master
+}
+
+rebase-main() {
+  git fetch origin
+  git rebase --interactive --autostash --autosquash origin/main
 }
 
 rebase-continue() {
@@ -43,6 +72,10 @@ cop-master() {
   git diff-tree -r --no-commit-id --name-only head origin/master | grep '\.rb$' | xargs rubocop
 }
 
+cop-main() {
+  git diff-tree -r --no-commit-id --name-only head origin/main | grep '\.rb$' | xargs rubocop
+}
+
 cop-upstream() {
   git diff-tree -r --no-commit-id --name-only @\{u\} head | grep '\.rb$' | xargs rubocop
 }
@@ -53,6 +86,10 @@ rspec-changed() {
 
 rspec-master() {
   git diff-tree -r --no-commit-id --name-only head origin/master | grep '\_spec\.rb$' | xargs rspec
+}
+
+rspec-main() {
+  git diff-tree -r --no-commit-id --name-only head origin/main | grep '\_spec\.rb$' | xargs rspec
 }
 
 rspec-upstream() {
@@ -76,4 +113,48 @@ pdf-svg() {
   svg_path="${1//pdf/svg}"
   inkscape --without-gui $pdf_path --export-plain-svg=$svg_path
   svgo $svg_path
+}
+
+
+update-core() {
+  git pull --rebase
+  cd common && bundle && cd -
+  cd omnibus && bundle && cd -
+  cd bundler && bundle && cd -
+  cd npm_and_yarn && bundle && cd -
+  cd nuget && bundle && cd -
+  cd hex && bundle && cd -
+  cd maven && bundle && cd -
+  cd docker && bundle && cd -
+  cd gradle && bundle && cd -
+  cd go_modules && bundle && cd -
+  cd dep && bundle && cd -
+  cd cargo && bundle && cd -
+  cd github_actions && bundle && cd -
+  cd git_submodules && bundle && cd -
+  cd elm && bundle && cd -
+  cd composer && bundle && cd -
+  cd python && bundle && cd -
+  cd terraform && bundle && cd -
+
+  mkdir -p npm_and_yarn/helpers/install-dir/npm_and_yarn
+  mkdir -p composer/helpers/install-dir/composer
+  mkdir -p python/helpers/install-dir/python
+  mkdir -p hex/helpers/install-dir/hex
+  mkdir -p terraform/helpers/install-dir/terraform
+  mkdir -p go_modules/helpers/install-dir/go_modules
+  mkdir -p dep/helpers/install-dir/dep
+
+  #cd npm_and_yarn/helpers && yarn install --production && cd -
+  #cd composer/helpers && composer install --no-dev && cd -
+  #cd python/helpers && pyenv exec pip install -r requirements.txt && cd -
+  #cd hex/helpers && mix deps.get && cd -
+
+  cd npm_and_yarn && helpers/build $(pwd)/helpers/install-dir/npm_and_yarn && cd -
+  cd composer && helpers/build $(pwd)/helpers/install-dir/composer && cd -
+  cd python && helpers/build $(pwd)/helpers/install-dir/python && cd -
+  cd hex && helpers/build $(pwd)/helpers/install-dir/hex && cd -
+  cd terraform && helpers/build $(pwd)/helpers/install-dir/terraform && cd -
+  cd go_modules && helpers/build $(pwd)/helpers/install-dir/go_modules && cd -
+  cd dep && helpers/build $(pwd)/helpers/install-dir/dep && cd -
 }

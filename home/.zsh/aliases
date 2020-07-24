@@ -18,3 +18,5 @@ alias cop="rubocop"
 alias cleardns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
 alias externalip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias edotfiles="$EDITOR ~/.dotfiles"
+
+alias killgpg="gpgconf --kill gpg-agent"
