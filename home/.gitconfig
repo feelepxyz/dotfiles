@@ -9,6 +9,9 @@
 [core]
     excludesfile = ~/.gitignore
 
+[init]
+    defaultBranch = main
+
 [push]
     default = current
 
