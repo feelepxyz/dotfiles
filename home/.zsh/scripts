@@ -115,7 +115,6 @@ pdf-svg() {
   svgo $svg_path
 }
 
-
 update-core() {
   git pull --rebase
   cd common && bundle && cd -
@@ -137,6 +136,7 @@ update-core() {
   cd python && bundle && cd -
   cd terraform && bundle && cd -
 
+  mkdir -p bundler/helpers/install-dir/bundler
   mkdir -p npm_and_yarn/helpers/install-dir/npm_and_yarn
   mkdir -p composer/helpers/install-dir/composer
   mkdir -p python/helpers/install-dir/python
@@ -150,6 +150,7 @@ update-core() {
   #cd python/helpers && pyenv exec pip install -r requirements.txt && cd -
   #cd hex/helpers && mix deps.get && cd -
 
+  cd bundler && helpers/build $(pwd)/helpers/install-dir/bundler && cd -
   cd npm_and_yarn && helpers/build $(pwd)/helpers/install-dir/npm_and_yarn && cd -
   cd composer && helpers/build $(pwd)/helpers/install-dir/composer && cd -
   cd python && helpers/build $(pwd)/helpers/install-dir/python && cd -
