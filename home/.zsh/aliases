@@ -14,6 +14,7 @@ alias cp="cp -irv"
 alias rake="noglob rake"
 alias be="noglob bundle exec"
 alias cop="rubocop"
+alias cat="bat"
 
 alias cleardns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
 alias externalip="dig +short myip.opendns.com @resolver1.opendns.com"
