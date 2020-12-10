@@ -64,6 +64,8 @@ PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="/usr/local/elixir/bin:$PATH"
 PATH="/usr/local/opt/terraform@0.11/bin:$PATH"
+PATH="/usr/local/opt/php@7.4/bin:$PATH"
+PATH="/usr/local/opt/php@7.4/sbin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
