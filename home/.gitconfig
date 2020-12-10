@@ -21,11 +21,15 @@
 
 [fetch]
     # Always prune when fetching (and pulling).
-    prune = 1
+    prune = true
+
+[gc]
+    # Write commit graph to speed up some repositories.
+    writeCommitGraph = true
 
 [rerere]
     # Store and re-use manual conflict resolution changes.
-    enabled = 1
+    enabled = true
 
 [rebase]
     # Run `git stash` if needed before a `git rebase`
@@ -94,6 +98,7 @@
     attributesfile = ~/.gitattributes
     # Don't prompt for commit messages for merge commits.
     mergeoptions = --no-edit
+    # Speed up some repositories.
     commitGraph = true
 
 [url "git@github.com:"]
@@ -102,3 +107,7 @@
     # private https:// repositories
     insteadOf = "https://github.com/"
     insteadOf = "git://github.com/"
+
+[protocol]
+    # Use Git v2 protocol for better performance
+    version = 2
