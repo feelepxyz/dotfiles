@@ -116,26 +116,6 @@ pdf-svg() {
 }
 
 update-core() {
-  git pull --rebase
-  cd common && bundle && cd -
-  cd omnibus && bundle && cd -
-  cd bundler && bundle && cd -
-  cd npm_and_yarn && bundle && cd -
-  cd nuget && bundle && cd -
-  cd hex && bundle && cd -
-  cd maven && bundle && cd -
-  cd docker && bundle && cd -
-  cd gradle && bundle && cd -
-  cd go_modules && bundle && cd -
-  cd dep && bundle && cd -
-  cd cargo && bundle && cd -
-  cd github_actions && bundle && cd -
-  cd git_submodules && bundle && cd -
-  cd elm && bundle && cd -
-  cd composer && bundle && cd -
-  cd python && bundle && cd -
-  cd terraform && bundle && cd -
-
   mkdir -p bundler/helpers/install-dir/bundler
   mkdir -p npm_and_yarn/helpers/install-dir/npm_and_yarn
   mkdir -p composer/helpers/install-dir/composer
@@ -145,17 +125,108 @@ update-core() {
   mkdir -p go_modules/helpers/install-dir/go_modules
   mkdir -p dep/helpers/install-dir/dep
 
-  #cd npm_and_yarn/helpers && yarn install --production && cd -
-  #cd composer/helpers && composer install --no-dev && cd -
-  #cd python/helpers && pyenv exec pip install -r requirements.txt && cd -
-  #cd hex/helpers && mix deps.get && cd -
+  git pull --rebase
+  cd common && rm -f Gemfile.lock && bundle
+  cd -
+  cd omnibus && rm -f Gemfile.lock && bundle
+  cd -
+  cd bundler && rm -f Gemfile.lock && bundle
+  cd -
+  cd npm_and_yarn && rm -f Gemfile.lock && bundle
+  cd -
+  cd nuget && rm -f Gemfile.lock && bundle
+  cd -
+  cd hex && rm -f Gemfile.lock && bundle
+  cd -
+  cd maven && rm -f Gemfile.lock && bundle
+  cd -
+  cd docker && rm -f Gemfile.lock && bundle
+  cd -
+  cd gradle && rm -f Gemfile.lock && bundle
+  cd -
+  cd go_modules && rm -f Gemfile.lock && bundle
+  cd -
+  cd dep && rm -f Gemfile.lock && bundle
+  cd -
+  cd cargo && rm -f Gemfile.lock && bundle
+  cd -
+  cd github_actions && rm -f Gemfile.lock && bundle
+  cd -
+  cd git_submodules && rm -f Gemfile.lock && bundle
+  cd -
+  cd elm && rm -f Gemfile.lock && bundle
+  cd -
+  cd composer && rm -f Gemfile.lock && bundle
+  cd -
+  cd python && rm -f Gemfile.lock && bundle
+  cd -
+  cd terraform && rm -f Gemfile.lock && bundle
+  cd -
 
-  cd bundler && helpers/build $(pwd)/helpers/install-dir/bundler && cd -
-  cd npm_and_yarn && helpers/build $(pwd)/helpers/install-dir/npm_and_yarn && cd -
-  cd composer && helpers/build $(pwd)/helpers/install-dir/composer && cd -
-  cd python && helpers/build $(pwd)/helpers/install-dir/python && cd -
-  cd hex && helpers/build $(pwd)/helpers/install-dir/hex && cd -
-  cd terraform && helpers/build $(pwd)/helpers/install-dir/terraform && cd -
-  cd go_modules && helpers/build $(pwd)/helpers/install-dir/go_modules && cd -
-  cd dep && helpers/build $(pwd)/helpers/install-dir/dep && cd -
+  cd npm_and_yarn/helpers && yarn install --production
+  cd -
+  cd composer/helpers/v1 && composer install --no-dev
+  cd -
+  cd composer/helpers/v2 && composer install --no-dev
+  cd -
+  cd python/helpers && pyenv exec pip install -r requirements.txt
+  cd -
+  cd hex/helpers && mix deps.get
+  cd -
+
+  cd bundler && helpers/build $(pwd)/helpers/install-dir/bundler
+  cd -
+  #cd npm_and_yarn && helpers/build $(pwd)/helpers/install-dir/npm_and_yarn
+  cd -
+  #cd composer && helpers/build $(pwd)/helpers/install-dir/composer
+  cd -
+  #cd python && helpers/build $(pwd)/helpers/install-dir/python
+  cd -
+  #cd hex && helpers/build $(pwd)/helpers/install-dir/hex
+  cd -
+  cd terraform && helpers/build $(pwd)/helpers/install-dir/terraform
+  cd -
+  cd go_modules && helpers/build $(pwd)/helpers/install-dir/go_modules
+  cd -
+  cd dep && helpers/build $(pwd)/helpers/install-dir/dep
+  cd -
+}
+
+cop-core() {
+  cd common && rubocop . -A
+  cd -
+  cd omnibus && rubocop . -A
+  cd -
+  cd bundler && rubocop . -A
+  cd -
+  cd npm_and_yarn && rubocop . -A
+  cd -
+  cd nuget && rubocop . -A
+  cd -
+  cd hex && rubocop . -A
+  cd -
+  cd maven && rubocop . -A
+  cd -
+  cd docker && rubocop . -A
+  cd -
+  cd gradle && rubocop . -A
+  cd -
+  cd go_modules && rubocop . -A
+  cd -
+  cd dep && rubocop . -A
+  cd -
+  cd cargo && rubocop . -A
+  cd -
+  cd github_actions && rubocop . -A
+  cd -
+  cd git_submodules && rubocop . -A
+  cd -
+  cd elm && rubocop . -A
+  cd -
+  cd composer && rubocop . -A
+  cd -
+  cd python && rubocop . -A
+  cd -
+  cd terraform && rubocop . -A
+  cd -
 }
