@@ -37,21 +37,12 @@
     # Auto-add `--autosquash` to `git rebase`
     autoSquash = true
 
-[merge]
-    tool = vscode
-
-[mergetool "vscode"]
-    cmd = $EDITOR --wait $MERGED
-
 [diff]
     # Use the slower but better patience diff algorithm
     algorithm = patience
     # Use new diff algorithm to make e.g. function diffs look better.
     compactionheuristic = true
     tool = vscode
-
-[difftool "vscode"]
-    cmd = $EDITOR --wait --diff $LOCAL $REMOTE
 
 [color]
     ui = auto
@@ -100,6 +91,13 @@
     mergeoptions = --no-edit
     # Speed up some repositories.
     commitGraph = true
+    pager = delta
+
+[delta]
+    side-by-side = true
+
+[interactive]
+    diffFilter = delta --color-only
 
 [url "git@github.com:"]
     # Use GitHub SSH protocol instead of HTTPS and GIT
