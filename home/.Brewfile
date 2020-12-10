@@ -6,7 +6,6 @@ tap "homebrew/cask"
 tap "homebrew/cask-versions"
 tap "homebrew/cask-drivers"
 tap "homebrew/services"
-tap "mas-cli/tap", pin: true
 tap "heroku/brew"
 
 brew "mas"
@@ -66,17 +65,12 @@ brew "rustup"
 brew "terraform@0.11"
 
 cask "1password"
-cask "1password-cli"
 cask "google-chrome"
-cask "notion"
 cask "docker"
 cask "adoptopenjdk8"
 cask "spotify"
 cask "zoomus"
-cask "graphiql"
-cask "pretzel"
 cask "skype"
-cask "keepingyouawake"
 cask "appcleaner"
 cask "the-unarchiver"
 cask "transmission"
@@ -84,28 +78,17 @@ cask "vlc"
 cask "firefox"
 cask "homebrew/cask-versions/firefox-developer-edition"
 cask "iterm2"
-cask "imageoptim"
 cask "visual-studio-code"
-cask "beamer"
 cask "soulseek"
 cask "keybase"
 cask "little-snitch"
-cask "shrinkit"
 cask "google-drive-file-stream"
-cask "homebrew/cask-versions/google-chrome-canary"
-cask "rekordbox"
 cask "caption"
 cask "tor-browser"
 cask "oversight"
 cask "slack"
-cask "figma"
-cask "sketch"
 cask "authy"
-cask "tableplus"
 cask "caption"
-cask "mpv"
-cask "max"
-cask "shrinkit"
 cask "dropshare"
 cask "karabiner-elements"
 cask "signal"
@@ -113,18 +96,23 @@ cask "gpg-suite"
 cask "homebrew/cask-drivers/yubico-yubikey-manager"
 cask "homebrew/cask-drivers/yubico-yubikey-personalization-gui"
 cask "homebrew/cask-drivers/yubico-yubikey-piv-manager"
-cask "sensiblesidebuttons"
-cask "vmware-fusion"
-cask "dash"
 cask "kap"
-cask "rightfont"
+cask "dropbox"
+cask "hookshot"
+cask "obsidian"
+cask "alfred"
+cask "fantastical"
+cask "muzzle"
+cask "steam"
+cask "encryptme"
+cask "viscosity"
 
-mas "com.apple.dt.Xcode", id: 497799835
-mas "com.matthewleon.FLACTunes", id: 517984121
-mas "com.iconfactory.mac.xScope", id: 889428659
-mas "Copy-em-Paste", id: 876540291
-mas "com.apple.iWork.Keynote", id: 409183694
-mas "com.apple.iWork.Numbers", id: 409203825
-mas "com.apple.iWork.Pages", id: 409201541
-mas "com.apple.iMovieApp", id: 408981434
-mas "com.acqualia.soulver", id: 413965349
+mas "Xcode", id: 497799835
+mas "xScope", id: 889428659
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Pages", id: 409201541
+mas "Gifski", id: 1351639930
+mas "iA Writer", id: 775737590
+mas "DaisyDisk", id: 411643860
