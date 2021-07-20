@@ -163,26 +163,19 @@ update-core() {
   cd terraform && rm -f Gemfile.lock && bundle
   cd -
 
-  cd npm_and_yarn/helpers && yarn install --production
+  cd bundler && helpers/v1/build $(pwd)/helpers/v1/install-dir/bundler
   cd -
-  cd composer/helpers/v1 && composer install --no-dev
+  cd bundler && helpers/v2/build $(pwd)/helpers/v2/install-dir/bundler
   cd -
-  cd composer/helpers/v2 && composer install --no-dev
+  cd npm_and_yarn && helpers/build $(pwd)/helpers/install-dir/npm_and_yarn
   cd -
-  cd python/helpers && pyenv exec pip install -r requirements.txt
+  cd composer && helpers/v1/build $(pwd)/helpers/v1/install-dir/composer
   cd -
-  cd hex/helpers && mix deps.get
+  cd composer && helpers/v2/build $(pwd)/helpers/v2/install-dir/composer
   cd -
-
-  cd bundler && helpers/build $(pwd)/helpers/install-dir/bundler
+  cd python && helpers/build $(pwd)/helpers/install-dir/python
   cd -
-  #cd npm_and_yarn && helpers/build $(pwd)/helpers/install-dir/npm_and_yarn
-  cd -
-  #cd composer && helpers/build $(pwd)/helpers/install-dir/composer
-  cd -
-  #cd python && helpers/build $(pwd)/helpers/install-dir/python
-  cd -
-  #cd hex && helpers/build $(pwd)/helpers/install-dir/hex
+  cd hex && helpers/build $(pwd)/helpers/install-dir/hex
   cd -
   cd terraform && helpers/build $(pwd)/helpers/install-dir/terraform
   cd -
