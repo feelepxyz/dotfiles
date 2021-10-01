@@ -55,6 +55,9 @@ if type brew &>/dev/null; then
   compinit
 fi
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(zoxide init zsh --cmd cd)"
+
 export GOPATH=$HOME/go
 
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
