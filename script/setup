@@ -1,14 +1,71 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-# Install all available software updates
-sudo softwareupdate -ia
+# Install all dotfiles into the home directory
+if [ -L "$0" ]
+then
+  SCRIPTSETUP="$(readlink "$0")"
+else
+  SCRIPTSETUP="$0"
+fi
 
-brew update
-brew upgrade
-brew bundle check --global || brew bundle --global
-mas upgrade
-brew cleanup
+DOTFILESDIRREL=$(dirname $SCRIPTSETUP)
+cd $DOTFILESDIRREL/../home/
+DOTFILESDIR=$(pwd -P)
 
-echo "To remove all packages not in .Brewfile run:"
-echo "brew bundle cleanup --global --force"
+[ $(uname -s) = "Darwin" ] && export MACOS=1 && export UNIX=1
+[ $(uname -s) = "Linux" ] && export LINUX=1 && export UNIX=1
+uname -s | grep -q "_NT-" && export WINDOWS=1
+
+if [ $MACOS ]
+then
+  VSCODE="$HOME/Library/Application Support/Code/User"
+elif [ $LINUX ]
+then
+  VSCODE="$HOME/.config/Code/User"
+elif [ $WINDOWS ]
+then
+  VSCODE="$APPDATA/Code/User"
+fi
+
+for DOTFILE in *; do
+  HOMEFILE="$HOME/.$DOTFILE"
+  [ -d $DOTFILE ] && DOTFILE="$DOTFILE/"
+  DIRFILE="$DOTFILESDIR/$DOTFILE"
+
+  # Don't mess with Codespaces' default GPG/SSH setup.
+  if [ -n "$CODESPACES" ]
+  then
+    echo $DOTFILE | egrep -q '^(gnupg|ssh)/' && continue
+  fi
+
+  if [ $UNIX ]
+  then
+    if [ -L "$HOMEFILE" ] && ! [ -d $DOTFILE ]
+    then
+      ln -sfv "$DIRFILE" "$HOMEFILE"
+    else
+      rm -rv "$HOMEFILE" 2>/dev/null
+      ln -sv "$DIRFILE" "$HOMEFILE"
+    fi
+  else
+    cp -rv "$DIRFILE" "$HOMEFILE"
+  fi
+done
+
+if [ -n "$CODESPACES" ]
+then
+  # Fix up Codespaces permissions
+  chmod 700 /workspaces
+
+  # Send notification that dotfiles setup has completed
+  curl --silent \
+    --form-string "token=$PUSHOVER_API_TOKEN" \
+    --form-string "user=$PUSHOVER_USER_KEY" \
+    --form-string "message=dotfiles script/setup complete for $CODESPACE_NAME!" \
+    https://api.pushover.net/1/messages.json
+fi
+
+# Fix gnupg permissions and import public key used for git signing
+chmod 700 ~/.gnupg
+gpg --import ~/.gnupg/philip@mailharrison.com.public.gpg-key

@@ -1,4 +1,7 @@
 #!/bin/bash
 set -e
 
-./postsetup
+if [ "$SHELL" != "/bin/zsh" ]
+then
+  chsh -s /bin/zsh feelepxyz
+fi

@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Install latest node
-nodenv install --list
-nodenv install 12.0.0
-nodenv global 12.0.0
-nodenv rehash
-
-npm update -g
+asdf plugin add nodejs
+asdf plugin-update nodejs
+asdf install nodejs 16.9.1
