@@ -5,3 +5,6 @@ if [ "$SHELL" != "/bin/zsh" ]
 then
   chsh -s /bin/zsh feelepxyz
 fi
+
+# Import key used for signing
+gpg --import ~/.gnupg/philip@mailharrison.com.public.gpg-key
