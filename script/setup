@@ -28,10 +28,12 @@ then
   VSCODE="$APPDATA/Code/User"
 fi
 
-for DOTFILE in *; do
-  HOMEFILE="$HOME/.$DOTFILE"
+for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
+  HOMEFILE="$HOME/$DOTFILE"
   [ -d $DOTFILE ] && DOTFILE="$DOTFILE/"
   DIRFILE="$DOTFILESDIR/$DOTFILE"
+  # Skip glob paths
+  [ ! -d $DIRFILE ] && [ ! -f $DIRFILE ] && continue
 
   # Don't mess with Codespaces' default GPG/SSH setup.
   if [ -n "$CODESPACES" ]
@@ -45,8 +47,12 @@ for DOTFILE in *; do
     then
       ln -sfv "$DIRFILE" "$HOMEFILE"
     else
-      rm -rv "$HOMEFILE" 2>/dev/null
-      ln -sv "$DIRFILE" "$HOMEFILE"
+      if [ -d $DOTFILE ]
+      then
+        mkdir -p "$HOMEFILE"
+      else
+        ln -sv "$DIRFILE" "$HOMEFILE"
+      fi
     fi
   else
     cp -rv "$DIRFILE" "$HOMEFILE"
@@ -66,6 +72,5 @@ then
     https://api.pushover.net/1/messages.json
 fi
 
-# Fix gnupg permissions and import public key used for git signing
+# Fix gnupg permissions
 chmod 700 ~/.gnupg
-gpg --import ~/.gnupg/philip@mailharrison.com.public.gpg-key
