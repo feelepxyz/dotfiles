@@ -37,11 +37,8 @@ brew "icu4c"
 brew "jemalloc"
 brew "jq"
 brew "mas"
-brew "mysql@5.7", restart_service: true, link: true
-brew "nginx", restart_service: true
 brew "openssl"
 brew "pinentry-mac" # yubikey
-brew "pipenv"
 brew "pstree"
 brew "pyenv"
 brew "readline"
