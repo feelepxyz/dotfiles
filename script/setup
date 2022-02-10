@@ -31,7 +31,7 @@ fi
 if [ $MACOS ]
 then
   echo "Installing from user Brewfile"
-  brew bundle check --file .Brewfile || brew bundle --file .Brewfile
+  brew bundle check --file .Brewfile || brew bundle --file .Brewfile || echo "Brew bundle failed failed but lets continue anyway"
 fi
 
 for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
