@@ -31,7 +31,7 @@ fi
 if [ $MACOS ]
 then
   echo "Installing from user Brewfile"
-  brew bundle check --file .Brewfile || brew bundle --file .Brewfile || echo "Brew bundle failed failed but lets continue anyway"
+  brew bundle check --file .Brewfile || brew bundle --file .Brewfile 2> /dev/null 
 fi
 
 for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
@@ -57,6 +57,7 @@ for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
       then
         mkdir -p "$HOMEFILE"
       else
+        rm -rv "$HOMEFILE" 2>/dev/null && true
         ln -sv "$DIRFILE" "$HOMEFILE"
       fi
     fi
