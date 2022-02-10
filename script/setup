@@ -80,4 +80,8 @@ fi
 
 # Fix permissions
 chmod 700 ~/.gnupg
-chmod 400 ~/.ssh/id_rsa_yubikey
+
+if [ ! -n "$CODESPACES" ]
+then
+  chmod 400 ~/.ssh/id_rsa_yubikey
+fi
