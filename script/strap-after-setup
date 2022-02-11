@@ -1,10 +1,22 @@
 #!/bin/bash
 set -e
 
+# Set zsh as the default shell
 if [ "$SHELL" != "/bin/zsh" ]
 then
   chsh -s /bin/zsh feelepxyz
 fi
 
+echo "Install the Solarized Dark theme for iTerm"
+echo "open \"${HOME}/.dotfiles/iterm/Solarized Dark.itermcolors\""
+
+# Update mac preferences
+./install/mac.sh
+
 # Import key used for signing
 gpg --import ~/.gnupg/philip@mailharrison.com.public.gpg-key
+
+echo "Update gpg key trust"
+echo "$ gpg --edit-key $KEYID"
+
+./extract-onepassword-secrets

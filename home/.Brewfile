@@ -14,7 +14,6 @@ brew "automake"
 brew "awscli"
 brew "bash"
 brew "bat"
-brew "broot"
 brew "cmake"
 brew "coreutils"
 brew "cosign" # sign and verify build artefacts

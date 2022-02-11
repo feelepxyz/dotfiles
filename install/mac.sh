@@ -8,8 +8,6 @@ set -o errtrace
 set -o nounset
 set -o pipefail
 
-touch ~/.hushlogin
-
 # Set up Safari for development.
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
@@ -44,16 +42,6 @@ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 # Allow text-selection in Quick Look
 defaults write com.apple.finder QLEnableTextSelection -bool true
 
-# Enable firewall
-sudo defaults write /Library/Preferences/com.apple.alf allowsignedenabled -bool false
-sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-sudo defaults write /Library/Preferences/com.apple.alf loggingenabled -bool true
-sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -bool true
-
-# Password on screensaver after 1 minute
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 60
-
 # Show the ~/Library folder.
 chflags nohidden ~/Library
 
@@ -78,7 +66,7 @@ defaults write NSGlobalDomain AppleShowScrollBars -string "WhenScrolling"
 # Set sidebar icon size to medium
 defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
 
-# Save screenshots to desktop and disable the horrific drop-shadow.
+# Save screenshots to desktop and disable the drop-shadow.
 defaults write com.apple.screencapture type -string "png"
 defaults write com.apple.screencapture disable-shadow -bool true
 
@@ -87,20 +75,11 @@ defaults write NSGlobalDomain KeyRepeat -int 4
 defaults write NSGlobalDomain InitialKeyRepeat -int 10
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-# Enable AirDrop over Ethernet and on unsupported Macs running Lion
-defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
-
 # Avoid creating .DS_Store files on network volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 
 # Disable creation of metadata files on USB volumes
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-
-# Disable the Ping sidebar in iTunes
-defaults write com.apple.iTunes disablePingSidebar -bool true
-
-# Disable all the other Ping stuff in iTunes
-defaults write com.apple.iTunes disablePing -bool true
 
 # Enable tap to click
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
@@ -152,9 +131,6 @@ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
 # Auto-play videos when opened with QuickTime Player
 defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
-
-defaults write com.apple.screencapture disable-shadow -bool true
-defaults write com.apple.screencapture location -string "${HOME}/Desktop"
 
 ###############################################################################
 # Dock                                                                        #
@@ -222,41 +198,11 @@ sudo defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerStat
 
 sudo defaults write /Library/Preferences/com.apple.mDNSResponder NoMulticastAdvertisements -bool true
 
-sudo defaults write /Library/Preferences/com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -bool false
-
-sudo systemsetup -setusingnetworktime on
-sudo systemsetup -setnetworktimeserver time1.google.com
-
-# Restart automatically if the computer freezes
-sudo systemsetup -setrestartfreeze on
-
-# Enable FileVault
-fdesetup status | grep "On"
-if [ $? -ne 0 ]; then
-  sudo fdesetup enable
-fi
-
-###############################################################################
-# Time Machine                                                                #
-###############################################################################
-
-# Only use UTF-8 in Terminal.app
-defaults write com.apple.terminal StringEncodings -array 4
-
-# Prevent Time Machine from prompting to use new hard drives as backup volume
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 ###############################################################################
 # Activity Monitor                                                            #
 ###############################################################################
-
-# Show the main window when launching Activity Monitor
-defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
-
-# Visualize CPU usage in the Activity Monitor Dock icon
-defaults write com.apple.ActivityMonitor IconType -int 5
 
 # Show all processes in Activity Monitor
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
@@ -268,12 +214,6 @@ defaults write com.apple.ActivityMonitor SortDirection -int 0
 ###############################################################################
 # Mac App Store                                                               #
 ###############################################################################
-
-# Enable the WebKit Developer Tools in the Mac App Store
-defaults write com.apple.appstore WebKitDeveloperExtras -bool true
-
-# Enable Debug Menu in the Mac App Store
-defaults write com.apple.appstore ShowDebugMenu -bool true
 
 # Enable the automatic update check
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
@@ -306,6 +246,9 @@ defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 ###############################################################################
 # Terminal                                                                    #
 ###############################################################################
+
+# Only use UTF-8 in Terminal.app
+defaults write com.apple.terminal StringEncodings -array 4
 
 # Enable Secure Keyboard Entry in Terminal.app
 # See: https://security.stackexchange.com/a/47786/8918
@@ -359,16 +302,10 @@ defaults write org.m0k.transmission BlocklistURL -string "http://john.bitsurge.n
 defaults write org.m0k.transmission BlocklistAutoUpdate -bool true
 
 ###############################################################################
-# Transmission.app                                                            #
-###############################################################################
-
-# https://spectrum.chat/figma/general/launching-figma-app-in-srgb-on-a-p3-display~e09dea99-494e-4469-a185-d80efe086686
-defaults write com.figma.Desktop ColorCorrectRendering -bool true
-
-###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
 
+echo "done"
 for app in "Activity Monitor" \
 	"Address Book" \
 	"Calendar" \
@@ -382,7 +319,6 @@ for app in "Activity Monitor" \
 	"Safari" \
 	"SystemUIServer" \
 	"Terminal" \
-	"Transmission" \
-	"Figma"; do
+	"Transmission"; do
 	killall "${app}" &> /dev/null
 done

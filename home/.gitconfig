@@ -109,3 +109,5 @@
 [protocol]
     # Use Git v2 protocol for better performance
     version = 2
+[credential]
+	helper = osxkeychain
