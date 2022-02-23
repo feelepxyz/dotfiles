@@ -77,13 +77,9 @@ then
     --form-string "user=$PUSHOVER_USER_KEY" \
     --form-string "message=dotfiles script/setup complete for $CODESPACE_NAME!" \
     https://api.pushover.net/1/messages.json
-fi
-
-# Fix permissions
-chmod 700 ~/.gnupg
-
-if [ ! -n "$CODESPACES" ]
-then
+else
+  # Fix permissions
+  chmod 700 ~/.gnupg
   chmod 400 ~/.ssh/id_rsa_yubikey
 fi
 

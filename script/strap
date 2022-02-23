@@ -250,6 +250,11 @@ xcode_license() {
 }
 xcode_license
 
+# Force git to use https instead of git:// so we don't need to set up a SSH key,
+# we'll reset it later as this setup sets up ssh auth using a yubikey.
+git config --global url."https://github.com/".insteadOf git@github.com:
+git config --global url."https://".insteadOf git://
+
 # Setup Homebrew directory and permissions.
 logn "Installing Homebrew:"
 HOMEBREW_PREFIX="$(brew --prefix 2>/dev/null || true)"
@@ -323,6 +328,13 @@ else
     echo "SKIPPED (for CI)"
   fi
 fi
+
+# Revert temporary git config as script/setup copies a .gitconfig file.
+git config --global --unset-all url.https://github.com/.insteadof
+git config --global --unset-all url.https://.insteadof
+
+echo "Backing up ~/.gitconfig to ~/.gitconfig.backup"
+mv ~/.gitconfig ~/.gitconfig.backup
 
 # Setup dotfiles
 if [ -n "$STRAP_GITHUB_USER" ]; then
