@@ -31,7 +31,7 @@ fi
 if [ $MACOS ]
 then
   echo "Installing from user Brewfile"
-  brew bundle check --file .Brewfile || brew bundle --file .Brewfile 2> /dev/null 
+  brew bundle check --file .Brewfile || brew bundle --file .Brewfile 2> /dev/null
 fi
 
 for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
@@ -85,4 +85,9 @@ chmod 700 ~/.gnupg
 if [ ! -n "$CODESPACES" ]
 then
   chmod 400 ~/.ssh/id_rsa_yubikey
+fi
+
+if [ $MACOS ]
+then
+  install/mac.sh
 fi
