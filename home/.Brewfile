@@ -55,7 +55,6 @@ brew "zsh"
 
 cask "1password-cli"
 cask "1password"
-cask "alfred"
 cask "appcleaner"
 cask "authy"
 cask "caption"
@@ -76,7 +75,6 @@ cask "homebrew/cask-versions/firefox-developer-edition"
 cask "hookshot"
 cask "iterm2"
 cask "kap"
-cask "keybase"
 cask "little-snitch"
 cask "muzzle"
 cask "obsidian"
@@ -95,12 +93,3 @@ cask "viscosity"
 cask "visual-studio-code"
 cask "vlc"
 cask "zoom"
-
-#mas "DaisyDisk", id: 411643860
-#mas "Gifski", id: 1351639930
-#mas "iA Writer", id: 775737590
-#mas "Keynote", id: 409183694
-#mas "Numbers", id: 409203825
-#mas "Pages", id: 409201541
-#mas "WhatsApp", id: 1147396723
-#mas "xScope", id: 889428659
