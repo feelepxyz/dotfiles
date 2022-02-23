@@ -11,14 +11,8 @@ then
   chsh -s /bin/zsh $USER
 fi
 
-echo "Install the Solarized Dark theme for iTerm"
-echo "open \"${HOME}/.dotfiles/iterm/Solarized Dark.itermcolors\""
-
 # Import key used for signing
 gpg --import ~/.gnupg/philip@mailharrison.com.public.gpg-key
-
-echo "Update gpg key trust"
-echo "$ gpg --edit-key \$KEYID"
 
 if [ $MACOS ]
 then

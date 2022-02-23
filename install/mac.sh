@@ -136,9 +136,6 @@ defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
 # Dock                                                                        #
 ###############################################################################
 
-# Set the icon size of Dock items to 36 pixels
-defaults write com.apple.dock tilesize -int 36
-
 # Change minimize/maximize window effect
 defaults write com.apple.dock mineffect -string "scale"
 
