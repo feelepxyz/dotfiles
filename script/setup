@@ -28,12 +28,6 @@ then
   VSCODE="$APPDATA/Code/User"
 fi
 
-if [ $MACOS ]
-then
-  echo "Installing from user Brewfile"
-  brew bundle check --file .Brewfile || brew bundle --file .Brewfile 2> /dev/null
-fi
-
 for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
   HOMEFILE="$HOME/$DOTFILE"
   [ -d $DOTFILE ] && DOTFILE="$DOTFILE/"
