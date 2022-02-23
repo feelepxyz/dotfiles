@@ -37,16 +37,12 @@ brew "jemalloc"
 brew "jq"
 brew "mas"
 brew "openssl"
-cask "cron"
 brew "pinentry-mac" # yubikey
 brew "pstree"
-brew "pyenv"
 brew "readline"
 brew "shellcheck"
-brew "stow"
 brew "terraform"
 brew "vim"
-brew "watchman"
 brew "wget"
 brew "xz"
 brew "ykman" # yubikey
@@ -63,6 +59,7 @@ cask "alfred"
 cask "appcleaner"
 cask "authy"
 cask "caption"
+cask "cron"
 cask "docker"
 cask "dropbox"
 cask "dropshare"
@@ -106,5 +103,4 @@ cask "zoom"
 #mas "Numbers", id: 409203825
 #mas "Pages", id: 409201541
 #mas "WhatsApp", id: 1147396723
-#mas "Xcode", id: 497799835
 #mas "xScope", id: 889428659
