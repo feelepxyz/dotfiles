@@ -19,13 +19,14 @@ open \"${HOME}/.dotfiles/iterm/Solarized Dark.itermcolors\"
 gpg --edit-key \$KEYID"
 ```
 
-- [ ] Sign in to the 1password app
-- [ ] Extract files from 1password
+- [ ] Sign in to the 1Passsword app
+- [ ] Extract files from 1Passsword
 
 ```
 $HOME/.dotfiles/scripts/extract-onepassword-secrets
 ```
 
+- [ ] Save `~/Desktop/FileVault\ Recovery\ Key.txt` in 1Passsword
 - [ ] Create a work and personal profile in Chrome
 - [ ] Sign in to Google Drive
 - [ ] Sign in to Dropbox
