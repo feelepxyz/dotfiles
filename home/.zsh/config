@@ -65,6 +65,7 @@ export GOPATH=$HOME/go
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+PATH="/Users/feelepxyz/.asdf/installs/python/3.10.2/bin:$PATH"
 PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
