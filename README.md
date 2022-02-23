@@ -10,13 +10,13 @@ STRAP_GIT_NAME='name' STRAP_GIT_EMAIL='email' STRAP_GITHUB_USER='user' script/st
 - [ ] Open iTerm and install the theme
 
 ```bash
-open \"${HOME}/.dotfiles/iterm/Solarized Dark.itermcolors\"
+open $HOME/.dotfiles/iterm/Solarized\ Dark.itermcolors
 ```
 
 - [ ] Trust the gpg key
 
 ```bash
-gpg --edit-key \$KEYID"
+gpg --edit-key $KEYID
 ```
 
 - [ ] Sign in to the 1Passsword app
