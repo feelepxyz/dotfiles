@@ -103,13 +103,13 @@ defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Set computer name/host name
-sudo hostname -s feelepxyz
-sudo scutil --set ComputerName feelepxyz
-sudo scutil --set LocalHostName feelepxyz
-sudo scutil --set HostName feelepxyz
-sudo sysctl kern.hostname=feelepxyz
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "feelepxyz"
-echo "kern.hostname=feelepxyz" | sudo tee -a /etc/sysctl.conf
+sudo hostname -s $USER
+sudo scutil --set ComputerName $USER
+sudo scutil --set LocalHostName $USER
+sudo scutil --set HostName $USER
+sudo sysctl kern.hostname=$USER
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$USER"
+echo "kern.hostname=$USER" | sudo tee -a /etc/sysctl.conf
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "
