@@ -1,12 +1,9 @@
 #!/bin/bash
 set -e
 
-[ $(uname -s) = "Darwin" ] && export MACOS=1
+SCRIPTSREL=$(dirname $0)
 
-if [ $MACOS ]
-then
-  ../install/mac.sh
-fi
+[ $(uname -s) = "Darwin" ] && export MACOS=1
 
 # Set zsh as the default shell
 if [ "$SHELL" != "/bin/zsh" ]
@@ -21,6 +18,9 @@ echo "open \"${HOME}/.dotfiles/iterm/Solarized Dark.itermcolors\""
 gpg --import ~/.gnupg/philip@mailharrison.com.public.gpg-key
 
 echo "Update gpg key trust"
-echo "$ gpg --edit-key $KEYID"
+echo "$ gpg --edit-key \$KEYID"
 
-./extract-onepassword-secrets
+if [ $MACOS ]
+then
+  $SCRIPTSREL/../install/mac.sh
+fi
