@@ -83,8 +83,3 @@ else
   chmod 700 ~/.gnupg
   chmod 400 ~/.ssh/id_rsa_yubikey
 fi
-
-if [ $MACOS ]
-then
-  install/mac.sh
-fi

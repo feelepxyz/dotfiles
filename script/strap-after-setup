@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+[ $(uname -s) = "Darwin" ] && export MACOS=1
+
+if [ $MACOS ]
+then
+  ../install/mac.sh
+fi
+
 # Set zsh as the default shell
 if [ "$SHELL" != "/bin/zsh" ]
 then
