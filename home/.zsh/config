@@ -62,11 +62,19 @@ eval "$(zoxide init zsh)"
 
 export GOPATH=$HOME/go
 
+# Tell compilers where to find openssl@3
+export LDFLAGS="-L/usr/local/opt/openssl@3/lib"
+export CPPFLAGS="-I/usr/local/opt/openssl@3/include"
+
+# Tell pkg-config where to find openssl@3
+export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig"
+
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 PATH="$HOME/.asdf/installs/python/3.10.2/bin:$PATH"
 PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+PATH="/usr/local/opt/openssl@3/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"

@@ -11,6 +11,8 @@ then
   chsh -s /bin/zsh $USER
 fi
 
+cp $SCRIPTSREL/../preferences/com.googlecode.iterm2.plist ~/Library/Preferences
+
 # Import key used for signing
 gpg --import ~/.gnupg/philip@mailharrison.com.public.gpg-key
 
