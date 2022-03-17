@@ -35,12 +35,15 @@ brew "htop"
 brew "icu4c"
 brew "jemalloc"
 brew "jq"
+brew "mariadb" # sigstore
 brew "mas"
+brew "opensc" # sigstore
 brew "openssl"
 brew "pinentry-mac" # yubikey
 brew "pstree"
 brew "readline"
 brew "shellcheck"
+brew "softhsm" # sigstore
 brew "terraform"
 brew "vim"
 brew "wget"
