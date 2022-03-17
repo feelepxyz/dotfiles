@@ -161,3 +161,14 @@ docker-debug() {
 docker-debug-latest() {
   docker-debug "$(docker ps --latest --quiet)"
 }
+
+function mkcd() {
+  if [ ! -n "$1" ]; then
+    echo "Provide a directory"
+    exit 1
+  elif [ -d $1 ]; then
+    cd $1
+  else
+    mkdir -p $@ && cd ${@:$#}
+  fi
+}
