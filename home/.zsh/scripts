@@ -53,6 +53,17 @@ rebase-main() {
   git rebase --interactive --autostash --autosquash origin/main
 }
 
+rebase-branch() {
+  if [ ! "$1" ]
+  then
+    echo "You must provide a branch name"
+    return
+  fi
+
+  git fetch origin
+  git rebase --interactive --autostash --autosquash origin/$1
+}
+
 rebase-continue() {
   git add --all
   git commit --no-edit
@@ -171,4 +182,31 @@ function mkcd() {
   else
     mkdir -p $@ && cd ${@:$#}
   fi
+}
+
+onepassword_login() {
+  if ! command -v op >/dev/null
+  then
+    echo "Install op first!" >&2
+    exit 1
+  fi
+
+  # shellcheck disable=SC2154
+  if [ -z "$OP_SESSION_my" ]
+  then
+    echo "Logging into 1Password..."
+    eval "$(op signin my.1password.com philip@mailharrison.com)"
+  fi
+}
+
+onepassword_get() {
+  if [ -f "$2" ]
+  then
+    echo "$2 already exists."
+    return
+  fi
+  echo "Extracting $2..."
+  onepassword_login
+  op get document "$1" --vault="j2kzzjxmhp5hexbvbzab66g3vy" > "$2"
+  chmod 600 "$2"
 }

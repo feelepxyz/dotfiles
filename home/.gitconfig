@@ -53,7 +53,7 @@
     com = commit -m
     d = diff
     pullr = pull --rebase
-    pushf = push --force-with-lease
+    pushf = push --force-if-includes
     amd = commit --amend --no-edit
     s = status -sb
     co = checkout
@@ -67,6 +67,7 @@
     prune-remote = !git remote | xargs -n 1 git remote prune
     prune-local = !git branch --merged | tr -d '*' | grep -v dev | xargs -n1 git branch -d
     fix-conflict = mergetool
+    brup = "!git branch --set-upstream-to origin/\"$(git branch --show-current)\" \"$(git branch --show-current)\""
 
 [gpg]
     program = gpg

@@ -1,5 +1,5 @@
 # Load zsh massive renamer
-autoload -U zmv
+# autoload -U zmv
 
 # Turn off auto correct
 unsetopt correct_all
@@ -30,10 +30,6 @@ export EDITOR="code"
 export GIT_EDITOR="$EDITOR --wait"
 export VISUAL=$EDITOR
 
-# Enable colorized output for ls command on MacOS
-export CLICOLOR=1
-export GREP_OPTIONS="--color=auto"
-
 # Set to number of cpus
 export MAKEFLAGS="-j4"
 export BUNDLE_JOBS="4"
@@ -45,17 +41,7 @@ gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye
 
 # Homebrew
-export HOMEBREW_BUNDLE_CASK_SKIP="docker github/bootstrap/zulu8"
-
-# Homebrew autocomplete
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-
-  autoload -Uz compinit
-  compinit
-fi
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# export HOMEBREW_BUNDLE_CASK_SKIP="docker"
 
 # Setup zoxide to replace cd
 eval "$(zoxide init zsh)"
@@ -85,9 +71,8 @@ PATH=".bundle/bin:$PATH"
 export PATH="bin:$PATH"
 
 # Load plugins
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/local/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fpath=(/usr/local/share/zsh-completions $fpath)
 
 # asdf package manager
 . /usr/local/opt/asdf/libexec/asdf.sh
