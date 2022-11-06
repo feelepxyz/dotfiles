@@ -49,12 +49,12 @@
 
 [alias]
     all = add -A
-    c = commit
-    com = commit -m
+    c = commit -s
+    com = commit -s -m
     d = diff
     pullr = pull --rebase
     pushf = push --force-if-includes
-    amd = commit --amend --no-edit
+    amd = commit --amend --no-edit -s
     s = status -sb
     co = checkout
     cob = checkout -b
