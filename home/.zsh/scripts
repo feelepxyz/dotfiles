@@ -126,25 +126,63 @@ pdf-svg() {
   svgo $svg_path
 }
 
-gh-clone() {
-  local repo="${1/https:\/\/github.com\//}"
-  repo="${repo/git@github.com:/}"
-  repo="${repo%.git}"
-  if [[ ! "$repo" =~ ^[^/]+/[^/]+$ ]]; then
-    echo "invalid repo - format must be ACCOUNT/NAME"
-    return
+function gh-clone() {
+  local repo_url=$1
+  local repo_host
+  local repo_path
+
+  # Validate the URL
+  if [[ $repo_url =~ "^(https?|git)[:@\/\/]+([^\/:]+)[\/:](.+)" ]]; then
+    repo_host=$match[2]
+    repo_path=$match[3]
+    repo_path="${repo_path:s/.git/}"
+  else
+    echo "invalid repo - format must be https://|git@host/|:account/name.git"
+    return 1
   fi
 
-  local dest="$HOME/src/github.com/$repo"
-  if [ -e "$dest" ]; then
+  local dest_folder="$HOME/src/$repo_host/$repo_path"
+  # Check if the destination folder exists
+  if [ -d "$dest_folder" ]; then
     echo "$dest: already exists"
-    cd "$dest"
-    return
+    cd "$dest_folder"
+    return 0
   fi
 
-  mkdir -p "$dest"
-  git clone "git@github.com:$repo" "$dest"
-  cd "$dest"
+  # Create the directory
+  mkdir -p "$dest_folder"
+
+  # Clone the repo and cd into it
+  git clone "$repo_url" "$dest_folder"
+  cd "$dest_folder"
+}
+
+go-clone() {
+  local repo_url=$1
+  local repo_host
+  local repo_path
+
+  # Validate the URL
+  if [[ $repo_url =~ "^(https?|git)[:@\/\/]+([^\/:]+)[\/:](.+)" ]]; then
+    repo_host=$match[2]
+    repo_path=$match[3]
+    repo_path="${repo_path:s/.git/}"
+  else
+    echo "invalid repo - format must be https://|git@host/|:account/name.git"
+    return 1
+  fi
+
+  local dest_folder="$HOME/go/src/$repo_host/$repo_path"
+  # Check if the destination folder exists
+  if [ -d "$dest_folder" ]; then
+    echo "$dest: already exists"
+    cd "$dest_folder"
+    return 0
+  fi
+
+  # Clone the repo and cd into it
+  git clone "$repo_url" "$dest_folder"
+  cd "$dest_folder"
 }
 
 docker-debug() {
@@ -209,4 +247,28 @@ onepassword_get() {
   onepassword_login
   op get document "$1" --vault="j2kzzjxmhp5hexbvbzab66g3vy" > "$2"
   chmod 600 "$2"
+}
+
+npm_provenance () {
+  local purl="${1:-sigstore@1.4.0}"
+  local purl_escaped="$(echo $purl | sed 's|/|%2f|g')"
+  curl -sSv  "https://registry.npmjs.org/-/npm/v1/attestations/${purl_escaped}" 2> /dev/null | jq '.attestations[] | select(.predicateType == "https://slsa.dev/provenance/v0.2" or .predicateType == "https://slsa.dev/provenance/v1") | .bundle'
+}
+
+sigstore_cert () {
+  local input="${1:-/dev/stdin}"
+  if [ -z "$input" ]; then
+    echo "expected a bundle.sigstore path or stdin input"
+    return 1
+  fi
+  cat $input | jq ".verificationMaterial.x509CertificateChain.certificates[0].rawBytes" | tr -d '"' | base64 -d | openssl x509 -text -inform der -noout
+}
+
+dsse_payload () {
+  local input="${1:-/dev/stdin}"
+  if [ -z "$input" ]; then
+    echo "expected a bundle.sigstore path or stdin input"
+    return 1
+  fi
+  cat $input | jq ".dsseEnvelope.payload" | tr -d '"' | base64 -d | jq
 }

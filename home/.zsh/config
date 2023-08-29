@@ -1,5 +1,5 @@
 # Load zsh massive renamer
-# autoload -U zmv
+autoload -U zmv
 
 # Turn off auto correct
 unsetopt correct_all

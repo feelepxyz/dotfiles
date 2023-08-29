@@ -1,7 +1,7 @@
 [user]
     name = Philip Harrison
     email = philip@mailharrison.com
-    signingkey = 0xF6F4212756997CEF
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIoznFGoftqg29NuiCsDWMvD3TyhJshCSVEB8JRzeqDo
 
 [github]
     user = feelepxyz
@@ -70,7 +70,10 @@
     brup = "!git branch --set-upstream-to origin/\"$(git branch --show-current)\" \"$(git branch --show-current)\""
 
 [gpg]
-    program = gpg
+    format = ssh
+
+[gpg "ssh"]
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 [commit]
     gpgsign = true
@@ -110,5 +113,6 @@
 [protocol]
     # Use Git v2 protocol for better performance
     version = 2
+
 [credential]
 	helper = osxkeychain
