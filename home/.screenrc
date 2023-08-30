@@ -4,7 +4,7 @@ hardstatus on
 hardstatus alwayslastline "%0=%{kB}| %{kw}%h %{kB}|%=%{kR}Load: %l%100="
 hardstatus string '%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%< %=%H %c:%s'
 
-setenv SHELL /usr/local/bin/zsh
+setenv SHELL /opt/homebrew/bin/zsh
 shell                 zsh
 
 startup_message       off             # default: on

@@ -1,5 +1,5 @@
 # Load zsh massive renamer
-autoload -U zmv
+# autoload -U zmv
 
 # Turn off auto correct
 unsetopt correct_all
@@ -34,33 +34,23 @@ export VISUAL=$EDITOR
 export MAKEFLAGS="-j4"
 export BUNDLE_JOBS="4"
 
-export KEYID=0xF6F4212756997CEF
-export GPG_TTY=$(tty)
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-gpgconf --launch gpg-agent
-gpg-connect-agent updatestartuptty /bye
-
-# Homebrew
-# export HOMEBREW_BUNDLE_CASK_SKIP="docker"
-
-# Setup zoxide to replace cd
-eval "$(zoxide init zsh)"
-
 export GOPATH=$HOME/go
 
 # Tell compilers where to find openssl@3
-export LDFLAGS="-L/usr/local/opt/openssl@3/lib"
-export CPPFLAGS="-I/usr/local/opt/openssl@3/include"
+export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
 
 # Tell pkg-config where to find openssl@3
-export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig"
 
+PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-PATH="$HOME/.asdf/installs/python/3.10.2/bin:$PATH"
-PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
-PATH="/usr/local/opt/openssl@3/bin:$PATH"
+PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+PATH="$HOME/.asdf/installs/python/3.11.5/bin:$PATH"
+PATH="/opt/homebrew/opt/openssl/bin:$PATH"
+PATH="/usr/local/opt/openssl/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
@@ -70,12 +60,18 @@ PATH="node_modules/.bin:$PATH"
 PATH=".bundle/bin:$PATH"
 export PATH="bin:$PATH"
 
+# Home for homebrew needed by some build scripts on Apple Silicon
+export HOMEBREW_PREFIX=/opt/homebrew
+
+# Setup zoxide to replace cd
+eval "$(zoxide init zsh)"
+
 # Load plugins
-source /usr/local/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # asdf package manager
-. /usr/local/opt/asdf/libexec/asdf.sh
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 # Load env variables from .envrc - to enable: `direnv allow .`
 eval "$(direnv hook zsh)"
