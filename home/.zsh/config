@@ -53,6 +53,7 @@ PATH="/opt/homebrew/opt/openssl/bin:$PATH"
 PATH="/usr/local/opt/openssl/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
+PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
 # Add relative bins with highest precedent
