@@ -44,10 +44,10 @@ for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
   # Skip glob paths
   [ ! -d $DIRFILE ] && [ ! -f $DIRFILE ] && continue
 
-  # Don't mess with Codespaces' default GPG/SSH setup.
+  # Don't mess with Codespaces' default Git/GPG/SSH setup.
   if [ -n "$CODESPACES" ]
   then
-    echo $DOTFILE | egrep -q '^(gnupg|ssh)/' && continue
+    echo $DOTFILE | egrep -q '^(gnupg|ssh|.gitconfig)/' && continue
   fi
 
   if [ $UNIX ]
@@ -68,3 +68,8 @@ for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
     cp -rv "$DIRFILE" "$HOMEFILE"
   fi
 done
+
+if [ -n "$CODESPACES" ]
+then
+  script/codespaces-post-start
+fi
