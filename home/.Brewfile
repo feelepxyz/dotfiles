@@ -50,6 +50,7 @@ brew "xz"
 brew "ykman" # yubikey
 brew "yubico-piv-tool" # yubikey
 brew "yubikey-personalization" # yubikey
+brew "zigup"
 brew "zlib"
 brew "zoxide"
 brew "zsh-autosuggestions"
