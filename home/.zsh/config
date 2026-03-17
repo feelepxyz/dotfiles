@@ -37,19 +37,19 @@ export BUNDLE_JOBS="4"
 export GOPATH=$HOME/go
 
 # Tell compilers where to find openssl@3
-export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
+export LDFLAGS="-L/usr/local/opt/openssl@3/lib"
+export CPPFLAGS="-I/usr/local/opt/openssl@3/include"
 
 # Tell pkg-config where to find openssl@3
-export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig"
+export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig"
 
-PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 PATH="$HOME/.asdf/installs/python/3.11.5/bin:$PATH"
-PATH="/opt/homebrew/opt/openssl/bin:$PATH"
+PATH="/usr/local/opt/openssl/bin:$PATH"
 PATH="/usr/local/opt/openssl/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
@@ -62,17 +62,20 @@ PATH=".bundle/bin:$PATH"
 export PATH="bin:$PATH"
 
 # Home for homebrew needed by some build scripts on Apple Silicon
-export HOMEBREW_PREFIX=/opt/homebrew
+export HOMEBREW_PREFIX=/usr/local
 
 # Setup zoxide to replace cd
 eval "$(zoxide init zsh)"
 
 # Load plugins
-source /opt/homebrew/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/local/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # asdf package manager
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+. /usr/local/opt/asdf/libexec/asdf.sh
+
+# Source rust/cargo env
+. "/Users/feelepxyz/.asdf/installs/rust/1.81.0/env"
 
 # Load env variables from .envrc - to enable: `direnv allow .`
 eval "$(direnv hook zsh)"

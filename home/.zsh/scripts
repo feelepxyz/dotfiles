@@ -272,3 +272,9 @@ dsse_payload () {
   fi
   cat $input | jq ".dsseEnvelope.payload" | tr -d '"' | base64 -d | jq
 }
+
+youtube-dl() {
+  yt-dlp -x --audio-format m4a --audio-quality 0 \
+  --add-metadata --embed-thumbnail --split-chapters \
+  -o "%(title)s.%(ext)s"s -- "$@";
+}

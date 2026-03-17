@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Add logging
 exec > >(tee -i $HOME/dotfiles_install.log)
 exec 2>&1
