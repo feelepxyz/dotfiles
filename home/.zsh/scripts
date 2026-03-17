@@ -75,42 +75,6 @@ open-port() {
   lsof -Pn -i4 | grep $1
 }
 
-cop-changed() {
-  git ls-files -m | xargs ls -1 2>/dev/null | grep '\.rb$' | xargs rubocop
-}
-
-cop-master() {
-  git diff-tree -r --no-commit-id --name-only head origin/master | grep '\.rb$' | xargs rubocop
-}
-
-cop-main() {
-  git diff-tree -r --no-commit-id --name-only head origin/main | grep '\.rb$' | xargs rubocop
-}
-
-cop-upstream() {
-  git diff-tree -r --no-commit-id --name-only @\{u\} head | grep '\.rb$' | xargs rubocop
-}
-
-rspec-changed() {
-  git ls-files -m | xargs ls -1 2>/dev/null | grep '\_spec\.rb$' | xargs rspec
-}
-
-rspec-master() {
-  git diff-tree -r --no-commit-id --name-only head origin/master | grep '\_spec\.rb$' | xargs rspec
-}
-
-rspec-main() {
-  git diff-tree -r --no-commit-id --name-only head origin/main | grep '\_spec\.rb$' | xargs rspec
-}
-
-rspec-upstream() {
-  git diff-tree -r --no-commit-id --name-only @\{u\} head | grep '\_spec\.rb$' | xargs rspec
-}
-
-npm-init() {
-  npm init --force --yes
-}
-
 git-init-npm() {
   git init --quiet
   touch .gitignore
@@ -144,7 +108,7 @@ function gh-clone() {
   local dest_folder="$HOME/src/$repo_host/$repo_path"
   # Check if the destination folder exists
   if [ -d "$dest_folder" ]; then
-    echo "$dest: already exists"
+    echo "$dest_folder: already exists"
     cd "$dest_folder"
     return 0
   fi

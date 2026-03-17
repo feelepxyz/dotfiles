@@ -3,7 +3,7 @@ alias ...="cd ../.."
 alias ..="cd .."
 alias cat="bat"
 alias cp="cp -irv"
-alias dir="mkdir $1 && cd $1"
+dir() { mkdir -p "$1" && cd "$1"; }
 alias e="$EDITOR ."
 alias g="git"
 alias l="eza -lhaFb --no-user --color=always"
