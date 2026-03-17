@@ -1,2 +1,5 @@
-PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+if [[ "$(uname -m)" == "arm64" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+  eval "$(/usr/local/bin/brew shellenv)"
+fi

@@ -36,20 +36,24 @@ export BUNDLE_JOBS="4"
 
 export GOPATH=$HOME/go
 
+# Detect Homebrew prefix based on architecture
+if [[ "$(uname -m)" == "arm64" ]]; then
+  export HOMEBREW_PREFIX=/opt/homebrew
+else
+  export HOMEBREW_PREFIX=/usr/local
+fi
+eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
+
 # Tell compilers where to find openssl@3
-export LDFLAGS="-L/usr/local/opt/openssl@3/lib"
-export CPPFLAGS="-I/usr/local/opt/openssl@3/include"
+export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl@3/lib"
+export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl@3/include"
 
 # Tell pkg-config where to find openssl@3
-export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig"
+export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl@3/lib/pkgconfig"
 
-PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
-PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-PATH="$HOME/.asdf/installs/python/3.11.5/bin:$PATH"
-PATH="/usr/local/opt/openssl/bin:$PATH"
-PATH="/usr/local/opt/openssl/bin:$PATH"
+PATH="$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+PATH="$HOMEBREW_PREFIX/opt/openssl/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/.cargo/bin:$PATH"
@@ -60,21 +64,18 @@ PATH="node_modules/.bin:$PATH"
 PATH=".bundle/bin:$PATH"
 export PATH="bin:$PATH"
 
-# Home for homebrew needed by some build scripts on Apple Silicon
-export HOMEBREW_PREFIX=/usr/local
-
 # Setup zoxide to replace cd
 eval "$(zoxide init zsh)"
 
 # Load plugins
-source /usr/local/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # asdf package manager
-. /usr/local/opt/asdf/libexec/asdf.sh
+. $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh
 
 # Source rust/cargo env
-. "/Users/feelepxyz/.asdf/installs/rust/1.81.0/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # Load env variables from .envrc - to enable: `direnv allow .`
 eval "$(direnv hook zsh)"
