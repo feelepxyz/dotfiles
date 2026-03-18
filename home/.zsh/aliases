@@ -6,7 +6,7 @@ alias cp="cp -irv"
 dir() { mkdir -p "$1" && cd "$1"; }
 alias e="$EDITOR ."
 alias g="git"
-alias l="eza -lhaFb --no-user --color=always"
+alias l="eza -lha --no-user --color=always"
 alias mkdir="mkdir -vp"
 alias mmv="noglob zmv -vW"
 alias mv="mv -iv"
