@@ -16,11 +16,9 @@ DOTFILESDIRREL=$(dirname $SCRIPTSETUP)
 cd $DOTFILESDIRREL/../home/
 DOTFILESDIR=$(pwd -P)
 
-UNAME_S="$(uname -s)"
-[[ "${UNAME_S}" = "Darwin" ]] && export MACOS=1
-[[ "${UNAME_S}" = "Linux" ]] && export LINUX=1
-[[ "${UNAME_S}" == *_NT-* ]] && export WINDOWS=1
-[[ -n "${LINUX}" ]] && grep -qEi "(Microsoft|WSL)" /proc/version && export WSL=1
+[ $(uname -s) = "Darwin" ] && export MACOS=1 && export UNIX=1
+[ $(uname -s) = "Linux" ] && export LINUX=1 && export UNIX=1
+uname -s | grep -q "_NT-" && export WINDOWS=1
 
 if [ $MACOS ]
 then
@@ -28,52 +26,28 @@ then
   brew bundle check --file .Brewfile || brew bundle --file .Brewfile 2> /dev/null
 fi
 
-for DOTFILE in *; do
-  HOMEFILE="${HOME}/.${DOTFILE}"
-  if [[ -d "${DOTFILE}" ]]; then
-    DOTFILE="${DOTFILE}/"
-    IS_DIR=1
-  else
-    IS_DIR=
-  fi
-  DIRFILE="${DOTFILESDIR}/${DOTFILE}"
+for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
+  HOMEFILE="$HOME/$DOTFILE"
+  [ -d $DOTFILE ] && DOTFILE="$DOTFILE/"
+  DIRFILE="$DOTFILESDIR/$DOTFILE"
+  # Skip glob paths
+  [ ! -d $DIRFILE ] && [ ! -f $DIRFILE ] && continue
 
-  # Don't mess with Codespaces' default SSH setup.
-  if [[ -n "${CODESPACES}" && "${DOTFILE}" = "ssh/" ]]; then
-    continue
-  fi
-
-  if [[ -z "${IS_DIR}" ]]; then
-    [[ "${HOMEFILE}" -ef "${DIRFILE}" ]] && continue
-    if [[ -L "${HOMEFILE}" ]]; then
-      ln -sf "${DIRFILE}" "${HOMEFILE}"
+  if [ $UNIX ]
+  then
+    if [ -L "$HOMEFILE" ] && ! [ -d $DOTFILE ]
+    then
+      ln -sfv "$DIRFILE" "$HOMEFILE"
     else
-      ln -svf "${DIRFILE}" "${HOMEFILE}"
+      if [ -d $DOTFILE ]
+      then
+        mkdir -p "$HOMEFILE"
+      else
+        rm -rv "$HOMEFILE" 2>/dev/null && true
+        ln -sv "$DIRFILE" "$HOMEFILE"
+      fi
     fi
-  elif [[ "${HOMEFILE}" -ef "${DIRFILE}" ]]; then
-    continue
-  elif [[ -L "${HOMEFILE}" ]]; then
-    rm -r "${HOMEFILE}" 2>/dev/null
-    ln -s "${DIRFILE}" "${HOMEFILE}"
   else
-    rm -rfv "${HOMEFILE}" 2>/dev/null
-    ln -sv "${DIRFILE}" "${HOMEFILE}"
+    cp -rv "$DIRFILE" "$HOMEFILE"
   fi
 done
-
-# Helper function to copy a file only when its contents change
-sync_if_changed() {
-  if ! [[ -f "${2}" ]] || ! cmp -s "${1}" "${2}"; then
-    cp -vf "${1}" "${2}"
-  fi
-}
-
-# if command -v "brew" >/dev/null; then
-#   # Sync selected dotfiles into Sandvault guest home if that directory exists.
-#   SANDVAULT_GUEST_HOME="$(brew --prefix)/etc/sandvault/guest_home_user"
-#   if [[ -d "${SANDVAULT_GUEST_HOME}" ]]; then
-#     for DOTFILE in *; do
-#       sync_if_changed "${DOTFILESDIR}/${DOTFILE}" "${SANDVAULT_GUEST_HOME}/${DOTFILE}"
-#     done
-#   fi
-# fi
