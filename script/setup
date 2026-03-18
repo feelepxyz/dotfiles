@@ -61,6 +61,13 @@ for DOTFILE in *; do
   fi
 done
 
+# Helper function to copy a file only when its contents change
+sync_if_changed() {
+  if ! [[ -f "${2}" ]] || ! cmp -s "${1}" "${2}"; then
+    cp -vf "${1}" "${2}"
+  fi
+}
+
 if command -v "brew" >/dev/null; then
   # Sync selected dotfiles into Sandvault guest home if that directory exists.
   SANDVAULT_GUEST_HOME="$(brew --prefix)/etc/sandvault/guest_home_user"
