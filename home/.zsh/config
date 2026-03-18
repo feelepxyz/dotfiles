@@ -26,7 +26,7 @@ setopt hist_reduce_blanks
 setopt share_history
 
 # Editor
-export EDITOR="code"
+export EDITOR="zed"
 export GIT_EDITOR="$EDITOR --wait"
 export VISUAL=$EDITOR
 
@@ -51,7 +51,6 @@ export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl@3/include"
 # Tell pkg-config where to find openssl@3
 export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl@3/lib/pkgconfig"
 
-PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 PATH="$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
 PATH="$HOMEBREW_PREFIX/opt/openssl/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"

@@ -16,20 +16,11 @@ DOTFILESDIRREL=$(dirname $SCRIPTSETUP)
 cd $DOTFILESDIRREL/../home/
 DOTFILESDIR=$(pwd -P)
 
-[ $(uname -s) = "Darwin" ] && export MACOS=1 && export UNIX=1
-[ $(uname -s) = "Linux" ] && export LINUX=1 && export UNIX=1
-uname -s | grep -q "_NT-" && export WINDOWS=1
-
-if [ $MACOS ]
-then
-  VSCODE="$HOME/Library/Application Support/Code/User"
-elif [ $LINUX ]
-then
-  VSCODE="$HOME/.config/Code/User"
-elif [ $WINDOWS ]
-then
-  VSCODE="$APPDATA/Code/User"
-fi
+UNAME_S="$(uname -s)"
+[[ "${UNAME_S}" = "Darwin" ]] && export MACOS=1
+[[ "${UNAME_S}" = "Linux" ]] && export LINUX=1
+[[ "${UNAME_S}" == *_NT-* ]] && export WINDOWS=1
+[[ -n "${LINUX}" ]] && grep -qEi "(Microsoft|WSL)" /proc/version && export WSL=1
 
 if [ $MACOS ]
 then
@@ -37,39 +28,35 @@ then
   brew bundle check --file .Brewfile || brew bundle --file .Brewfile 2> /dev/null
 fi
 
-for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
-  HOMEFILE="$HOME/$DOTFILE"
-  [ -d $DOTFILE ] && DOTFILE="$DOTFILE/"
-  DIRFILE="$DOTFILESDIR/$DOTFILE"
-  # Skip glob paths
-  [ ! -d $DIRFILE ] && [ ! -f $DIRFILE ] && continue
+for DOTFILE in *; do
+  HOMEFILE="${HOME}/.${DOTFILE}"
+  if [[ -d "${DOTFILE}" ]]; then
+    DOTFILE="${DOTFILE}/"
+    IS_DIR=1
+  else
+    IS_DIR=
+  fi
+  DIRFILE="${DOTFILESDIR}/${DOTFILE}"
 
-  # Don't mess with Codespaces' default Git/GPG/SSH setup.
-  if [ -n "$CODESPACES" ]
-  then
-    echo $DOTFILE | egrep -q '^(gnupg|ssh|.gitconfig)/' && continue
+  # Don't mess with Codespaces' default SSH setup.
+  if [[ -n "${CODESPACES}" && "${DOTFILE}" = "ssh/" ]]; then
+    continue
   fi
 
-  if [ $UNIX ]
-  then
-    if [ -L "$HOMEFILE" ] && ! [ -d $DOTFILE ]
-    then
-      ln -sfv "$DIRFILE" "$HOMEFILE"
+  if [[ -z "${IS_DIR}" ]]; then
+    [[ "${HOMEFILE}" -ef "${DIRFILE}" ]] && continue
+    if [[ -L "${HOMEFILE}" ]]; then
+      ln -sf "${DIRFILE}" "${HOMEFILE}"
     else
-      if [ -d $DOTFILE ]
-      then
-        mkdir -p "$HOMEFILE"
-      else
-        rm -rv "$HOMEFILE" 2>/dev/null && true
-        ln -sv "$DIRFILE" "$HOMEFILE"
-      fi
+      ln -svf "${DIRFILE}" "${HOMEFILE}"
     fi
+  elif [[ "${HOMEFILE}" -ef "${DIRFILE}" ]]; then
+    continue
+  elif [[ -L "${HOMEFILE}" ]]; then
+    rm -r "${HOMEFILE}" 2>/dev/null
+    ln -s "${DIRFILE}" "${HOMEFILE}"
   else
-    cp -rv "$DIRFILE" "$HOMEFILE"
+    rm -rfv "${HOMEFILE}" 2>/dev/null
+    ln -sv "${DIRFILE}" "${HOMEFILE}"
   fi
 done
-
-if [ -n "$CODESPACES" ]
-then
-  script/codespaces-post-start
-fi

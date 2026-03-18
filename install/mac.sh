@@ -8,6 +8,17 @@ set -o errtrace
 set -o nounset
 set -o pipefail
 
+# Ensure auto-update is always enabled
+if [ "$(defaults read /Library/Preferences/com.apple.commerce.plist AutoUpdate)" != "1" ]; then
+  sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate 1
+fi
+
+# macOS appearance: Auto (Light by day, Dark by night)
+defaults write -g AppleInterfaceStyleSwitchesAutomatically -bool true
+
+# Prefer tabs when opening documents: Always
+defaults write -g AppleWindowTabbingMode -string Always
+
 # Set up Safari for development.
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
@@ -63,9 +74,6 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write NSGlobalDomain AppleShowScrollBars -string "WhenScrolling"
 # Possible values: `WhenScrolling`, `Automatic` and `Always`
 
-# Set sidebar icon size to medium
-defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
-
 # Save screenshots to desktop and disable the drop-shadow.
 defaults write com.apple.screencapture type -string "png"
 defaults write com.apple.screencapture disable-shadow -bool true
@@ -80,9 +88,6 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 
 # Disable creation of metadata files on USB volumes
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-
-# Enable tap to click
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
@@ -113,9 +118,6 @@ echo "kern.hostname=$USER" | sudo tee -a /etc/sysctl.conf
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "
-
-# Set highlight color to pink
-defaults write NSGlobalDomain AppleHighlightColor -string "1.000000 0.749020 0.823529"
 
 defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 
@@ -204,10 +206,6 @@ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.c
 # Show all processes in Activity Monitor
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
 
-# Sort Activity Monitor results by CPU usage
-defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
-defaults write com.apple.ActivityMonitor SortDirection -int 0
-
 ###############################################################################
 # Mac App Store                                                               #
 ###############################################################################
@@ -224,14 +222,8 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 # Install System data files & security updates
 defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
 
-# Automatically download apps purchased on other Macs
-defaults write com.apple.SoftwareUpdate ConfigDataInstall -int 1
-
 # Turn on app auto-update
 defaults write com.apple.commerce AutoUpdate -bool true
-
-# Allow the App Store to reboot machine on macOS updates
-defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
 
 ###############################################################################
 # Photos                                                                      #
@@ -253,18 +245,6 @@ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 
 # Don’t display the annoying prompt when quitting iTerm
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
-###############################################################################
-# Google Chrome & Google Chrome Canary                                        #
-###############################################################################
-
-# Use the system-native print preview dialog
-defaults write com.google.Chrome DisablePrintPreview -bool true
-defaults write com.google.Chrome.canary DisablePrintPreview -bool true
-
-# Expand the print dialog by default
-defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
-defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
 
 ###############################################################################
 # Transmission.app                                                            #
@@ -310,8 +290,6 @@ for app in "Activity Monitor" \
 	"Contacts" \
 	"Dock" \
 	"Finder" \
-	"Google Chrome Canary" \
-	"Google Chrome" \
 	"Photos" \
 	"Safari" \
 	"SystemUIServer" \

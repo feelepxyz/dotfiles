@@ -1,7 +1,0 @@
-#!/bin/sh
-
-# Use ZSH as the default shell
-if ! grep -q "root.*/bin/zsh" /etc/passwd
-then
-  chsh -s /bin/zsh root
-fi

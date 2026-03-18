@@ -88,7 +88,7 @@ sudo_init() {
   fi
 
   # If TouchID for sudo is setup: use that instead.
-  if grep -q pam_tid /etc/pam.d/sudo; then
+  if grep -q pam_tid /etc/pam.d/sudo /etc/pam.d/sudo_local 2>/dev/null; then
     return
   fi
 
@@ -178,8 +178,18 @@ caffeinate -s -w $$ &
 # shellcheck disable=SC2010
 if ls /usr/lib/pam | grep $Q "pam_tid.so"; then
   logn "Configuring sudo authentication using TouchID:"
-  PAM_FILE="/etc/pam.d/sudo"
-  FIRST_LINE="# sudo: auth account password session"
+  if [[ -f /etc/pam.d/sudo_local || -f /etc/pam.d/sudo_local.template ]]; then
+    # New in macOS Sonoma, survives updates.
+    PAM_FILE="/etc/pam.d/sudo_local"
+    FIRST_LINE="# sudo_local: local config file which survives system update and is included for sudo"
+    if [[ ! -f "/etc/pam.d/sudo_local" ]]; then
+      echo "$FIRST_LINE" | sudo_askpass tee "$PAM_FILE" >/dev/null
+    fi
+  else
+    PAM_FILE="/etc/pam.d/sudo"
+    FIRST_LINE="# sudo: auth account password session"
+  fi
+
   if grep $Q pam_tid.so "$PAM_FILE"; then
     logk
   elif ! head -n1 "$PAM_FILE" | grep $Q "$FIRST_LINE"; then
@@ -209,7 +219,9 @@ sudo_askpass launchctl load /System/Library/LaunchDaemons/com.apple.alf.agent.pl
 
 if [ -n "$STRAP_GIT_NAME" ] && [ -n "$STRAP_GIT_EMAIL" ]; then
   LOGIN_TEXT=$(escape "Found this computer? Please contact $STRAP_GIT_NAME at $STRAP_GIT_EMAIL.")
-  echo "$LOGIN_TEXT" | grep -q '[()]' && LOGIN_TEXT="'$LOGIN_TEXT'"
+  if [[ $LOGIN_TEXT == *"("* || $LOGIN_TEXT == *")"* ]]; then
+    LOGIN_TEXT="'$LOGIN_TEXT'"
+  fi
   sudo_askpass defaults write /Library/Preferences/com.apple.loginwindow \
     LoginwindowText \
     "$LOGIN_TEXT"
@@ -225,8 +237,8 @@ elif [ -n "$STRAP_CI" ]; then
 elif [ -n "$STRAP_INTERACTIVE" ]; then
   echo
   log "Enabling full-disk encryption on next reboot:"
-  sudo_askpass fdesetup enable -user "$USER" \
-    | tee ~/Desktop/"FileVault Recovery Key.txt"
+  sudo_askpass fdesetup enable -user "$USER" |
+    tee ~/Desktop/"FileVault Recovery Key.txt"
   logk
 else
   echo
@@ -234,22 +246,20 @@ else
 fi
 
 # Install the Xcode Command Line Tools.
-if ! [ -f "/Library/Developer/CommandLineTools/usr/bin/git" ]
-then
+if ! [ -f "/Library/Developer/CommandLineTools/usr/bin/git" ]; then
   log "Installing the Xcode Command Line Tools:"
   CLT_PLACEHOLDER="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
   sudo_askpass touch "$CLT_PLACEHOLDER"
 
-  CLT_PACKAGE=$(softwareupdate -l | \
-                grep -B 1 "Command Line Tools" | \
-                awk -F"*" '/^ *\*/ {print $2}' | \
-                sed -e 's/^ *Label: //' -e 's/^ *//' | \
-                sort -V |
-                tail -n1)
+  CLT_PACKAGE=$(softwareupdate -l |
+    grep -B 1 "Command Line Tools" |
+    awk -F"*" '/^ *\*/ {print $2}' |
+    sed -e 's/^ *Label: //' -e 's/^ *//' |
+    sort -V |
+    tail -n1)
   sudo_askpass softwareupdate -i "$CLT_PACKAGE"
   sudo_askpass rm -f "$CLT_PLACEHOLDER"
-  if ! [ -f "/Library/Developer/CommandLineTools/usr/bin/git" ]
-  then
+  if ! [ -f "/Library/Developer/CommandLineTools/usr/bin/git" ]; then
     if [ -n "$STRAP_INTERACTIVE" ]; then
       echo
       logn "Requesting user install of Xcode Command Line Tools:"
@@ -282,51 +292,48 @@ git config --global url."https://github.com/".insteadOf git@github.com:
 git config --global url."https://".insteadOf git://
 
 # Setup Homebrew directory and permissions.
-logn "Installing Homebrew:"
-HOMEBREW_PREFIX="$(brew --prefix 2>/dev/null || true)"
-HOMEBREW_REPOSITORY="$(brew --repository 2>/dev/null || true)"
-if [ -z "$HOMEBREW_PREFIX" ] || [ -z "$HOMEBREW_REPOSITORY" ]; then
-  UNAME_MACHINE="$(/usr/bin/uname -m)"
-  if [[ "$UNAME_MACHINE" == "arm64" ]]; then
-    HOMEBREW_PREFIX="/opt/homebrew"
-    HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}"
-  else
-    HOMEBREW_PREFIX="/usr/local"
-    HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
+if [[ "$(uname -m)" == "arm64" ]]; then
+  HOMEBREW_PREFIX="/opt/homebrew"
+  HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}"
+  export PATH="/opt/homebrew/bin:$PATH"
+else
+  HOMEBREW_PREFIX="/usr/local"
+  HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
+  export PATH="/usr/local/bin:$PATH"
+fi
+
+if ! command -v brew &>/dev/null; then
+  logn "Installing Homebrew:"
+  [ -d "$HOMEBREW_PREFIX" ] || sudo_askpass mkdir -p "$HOMEBREW_PREFIX"
+  if [ "$HOMEBREW_PREFIX" = "/usr/local" ]; then
+    sudo_askpass chown "root:wheel" "$HOMEBREW_PREFIX" 2>/dev/null || true
   fi
-fi
-[ -d "$HOMEBREW_PREFIX" ] || sudo_askpass mkdir -p "$HOMEBREW_PREFIX"
-if [ "$HOMEBREW_PREFIX" = "/usr/local" ]
-then
-  sudo_askpass chown "root:wheel" "$HOMEBREW_PREFIX" 2>/dev/null || true
-fi
-(
-  cd "$HOMEBREW_PREFIX"
-  sudo_askpass mkdir -p               Cellar Caskroom Frameworks bin etc include lib opt sbin share var
-  sudo_askpass chown    "$USER:admin" Cellar Caskroom Frameworks bin etc include lib opt sbin share var
-)
+  (
+    cd "$HOMEBREW_PREFIX"
+    sudo_askpass mkdir -p Cellar Caskroom Frameworks bin etc include lib opt sbin share var
+    sudo_askpass chown "$USER:admin" Cellar Caskroom Frameworks bin etc include lib opt sbin share var
+  )
 
-[ -d "$HOMEBREW_REPOSITORY" ] || sudo_askpass mkdir -p "$HOMEBREW_REPOSITORY"
-sudo_askpass chown -R "$USER:admin" "$HOMEBREW_REPOSITORY"
+  [ -d "$HOMEBREW_REPOSITORY" ] || sudo_askpass mkdir -p "$HOMEBREW_REPOSITORY"
+  sudo_askpass chown -R "$USER:admin" "$HOMEBREW_REPOSITORY"
 
-if [ $HOMEBREW_PREFIX != $HOMEBREW_REPOSITORY ]
-then
-  ln -sf "$HOMEBREW_REPOSITORY/bin/brew" "$HOMEBREW_PREFIX/bin/brew"
+  if [ $HOMEBREW_PREFIX != $HOMEBREW_REPOSITORY ]; then
+    ln -sf "$HOMEBREW_REPOSITORY/bin/brew" "$HOMEBREW_PREFIX/bin/brew"
+  fi
+
+  # Download Homebrew.
+  export GIT_DIR="$HOMEBREW_REPOSITORY/.git" GIT_WORK_TREE="$HOMEBREW_REPOSITORY"
+  git init $Q
+  git config remote.origin.url "https://github.com/Homebrew/brew"
+  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  git fetch $Q --tags --force
+  git reset $Q --hard origin/master
+  unset GIT_DIR GIT_WORK_TREE
+  logk
 fi
-
-# Download Homebrew.
-export GIT_DIR="$HOMEBREW_REPOSITORY/.git" GIT_WORK_TREE="$HOMEBREW_REPOSITORY"
-git init $Q
-git config remote.origin.url "https://github.com/Homebrew/brew"
-git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-git fetch $Q --tags --force
-git reset $Q --hard origin/master
-unset GIT_DIR GIT_WORK_TREE
-logk
 
 # Update Homebrew.
-export PATH="$HOMEBREW_PREFIX/bin:$PATH"
-logn "Updating Homebrew:"
+log "Updating Homebrew:"
 brew update --quiet
 logk
 
@@ -337,12 +344,14 @@ if softwareupdate -l 2>&1 | grep $Q "No new software available."; then
 else
   echo
   log "Installing software updates:"
-  if [ -z "$STRAP_CI" ]; then
+  if [ -z "$STRAP_CI" ] && [ -z "$STRAP_NO_SOFTWAREUPDATE" ]; then
     sudo_askpass softwareupdate --install --all
     xcode_license
     logk
-  else
+  elif [ -n "$STRAP_CI" ]; then
     echo "SKIPPED (for CI)"
+  else
+    echo "SKIPPED (by STRAP_NO_SOFTWAREUPDATE)"
   fi
 fi
 
@@ -375,8 +384,15 @@ fi
 
 # Install from local Brewfile
 if [ -f "$HOME/.Brewfile" ]; then
-  log "Installing from user Brewfile on GitHub:"
-  brew bundle check --global || brew bundle --global
+  log "Installing from ~/.Brewfile:"
+  brew bundle check --global &>/dev/null || brew bundle --global
+  logk
+fi
+
+# Add GitHub credentials if missing
+if command -v "gh" >/dev/null && ! gh auth token &>/dev/null; then
+  logn "Configuring GitHub CLI:"
+  gh auth login --git-protocol https --hostname github.com --web
   logk
 fi
 

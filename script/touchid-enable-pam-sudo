@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+PAM_FILE="/etc/pam.d/sudo_local"
+FIRST_LINE="# sudo_local: local config file which survives system update and is included for sudo"
+
+if [[ ! -f "$PAM_FILE" ]]; then
+  echo "Error: $PAM_FILE does not exist!" >&2
+  exit 1
+fi
+
+if grep -q "pam_tid.so" "$PAM_FILE"; then
+  [[ "$1" != "--quiet" ]] && echo "TouchID PAM sudo module already enabled!"
+  exit 0
+fi
+
+if ! grep -qF "$FIRST_LINE" "$PAM_FILE"; then
+  echo "Error: $PAM_FILE is not in the expected format!" >&2
+  exit 1
+fi
+
+if [[ "$EUID" -ne 0 ]]; then
+  echo "Rerunning $0 with sudo..."
+  exec sudo "$0" "$@"
+fi
+
+sed -i '' "s|$FIRST_LINE|$FIRST_LINE\nauth       sufficient     pam_tid.so|" "$PAM_FILE"
+echo "TouchID PAM sudo module now enabled!"
