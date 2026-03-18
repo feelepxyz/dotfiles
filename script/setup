@@ -60,3 +60,13 @@ for DOTFILE in *; do
     ln -sv "${DIRFILE}" "${HOMEFILE}"
   fi
 done
+
+if command -v "brew" >/dev/null; then
+  # Sync selected dotfiles into Sandvault guest home if that directory exists.
+  SANDVAULT_GUEST_HOME="$(brew --prefix)/etc/sandvault/guest_home_user"
+  if [[ -d "${SANDVAULT_GUEST_HOME}" ]]; then
+    for DOTFILE in *; do
+      sync_if_changed "${DOTFILESDIR}/${DOTFILE}" "${SANDVAULT_GUEST_HOME}/${DOTFILE}"
+    done
+  fi
+fi
