@@ -1,0 +1,154 @@
+# Herdr configuration
+# Managed in ~/.dotfiles and stowed to ~/.config/herdr/config.toml
+# Terminal-native workspace/tab/pane manager.
+
+[terminal]
+# Use zsh while preserving macOS login shell behavior.
+default_shell = "zsh"
+shell_mode = "auto"
+# New panes and tabs start in the current pane's directory.
+new_cwd = "follow"
+
+[update]
+channel = "stable"
+
+[keys]
+# Prefix: C-;
+prefix = "ctrl+semicolon"
+
+# Basics.
+help = "prefix+?"
+# Keep prefix+s available for workspace picking.
+settings = "prefix+shift+s"
+detach = ["prefix+d", "prefix+q"]
+reload_config = "prefix+r"
+goto = "prefix+g"
+
+# Workspace controls:
+#   prefix+s       choose workspace
+#   prefix+w       also open workspace navigation (Herdr default muscle memory)
+#   prefix+shift+w rename workspace (avoids symbol-layer gymnastics)
+#   prefix+( / )   previous / next workspace
+workspace_picker = ["prefix+s", "prefix+w"]
+new_workspace = "prefix+shift+n"
+rename_workspace = "prefix+shift+w"
+close_workspace = "prefix+shift+d"
+previous_workspace = "prefix+("
+next_workspace = "prefix+)"
+
+# agents
+focus_agent = "prefix+alt+1..9"
+
+# Tab controls.
+new_tab = "prefix+c"
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+switch_tab = "prefix+1..9"
+rename_tab = "prefix+comma"
+close_tab = "prefix+shift+x"
+
+# Pane creation:
+#   prefix+\     split right
+#   prefix+Enter split down
+split_vertical = "prefix+backslash"
+split_horizontal = "prefix+enter"
+close_pane = "prefix+x"
+zoom = "prefix+m"
+copy_mode = "prefix+v"
+
+# Pane resize mode.
+resize_mode = "prefix+shift+r"
+
+# Pane navigation; Vim/Neovim-aware navigation owns the direct chords.
+# Prefix bindings remain available as an escape hatch from any pane.
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+cycle_pane_next = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+
+# Keep Herdr's dashboard/sidebar available, but not on prefix+b since C-b is not the prefix here.
+toggle_sidebar = "prefix+b"
+
+# Navigate-mode movement.
+navigate_workspace_up = "up"
+navigate_workspace_down = "down"
+navigate_pane_left = "h"
+navigate_pane_down = "j"
+navigate_pane_up = "k"
+navigate_pane_right = "l"
+
+# vim-herdr-navigation forwards these chords into Vim/Neovim when focused;
+# otherwise it focuses the adjacent Herdr pane.
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "vim-herdr-navigation.left"
+description = "Navigate left (Vim/Herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "vim-herdr-navigation.down"
+description = "Navigate down (Vim/Herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "vim-herdr-navigation.up"
+description = "Navigate up (Vim/Herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "vim-herdr-navigation.right"
+description = "Navigate right (Vim/Herdr)"
+
+[ui]
+sidebar_width = 32
+sidebar_min_width = 18
+sidebar_max_width = 36
+mouse_capture = true
+right_click_passthrough_modifier = "ctrl"
+mouse_scroll_lines = 3
+# Close panes/tabs without prompting.
+confirm_close = false
+prompt_new_tab_name = true
+prompt_new_workspace_name = true
+accent = "#c6a0f6"
+
+show_agent_labels_on_pane_borders = false
+agent_panel_sort = "spaces"
+[ui.toast]
+delivery = "herdr"
+delay_seconds = 1
+
+[ui.toast.herdr]
+position = "top-right"
+
+[ui.toast.clipboard]
+enabled = true
+position = "bottom-center"
+
+[ui.sound]
+# Keep sound notifications disabled.
+enabled = false
+
+[session]
+# Resume supported coding agents when restoring sessions.
+resume_agents_on_restore = true
+
+[remote]
+manage_ssh_config = true
+
+[experimental]
+# Persist recent pane output to disk.
+# This persists recent pane output to disk; keep in mind it may include secrets.
+pane_history = true
+allow_nested = false
+kitty_graphics = true
+
+[advanced]
+# Scrollback limit is byte-based.
+scrollback_limit_bytes = 52428800

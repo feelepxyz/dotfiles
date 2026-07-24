@@ -51,3 +51,17 @@ for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
     cp -rv "$DIRFILE" "$HOMEFILE"
   fi
 done
+
+# nvim + pi configs live too deep for the loop above; link them explicitly.
+if [ $UNIX ]; then
+  rmdir "$HOME/.config/nvim" 2>/dev/null || true   # loop pre-mkdir'd it empty
+  ln -sfn "$DOTFILESDIR/.config/nvim" "$HOME/.config/nvim"
+
+  mkdir -p "$HOME/.pi/agent"
+  # extensions is a whole-dir symlink; replace any real dir left by herdr (it
+  # re-installs its own extension into the linked dir, which .gitignore excludes).
+  [ -L "$HOME/.pi/agent/extensions" ] || rm -rf "$HOME/.pi/agent/extensions"
+  ln -sfn "$DOTFILESDIR/.pi/agent/extensions"    "$HOME/.pi/agent/extensions"
+  ln -sf  "$DOTFILESDIR/.pi/agent/settings.json" "$HOME/.pi/agent/settings.json"
+  ln -sf  "$DOTFILESDIR/.pi/agent/cloak.json"    "$HOME/.pi/agent/cloak.json"
+fi

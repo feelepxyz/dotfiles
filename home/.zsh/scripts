@@ -148,3 +148,32 @@ youtube-dl() {
   --add-metadata --embed-thumbnail --split-chapters \
   -o "%(title)s.%(ext)s"s -- "$@";
 }
+
+# Create/attach a tmux session for a project directory (defaults to $PWD).
+# Session name is the directory basename, with the standard agent/review/tests/servers/misc layout.
+moshi() {
+  local dir="${1:-$PWD}"
+  if [[ ! -d "$dir" ]]; then
+    echo "Directory not found: $dir" >&2
+    return 1
+  fi
+
+  local abs
+  abs="$(cd "$dir" && pwd)"
+
+  local session
+  session="$(basename "$abs" | LC_ALL=C tr -cs '[:alnum:]_-' '-')"
+  session="${session#-}"
+  session="${session%-}"
+  [[ -n "$session" ]] || session="main"
+
+  if ! tmux has-session -t "$session" 2>/dev/null; then
+    tmux new-session -d -s "$session" -c "$abs" -n agent
+    tmux new-window -t "$session":2 -c "$abs" -n review
+    tmux new-window -t "$session":3 -c "$abs" -n tests
+    tmux new-window -t "$session":4 -c "$abs" -n servers
+    tmux new-window -t "$session":5 -c "$abs" -n misc
+  fi
+
+  tmux attach -t "$session"
+}

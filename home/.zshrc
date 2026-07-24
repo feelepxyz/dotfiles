@@ -1,5 +1,4 @@
 . ~/.zsh/config
-. ~/.zsh/prompt
 . ~/.zsh/aliases
 . ~/.zsh/autocompletion
 . ~/.zsh/scripts
@@ -14,3 +13,15 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # proto
 export PROTO_HOME="$HOME/.proto";
 export PATH="$PROTO_HOME/shims:$PROTO_HOME/bin:$PATH";
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/feelepxyz/.local/bin:$PATH"
+
+# kimi-code
+export PATH="/Users/feelepxyz/.kimi-code/bin:$PATH"
+
+# Pi
+export PATH="/Users/feelepxyz/.vite-plus/js_runtime/node/24.18.0/bin:$PATH"

@@ -1,0 +1,15 @@
+# Agent-skill sources, installed globally via `npx skills`. One repo per line.
+# Format: owner/repo [selector]   (selector defaults to '*' = all skills)
+# Regenerate from installed skills with: install/skills.sh --generate
+anthropics/skills
+backnotprop/plannotator
+diffusionstudio/lottie
+dmmulroy/skills
+mattpocock/skills
+ogulcancelik/herdr
+petergyang/no-ai-slop
+rjyo/moshi-skill
+supabase/agent-skills
+vercel-labs/agent-browser
+vercel-labs/agent-skills
+vercel-labs/skills

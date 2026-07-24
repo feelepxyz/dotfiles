@@ -1,1 +1,10 @@
 home/.Brewfile.lock.json
+
+# pi: extension workspace deps (installed by install/ai.sh)
+home/.pi/node_modules/
+home/.pi/agent/extensions/**/node_modules/
+# pi: credential (defense in depth — never enters the repo working tree)
+home/.pi/agent/auth.json
+
+# nvim: lazy.nvim writes this into the symlinked config dir
+home/.config/nvim/lazy-lock.json

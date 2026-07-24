@@ -1,30 +1,21 @@
 #!/bin/bash
 
-# Close any open System Preferences panes, to prevent them from overriding
+# Close any open System Settings panes, to prevent them from overriding
 # settings we’re about to change
-osascript -e 'tell application "System Preferences" to quit'
+osascript -e 'tell application "System Settings" to quit'
 
 set -o errtrace
 set -o nounset
 set -o pipefail
 
-# Ensure auto-update is always enabled
-if [ "$(defaults read /Library/Preferences/com.apple.commerce.plist AutoUpdate)" != "1" ]; then
-  sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate 1
-fi
+# Cache sudo credentials up front so we only prompt once
+sudo -v
 
 # macOS appearance: Auto (Light by day, Dark by night)
 defaults write -g AppleInterfaceStyleSwitchesAutomatically -bool true
 
 # Prefer tabs when opening documents: Always
 defaults write -g AppleWindowTabbingMode -string Always
-
-# Set up Safari for development.
-defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
-defaults write -g WebKitDeveloperExtras -bool true
 
 # Expand the following File Info panes:
 # “General”, “Open with”, and “Sharing & Permissions”
@@ -49,9 +40,6 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
 # Disable the warning when changing file extensions
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-
-# Allow text-selection in Quick Look
-defaults write com.apple.finder QLEnableTextSelection -bool true
 
 # Show the ~/Library folder.
 chflags nohidden ~/Library
@@ -100,26 +88,17 @@ defaults write -g AppleLocale -string "en_GB@currency=GBP"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write -g AppleMetricUnits -bool true
 
-# Privacy: don’t send search queries to Apple
-defaults write com.apple.Safari UniversalSearchEnabled -bool false
-defaults write com.apple.Safari SuppressSearchSuggestions -bool true
-
 # Use current directory as default search scope in Finder
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Set computer name/host name
-sudo hostname -s $USER
-sudo scutil --set ComputerName $USER
-sudo scutil --set LocalHostName $USER
-sudo scutil --set HostName $USER
-sudo sysctl kern.hostname=$USER
+sudo scutil --set ComputerName "$USER"
+sudo scutil --set LocalHostName "$USER"
+sudo scutil --set HostName "$USER"
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$USER"
-echo "kern.hostname=$USER" | sudo tee -a /etc/sysctl.conf
 
-# Disable the sound effects on boot
-sudo nvram SystemAudioVolume=" "
-
-defaults write com.apple.menuextra.battery ShowPercent -string "YES"
+# Show battery percentage in the menu bar
+defaults write com.apple.controlcenter BatteryShowPercentage -bool true
 
 # Enable the debug menu in Disk Utility
 defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
@@ -186,18 +165,7 @@ defaults write com.apple.spotlight orderedItems -array \
   '{"enabled" = 0;"name" = "MENU_WEBSEARCH";}' \
   '{"enabled" = 0;"name" = "MENU_SPOTLIGHT_SUGGESTIONS";}'
 
-# Load new settings before rebuilding the index
-killall mds > /dev/null 2>&1
-# Make sure indexing is enabled for the main volume
-sudo mdutil -i on / > /dev/null
-# Rebuild the index from scratch
-sudo mdutil -E / > /dev/null
-
-sudo defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0
-
 sudo defaults write /Library/Preferences/com.apple.mDNSResponder NoMulticastAdvertisements -bool true
-
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -bool false
 
 ###############################################################################
 # Activity Monitor                                                            #
@@ -233,20 +201,6 @@ defaults write com.apple.commerce AutoUpdate -bool true
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 
 ###############################################################################
-# Terminal                                                                    #
-###############################################################################
-
-# Only use UTF-8 in Terminal.app
-defaults write com.apple.terminal StringEncodings -array 4
-
-# Enable Secure Keyboard Entry in Terminal.app
-# See: https://security.stackexchange.com/a/47786/8918
-defaults write com.apple.terminal SecureKeyboardEntry -bool true
-
-# Don’t display the annoying prompt when quitting iTerm
-defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
-###############################################################################
 # Transmission.app                                                            #
 ###############################################################################
 
@@ -272,28 +226,20 @@ defaults write org.m0k.transmission WarningDonate -bool false
 # Hide the legal disclaimer
 defaults write org.m0k.transmission WarningLegal -bool false
 
-# IP block list.
-# Source: https://giuliomac.wordpress.com/2014/02/19/best-blocklist-for-transmission/
-defaults write org.m0k.transmission BlocklistNew -bool true
-defaults write org.m0k.transmission BlocklistURL -string "http://john.bitsurge.net/public/biglist.p2p.gz"
-defaults write org.m0k.transmission BlocklistAutoUpdate -bool true
-
 ###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
 
 echo "done"
 for app in "Activity Monitor" \
-	"Address Book" \
 	"Calendar" \
 	"cfprefsd" \
 	"Contacts" \
+	"ControlCenter" \
 	"Dock" \
 	"Finder" \
 	"Photos" \
-	"Safari" \
 	"SystemUIServer" \
-	"Terminal" \
 	"Transmission"; do
 	killall "${app}" &> /dev/null
 done

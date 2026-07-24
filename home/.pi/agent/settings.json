@@ -1,0 +1,17 @@
+{
+  "packages": [
+    "npm:@ogulcancelik/pi-codex-subagents",
+    "npm:@ogulcancelik/pi-codex-compaction",
+    "npm:@ogulcancelik/pi-auto-permissions",
+    "npm:@ogulcancelik/pi-session-recall",
+    "npm:@ogulcancelik/pi-herdr",
+    "npm:@ogulcancelik/pi-model-thinking",
+    "npm:@ogulcancelik/pi-goal",
+    "npm:@plannotator/pi-extension"
+  ],
+  "lastChangelogVersion": "0.82.0",
+  "theme": "dark",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-luna",
+  "defaultThinkingLevel": "medium"
+}

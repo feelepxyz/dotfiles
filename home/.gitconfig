@@ -104,11 +104,11 @@
     diffFilter = delta --color-only
 
 [url "git@github.com:"]
+	insteadof = git://github.com/
+	insteadof = https://github.com/
     # Use GitHub SSH protocol instead of HTTPS and GIT
     # Allows use of git:// for public repositories with push access and cloning
     # private https:// repositories
-    insteadOf = "https://github.com/"
-    insteadOf = "git://github.com/"
 
 [protocol]
     # Use Git v2 protocol for better performance
@@ -116,3 +116,9 @@
 
 [credential]
 	helper = osxkeychain
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
