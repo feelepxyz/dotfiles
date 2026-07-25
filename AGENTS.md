@@ -10,7 +10,7 @@ over the common defaults.
 - Git: `delta` is the diff pager; `main` is the default branch; rebase-by-default;
   commits are SSH-signed via 1Password. Handy aliases: `g`, `git c/com/s/co/cob/l/lg`.
   `jj` (Jujutsu) is available as a git-compatible alternative.
-- Multiplexer: use `herdr` (prefix `C-;`), not tmux. tmux stays only for Moshi.
+- Multiplexer: use `herdr` (prefix `C-;`), not tmux.
 - GitHub: `gh`. Secrets: `doppler`. JSON: `jq`. Lint shell: `shellcheck`.
 - Runtimes come from `asdf` + `home/.tool-versions` (ruby / node / rust / uv);
   Python is uv-managed (`uv python`), not asdf. See README "Reinstalling AI tooling".
@@ -23,7 +23,5 @@ over the common defaults.
 - Add a tool: add it to `home/.Brewfile`, then `brew bundle --global`
   (or `script/brewfile-update`). Don't commit `home/.Brewfile.lock.json` (gitignored).
 - Shell scripts: run `shellcheck` before committing.
-- Commits: terse, imperative, sentence-case (e.g. "Update brew", "Fix eza").
-  This repo does not use conventional-commit prefixes.
 
 See `README.md` for the full default→modern tool table and repo layout.
