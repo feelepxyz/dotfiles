@@ -7,7 +7,9 @@
     "npm:@ogulcancelik/pi-herdr",
     "npm:@ogulcancelik/pi-model-thinking",
     "npm:@ogulcancelik/pi-goal",
-    "npm:@plannotator/pi-extension"
+    "npm:@plannotator/pi-extension",
+    "npm:pi-web-access",
+    "npm:pi-skill-toggle"
   ],
   "lastChangelogVersion": "0.82.0",
   "theme": "dark",

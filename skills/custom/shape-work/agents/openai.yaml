@@ -1,0 +1,12 @@
+interface:
+  display_name: Shape Work
+  short_description: Turn rough work into a decision-ready brief
+  default_prompt: Use $shape-work to turn this request into the smallest decision-ready
+    brief.
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

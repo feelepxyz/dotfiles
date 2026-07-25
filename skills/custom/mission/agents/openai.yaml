@@ -1,0 +1,12 @@
+interface:
+  display_name: Mission
+  short_description: Run large work through fresh workers and validators
+  default_prompt: Use $mission to orchestrate this large project from validation contract
+    through independently validated completion.
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

@@ -14,13 +14,16 @@ LOCK="$HOME/.agents/.skill-lock.json"
 AGENTS=(claude-code codex pi antigravity-cli)
 
 restore() {
-  local repo selector _rest
-  while read -r repo selector _rest; do
-    [ -z "$repo" ] && continue
+  local repo
+  local -a fields selectors
+  while read -r -a fields; do
+    [ "${#fields[@]}" -eq 0 ] && continue
+    repo="${fields[0]}"
     case "$repo" in \#*) continue ;; esac
-    selector="${selector:-*}"
-    echo "==> $repo ($selector)"
-    npx skills@latest add "$repo" -g -s "$selector" -a "${AGENTS[@]}" -y
+    selectors=("${fields[@]:1}")
+    [ "${#selectors[@]}" -gt 0 ] || selectors=('*')
+    echo "==> $repo (${selectors[*]})"
+    npx skills@latest add "$repo" -g -s "${selectors[@]}" -a "${AGENTS[@]}" -y
   done < "$MANIFEST"
 
   if [ -d "$CUSTOM" ]; then

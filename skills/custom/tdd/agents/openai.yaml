@@ -1,0 +1,12 @@
+interface:
+  display_name: TDD
+  short_description: Drive implementation through behavioral feedback
+  default_prompt: Use $tdd to implement this behavior through a focused test-driven
+    loop.
+policy:
+  allow_implicit_invocation: true
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

@@ -1,0 +1,12 @@
+interface:
+  display_name: Surface Unknowns
+  short_description: Find the uncertainties that could change the work
+  default_prompt: Map the knowns and unknowns in this request, prioritize the consequential
+    gaps, and recommend the cheapest next step.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: false

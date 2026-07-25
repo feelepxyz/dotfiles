@@ -1,15 +1,13 @@
 # Agent-skill sources, installed globally via `npx skills`. One repo per line.
 # Format: owner/repo [selector]   (selector defaults to '*' = all skills)
 # Regenerate from installed skills with: install/skills.sh --generate
-anthropics/skills
-backnotprop/plannotator
-diffusionstudio/lottie
-dmmulroy/skills
-mattpocock/skills
-ogulcancelik/herdr
-petergyang/no-ai-slop
-rjyo/moshi-skill
-supabase/agent-skills
-vercel-labs/agent-browser
-vercel-labs/agent-skills
-vercel-labs/skills
+anthropics/skills skill-creator
+# diffusionstudio/lottie
+mattpocock/skills batch-grill-me claude-handoff writing-shape writing-fragments writing-beats loop-me wizard grilling grill-me writing-great-skills teach handoff ask-matt grill-with-docs triage improve-codebase-architecture setup-matt-pocock-skills to-spec to-tickets wayfinder
+ogulcancelik/herdr herdr
+petergyang/no-ai-slop no-ai-slop
+rjyo/moshi-skill moshi-best-practices
+# supabase/agent-skills
+# vercel-labs/agent-browser
+# vercel-labs/agent-skills
+# vercel-labs/skills

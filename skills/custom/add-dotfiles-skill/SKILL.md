@@ -1,12 +1,9 @@
 ---
 name: add-dotfiles-skill
-description: Scaffold a new personal skill in this dotfiles repo (skills/custom/) and symlink it into Claude via npx skills. Use when the user wants to create, add, or author a custom or personal agent skill that should live in their dotfiles.
+description: Scaffold a new personal skill in this dotfiles repo (skills/custom/) and symlink it into Claude/Codex via npx skills. Use when the user wants to create, add, or author a custom or personal agent skill that should live in their dotfiles.
 ---
 
 # Add a dotfiles skill
-
-Create a new personal skill that lives in this dotfiles repo under
-`skills/custom/<name>/` and is symlinked into `~/.claude/skills` by `npx skills`.
 
 ## Steps
 
@@ -25,6 +22,4 @@ Create a new personal skill that lives in this dotfiles repo under
    claude-code codex pi antigravity-cli`).
 5. Confirm: `ls -la ~/.claude/skills/<name>` and `npx skills ls -g`.
 
-`npx skills` copies local skills into the shared store (`~/.agents/skills`) and
-symlinks that into each agent, so after editing `SKILL.md` re-run
-`~/.dotfiles/install/skills.sh` to resync. Commit the new directory to version it.
+After editing `SKILL.md` re-run `~/.dotfiles/install/skills.sh` to resync.
