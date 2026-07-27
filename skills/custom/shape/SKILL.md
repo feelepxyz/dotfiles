@@ -1,12 +1,12 @@
 ---
-name: shape-work
+name: shape
 description: Create clear, actionable contracts that define project goals, implementation details, and success validation criteria. Use this skill when you need to outline project objectives and ensure all key factors are addressed before moving forward with implementation.
 disable-model-invocation: true
 ---
 
-# Shape Work
+# Shape
 
-Create a compact contract between intent, implementation, and validation.
+Enter /plan mode and create a compact contract between intent, implementation, and validation.
 
 ## 1. Make the destination clear
 
@@ -18,6 +18,7 @@ outside this effort.
   user, with a recommended answer.
 - Choose the cheapest method that reduces material uncertainty: inspection,
   research, comparison, prototype, or question.
+- When quality is difficult to describe, use reference artifacts and name the properties that should transfer.
 - Reframe the work when evidence invalidates the original premise.
 
 When useful, distinguish:
@@ -48,27 +49,18 @@ the smallest useful set of independently verifiable facts.
 
 Each contract must:
 
+- use stable sequential IDs derived from a short project name
 - prove one observable fact, not describe an implementation task;
 - state the scenario or action and expected outcome in **Goal**;
 - name a feasible verification mechanism in **Tool**; and
 - specify the concrete artifact or observation that demonstrates success in
   **Evidence**.
 
-Use stable sequential IDs derived from a short project name:
-
-```md
-### PROJ-NAME-001: <verifiable fact>
-Goal: <precondition or action and its observable outcome>
-Tool: <tool or verification method>
-Evidence: <specific artifact, assertion, response, screenshot, log, or metric>
-```
-
 Together, the contracts must be sufficient to prove the destination. Remove
 duplicates. Include failure cases, boundaries, compatibility, security, or
 non-functional properties only when the destination makes them material.
 
-If a required fact has no feasible tool or concrete evidence, treat that as an
-unresolved blocker and return to shaping.
+If a required fact has no feasible tool or concrete evidence, first try to design and calibrate a credible verifier. If none is feasible, treat that as an unresolved blocker and return to shaping.
 
 ## Return
 

@@ -95,7 +95,7 @@
     mergeoptions = --no-edit
     # Speed up some repositories.
     commitGraph = true
-    pager = delta
+	pager = hunk pager
 
 [delta]
     side-by-side = true

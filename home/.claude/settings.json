@@ -1,6 +1,13 @@
 {
   "permissions": {
+    "deny": [
+      "Read(./.entire/metadata/**)"
+    ],
     "defaultMode": "auto"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "wt list statusline --format=claude-code"
   },
   "model": "opus[1m]",
   "hooks": {
@@ -16,6 +23,37 @@
         ]
       }
     ],
+    "PreToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code pre-task'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code post-task'"
+          }
+        ]
+      },
+      {
+        "matcher": "TodoWrite",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code post-todo'"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
@@ -23,6 +61,26 @@
             "type": "command",
             "command": "'/opt/homebrew/bin/moshi-hook' claude-hook",
             "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"\\\\n\\\\nEntire CLI is enabled but not installed or not on PATH.\\\\nInstallation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; exec entire hooks claude-code session-start'"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code session-end'"
           }
         ]
       }
@@ -36,6 +94,15 @@
             "async": true
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code stop'"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -47,11 +114,46 @@
             "async": true
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code user-prompt-submit'"
+          }
+        ]
       }
     ]
   },
   "worktree": {
     "baseRef": "fresh"
+  },
+  "enabledPlugins": {
+    "plannotator@plannotator": true,
+    "claude-security@claude-plugins-official": true,
+    "gh-cli@trailofbits": true,
+    "worktrunk@worktrunk": true
+  },
+  "extraKnownMarketplaces": {
+    "plannotator": {
+      "source": {
+        "source": "github",
+        "repo": "backnotprop/plannotator"
+      }
+    },
+    "trailofbits": {
+      "source": {
+        "source": "github",
+        "repo": "trailofbits/skills"
+      }
+    },
+    "worktrunk": {
+      "source": {
+        "source": "github",
+        "repo": "max-sixty/worktrunk"
+      }
+    }
   },
   "effortLevel": "xhigh",
   "tui": "fullscreen",
@@ -65,13 +167,5 @@
   "verbose": true,
   "agentPushNotifEnabled": true,
   "voiceEnabled": true,
-  "shell": "/bin/zsh",
-  "extraKnownMarketplaces": {
-    "plannotator": {
-      "source": { "repo": "backnotprop/plannotator", "source": "github" }
-    }
-  },
-  "enabledPlugins": {
-    "plannotator@plannotator": true
-  }
+  "shell": "/bin/zsh"
 }

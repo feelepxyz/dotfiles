@@ -27,7 +27,7 @@ available.
 ## 1. Frame the mission
 
 Clarify the observable destination, scope, non-goals, boundaries, and material
-unknowns. Reuse an existing `shape-work` brief and validation contracts when
+unknowns. Reuse an existing `shape` brief and validation contracts when
 available. Define correctness before planning features.
 
 Write a finite validation contract of independently verifiable behavioral
@@ -123,9 +123,7 @@ one independent validation pass; separate these axes when both matter:
 Record each contract as passed, failed, or blocked with evidence. Validators
 surface issues only.
 
-Convert actionable findings into bounded fix features linked to the affected
-contracts. Send them to fresh workers, then re-run the milestone's relevant
-validation. Repeat until it passes.
+Prioritize the highest-impact remaining evidence gap. Convert it into the smallest bounded fix feature linked to the affected contracts. Send them to fresh workers, then re-run the milestone's relevant validation. Repeat until it passes.
 
 ## Complete or halt
 
