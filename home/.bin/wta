@@ -1,0 +1,383 @@
+#!/usr/bin/env bash
+#
+# wta - worktree agent. Create a git worktree for agent work and launch the
+# agent in it, deciding what happens to any uncommitted changes on the way.
+#
+# Worktrunk creates the worktree; Entire must already be enabled in the repo so
+# the agent session gets checkpointed. See `wta --help`.
+#
+# The shell cannot be moved by a child process, so when $WTA_CD_FILE is set the
+# worktree path is written there for the zsh wrapper in ~/.zsh/scripts to cd to.
+
+set -euo pipefail
+
+readonly VALID_FLAGS='--agent <cmd>, --no-agent, --dirty carry|keep, -h|--help'
+
+agent='claude'
+agent_explicit=0
+no_agent=0
+dirty_choice=''
+branch=''
+
+# stdout: results and errors, each carrying the command that fixes it.
+say() { printf '%s\n' "$@"; }
+
+# stderr: progress and prompts only, never mixed into stdout.
+note() { printf '%s\n' "$@" >&2; }
+
+# die <exit-code> <line>...
+die() {
+  local code=$1
+  shift
+  say "$@"
+  exit "$code"
+}
+
+usage() {
+  cat <<'EOF'
+wta - create a git worktree for agent work and launch the agent in it
+
+Usage:
+  wta [branch] [options]
+
+Arguments:
+  branch                Branch to create off the default branch. Required when
+                        on the default branch. On a feature branch, omit it to
+                        move the current branch out into a worktree instead.
+
+Options:
+  --agent <cmd>         Command to exec in the worktree (default: claude)
+  --no-agent            Create the worktree, launch nothing
+  --dirty carry|keep    What to do with uncommitted changes, instead of asking:
+                          carry - move them into the new worktree
+                          keep  - leave them in the current clone
+  -h, --help            Show this help
+
+Examples:
+  wta fix-auth                  Branch off the default branch, then launch claude
+  wta fix-auth --agent codex    Same, launching codex instead
+  wta --dirty carry             On a feature branch: move it out, bring changes
+  wta spike --no-agent          Just create the worktree
+
+Requires worktrunk (wt) and Entire enabled in the repository. The agent is
+skipped automatically when the repo has .config/wt.toml, since those projects
+launch agents from their own worktrunk hooks; pass --agent to override.
+EOF
+}
+
+# --- arguments ---------------------------------------------------------------
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    --no-agent)
+      no_agent=1
+      shift
+      ;;
+    --agent)
+      [ $# -ge 2 ] || die 2 \
+        'error: --agent requires a command' \
+        'help: wta <branch> --agent claude'
+      agent="$2"
+      agent_explicit=1
+      shift 2
+      ;;
+    --agent=*)
+      agent="${1#--agent=}"
+      agent_explicit=1
+      shift
+      ;;
+    --dirty)
+      [ $# -ge 2 ] || die 2 \
+        'error: --dirty requires a value' \
+        'help: wta <branch> --dirty carry   # or --dirty keep'
+      dirty_choice="$2"
+      shift 2
+      ;;
+    --dirty=*)
+      dirty_choice="${1#--dirty=}"
+      shift
+      ;;
+    -*)
+      die 2 \
+        "error: unknown flag $1 for wta" \
+        "help: valid flags: $VALID_FLAGS" \
+        'help: wta --help   # full reference'
+      ;;
+    *)
+      [ -z "$branch" ] || die 2 \
+        "error: unexpected argument $1 (branch is already \"$branch\")" \
+        'help: wta <branch> [options]'
+      branch="$1"
+      shift
+      ;;
+  esac
+done
+
+case "$dirty_choice" in
+  '' | carry | keep) ;;
+  *)
+    die 2 \
+      "error: invalid --dirty value \"$dirty_choice\"" \
+      'help: --dirty carry   # move changes into the new worktree' \
+      'help: --dirty keep    # leave changes in the current clone'
+    ;;
+esac
+
+if [ "$agent_explicit" -eq 1 ] && [ "$no_agent" -eq 1 ]; then
+  die 2 \
+    'error: --agent and --no-agent conflict' \
+    'help: pass one or the other'
+fi
+
+# --- preconditions -----------------------------------------------------------
+
+command -v wt >/dev/null 2>&1 || die 1 \
+  'error: worktrunk (wt) is not installed' \
+  'help: brew install worktrunk'
+
+command -v jq >/dev/null 2>&1 || die 1 \
+  'error: jq is not installed' \
+  'help: brew install jq'
+
+toplevel="$(git rev-parse --show-toplevel 2>/dev/null)" || die 1 \
+  'error: not in a git repository' \
+  'help: cd into a repository and re-run wta'
+
+here="$(pwd -P)"
+[ "$here" = "$toplevel" ] || die 1 \
+  'error: wta must run from the repository root' \
+  "help: cd $toplevel"
+
+entire_settings="$toplevel/.entire/settings.json"
+if [ ! -f "$entire_settings" ] ||
+  [ "$(jq -r '.enabled // false' "$entire_settings" 2>/dev/null)" != 'true' ]; then
+  die 1 \
+    'error: Entire is not enabled in this repository' \
+    'help: entire enable --agent claude-code' \
+    'help: entire enable -y --agent codex' \
+    'help: entire enable -y --agent pi' \
+    'help: entire enable -y --agent gemini' \
+    'help: then commit the files those wrote and re-run wta'
+fi
+
+# --- repository state --------------------------------------------------------
+
+# Print the worktree path holding a branch, or nothing. "worktree " is 9 chars,
+# so the path starts at 10 and may itself contain spaces.
+worktree_for_branch() {
+  git worktree list --porcelain | awk -v want="refs/heads/$1" '
+    $1 == "worktree" { path = substr($0, 10) }
+    $1 == "branch" && $2 == want { print path; exit }
+  '
+}
+
+resolve_default_branch() {
+  local ref candidate
+  if ref="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)"; then
+    printf '%s\n' "${ref#origin/}"
+    return 0
+  fi
+  for candidate in main master; do
+    if git show-ref --verify --quiet "refs/heads/$candidate"; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+default_branch="$(resolve_default_branch)" || die 1 \
+  'error: could not determine the default branch' \
+  'help: git remote set-head origin --auto'
+
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+[ "$current_branch" != 'HEAD' ] || die 1 \
+  'error: HEAD is detached' \
+  'help: git switch <branch>   # then re-run wta'
+
+dirty=0
+[ -n "$(git status --porcelain)" ] && dirty=1
+
+# --- decide what to do -------------------------------------------------------
+
+# mode=create  build a new worktree for `branch`, leaving this clone alone
+# mode=move    hand the current branch over to a worktree, resetting this clone
+if [ "$current_branch" = "$default_branch" ]; then
+  [ -n "$branch" ] || die 2 \
+    "error: branch name is required on the default branch ($default_branch)" \
+    'help: wta <branch-name>' \
+    'help: on a feature branch you can omit it to move that branch out'
+  mode='create'
+elif [ -n "$branch" ]; then
+  mode='create'
+else
+  mode='move'
+  branch="$current_branch"
+fi
+
+existing_worktree="$(worktree_for_branch "$branch")"
+if [ "$mode" = 'create' ] && [ -n "$existing_worktree" ]; then
+  die 1 \
+    "error: branch $branch already has a worktree at $existing_worktree" \
+    "help: wt switch $branch"
+fi
+
+if [ "$mode" = 'move' ]; then
+  git show-ref --verify --quiet "refs/heads/$default_branch" || die 1 \
+    "error: no local $default_branch branch to fall back to" \
+    "help: git fetch origin && git branch $default_branch origin/$default_branch"
+
+  default_worktree="$(worktree_for_branch "$default_branch")"
+  if [ -n "$default_worktree" ] && [ "$default_worktree" != "$toplevel" ]; then
+    die 1 \
+      "error: $default_branch is checked out at $default_worktree, so this clone cannot fall back to it" \
+      "help: wta <new-branch-name>   # branch off $default_branch instead"
+  fi
+fi
+
+# Moving a branch out takes its uncommitted changes with it; leaving them behind
+# would strand them on a branch that is no longer here.
+dirty_action='none'
+if [ "$dirty" -eq 1 ]; then
+  if [ "$mode" = 'move' ]; then
+    dirty_action='carry'
+  elif [ -n "$dirty_choice" ]; then
+    dirty_action="$dirty_choice"
+  elif [ -t 0 ]; then
+    note "uncommitted changes on $current_branch:"
+    git status --short >&2
+    note '' \
+      '  [c] carry them into the new worktree' \
+      "  [k] keep them here on $current_branch"
+    while :; do
+      read -r -p 'carry or keep? [c/k] ' reply || die 1 \
+        'error: no answer given' \
+        'help: wta <branch> --dirty carry   # or --dirty keep'
+      case "$reply" in
+        c | C | carry) dirty_action='carry'; break ;;
+        k | K | keep) dirty_action='keep'; break ;;
+      esac
+    done
+  else
+    die 2 \
+      'error: uncommitted changes and no way to ask what to do with them' \
+      'help: wta <branch> --dirty carry   # move them into the new worktree' \
+      'help: wta <branch> --dirty keep    # leave them in this clone'
+  fi
+fi
+
+# Projects with a worktrunk config launch their own agents from post-start
+# hooks; exec'ing one here would race them.
+project_wt_config=0
+if [ -f "$toplevel/.config/wt.toml" ] && [ "$agent_explicit" -eq 0 ]; then
+  project_wt_config=1
+  no_agent=1
+fi
+
+# --- act ---------------------------------------------------------------------
+
+stashed=0
+if [ "$dirty_action" = 'carry' ]; then
+  note "carrying uncommitted changes to $branch"
+  git stash push --include-untracked --message "wta: $branch" >&2
+  stashed=1
+fi
+
+# Undo whatever we did before failing, so a failed run leaves no residue.
+unwind() {
+  if [ "$mode" = 'move' ]; then
+    git switch "$current_branch" >/dev/null 2>&1 || true
+  fi
+  if [ "$stashed" -eq 1 ]; then
+    git stash pop >/dev/null 2>&1 || true
+  fi
+}
+
+if [ "$mode" = 'move' ]; then
+  note "returning this clone to $default_branch"
+  if ! git switch "$default_branch" >&2; then
+    unwind
+    die 1 \
+      "error: could not switch this clone to $default_branch" \
+      'help: resolve the git error above and re-run wta'
+  fi
+fi
+
+if git show-ref --verify --quiet "refs/heads/$branch"; then
+  switch_args=("$branch" --no-cd)
+else
+  switch_args=(--create "$branch" --no-cd)
+fi
+
+# wt's own output is progress, not result; keep stdout clean. Hook approval
+# prompts still reach the terminal, and --yes is never passed on the user's
+# behalf.
+if ! command wt switch "${switch_args[@]}" >&2; then
+  unwind
+  die 1 \
+    "error: wt switch failed for $branch" \
+    'help: resolve the worktrunk error above and re-run wta'
+fi
+
+worktree="$(worktree_for_branch "$branch")"
+[ -n "$worktree" ] || die 1 \
+  "error: wt switch reported success but no worktree holds $branch" \
+  'help: wt list'
+
+pop_conflict=0
+if [ "$stashed" -eq 1 ]; then
+  if git -C "$worktree" stash pop >&2; then
+    stashed=0
+  else
+    pop_conflict=1
+  fi
+fi
+
+# .entire/settings.local.json is gitignored, so it never reaches a new worktree
+# and `wt step copy-ignored` skips .entire/ by design. Write it here instead.
+entire_local="$worktree/.entire/settings.local.json"
+mkdir -p "$worktree/.entire"
+if [ -s "$entire_local" ]; then
+  scratch="$(mktemp)"
+  trap 'rm -f "$scratch"' EXIT
+  jq '.commit_linking = "always"' "$entire_local" >"$scratch"
+  cat "$scratch" >"$entire_local"
+else
+  printf '{\n  "commit_linking": "always"\n}\n' >"$entire_local"
+fi
+
+# Written before exec'ing the agent, so quitting the agent still lands the
+# shell in the worktree.
+[ -n "${WTA_CD_FILE:-}" ] && printf '%s\n' "$worktree" >"$WTA_CD_FILE"
+
+say "worktree: $worktree" "branch:   $branch"
+
+case "$dirty_action" in
+  carry) say "changes:  carried from $current_branch" ;;
+  keep) say "changes:  kept in $toplevel on $current_branch" ;;
+esac
+
+if [ "$pop_conflict" -eq 1 ]; then
+  say \
+    'warning: the carried changes did not apply cleanly' \
+    "help: resolve the conflicts in $worktree, then: git -C $worktree stash drop"
+fi
+
+if [ "$no_agent" -eq 1 ]; then
+  if [ "$project_wt_config" -eq 1 ]; then
+    say 'agent:    skipped (.config/wt.toml present; project hooks launch it)'
+  else
+    say 'agent:    skipped (--no-agent)'
+  fi
+  exit 0
+fi
+
+say "agent:    $agent"
+
+read -r -a agent_cmd <<<"$agent"
+cd "$worktree"
+exec "${agent_cmd[@]}"

@@ -52,10 +52,15 @@ for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
   fi
 done
 
-# nvim + pi configs live too deep for the loop above; link them explicitly.
+# nvim + worktrunk + pi configs live too deep for the loop above; link them
+# explicitly.
 if [ $UNIX ]; then
   rmdir "$HOME/.config/nvim" 2>/dev/null || true   # loop pre-mkdir'd it empty
   ln -sfn "$DOTFILESDIR/.config/nvim" "$HOME/.config/nvim"
+
+  # worktrunk writes state alongside its config, so link the file not the dir.
+  mkdir -p "$HOME/.config/worktrunk"
+  ln -sf "$DOTFILESDIR/.config/worktrunk/config.toml" "$HOME/.config/worktrunk/config.toml"
 
   mkdir -p "$HOME/.pi/agent"
   # extensions is a whole-dir symlink; replace any real dir left by herdr (it

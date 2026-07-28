@@ -177,3 +177,17 @@ moshi() {
 
   tmux attach -t "$session"
 }
+
+# Create a worktree for agent work and land this shell in it. The wta script
+# execs the agent, so stdout can't carry the path back — it writes the worktree
+# path to $WTA_CD_FILE instead, the same trick `wt` uses. `command rm` skips the
+# `rm -iv` alias, which would otherwise print "removed '/var/…'" every run.
+wta() {
+  local cd_file
+  cd_file="$(mktemp)"
+  WTA_CD_FILE="$cd_file" command wta "$@"
+  local rc=$?
+  [[ -s "$cd_file" ]] && builtin cd -- "$(<"$cd_file")"
+  command rm -f "$cd_file"
+  return $rc
+}

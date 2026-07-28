@@ -1,0 +1,12 @@
+interface:
+  display_name: Setup Git Hooks
+  short_description: Wire prek hooks to what this repo can actually run
+  default_prompt: Use $setup-git-hooks to inspect this repository, propose pre-commit
+    and pre-push hooks, and install them with prek.
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

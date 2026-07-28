@@ -1,7 +1,7 @@
 interface:
-  display_name: Shape Work
+  display_name: Shape
   short_description: Turn rough work into a decision-ready brief
-  default_prompt: Use $shape-work to turn this request into the smallest decision-ready
+  default_prompt: Use $shape to turn this request into the smallest decision-ready
     brief.
 policy:
   allow_implicit_invocation: false

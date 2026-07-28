@@ -1,0 +1,13 @@
+interface:
+  display_name: Commit
+  short_description: Commit the working tree with a generated Conventional Commits
+    message and name the next step
+  default_prompt: Use $commit to commit the current working tree and tell me what
+    comes next.
+policy:
+  allow_implicit_invocation: true
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
