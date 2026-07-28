@@ -104,6 +104,7 @@ Give each worker:
 Have the worker explicitly invoke assigned skills. Where no assigned workflow
 governs implementation, define verification before changing code and write
 behavioral tests first when the repository has an appropriate test seam.
+
 Require the worker to return the work performed, checks run, implementation
 evidence, knowledge updates, and blockers. Worker verification demonstrates
 feature progress but cannot pass a validation contract; only a fresh validator
