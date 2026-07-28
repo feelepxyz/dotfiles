@@ -69,6 +69,7 @@ PATH="$HOMEBREW_PREFIX/opt/openssl/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/.cargo/bin:$PATH"
+PATH="$HOME/.bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
 # Add relative bins with highest precedent
@@ -78,9 +79,6 @@ export PATH="bin:$PATH"
 
 # Setup zoxide to replace cd
 eval "$(zoxide init zsh)"
-
-# herdr completions
-source <(herdr completion zsh)
 
 # Load plugins
 source $HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh

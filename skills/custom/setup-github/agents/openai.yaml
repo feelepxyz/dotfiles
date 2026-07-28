@@ -1,0 +1,13 @@
+interface:
+  display_name: Setup GitHub
+  short_description: Converge a GitHub repo's merge hygiene, branch guardrails, Dependabot
+    and secret scanning
+  default_prompt: Use $setup-github to check this repository's GitHub settings and
+    apply the recommended housekeeping.
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

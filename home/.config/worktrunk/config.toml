@@ -1,5 +1,18 @@
 [commit.generation]
 command = "MAX_THINKING_TOKENS=0 claude -p --no-session-persistence --model=sonnet --tools='' --safe-mode --setting-sources='user' --system-prompt=''"
 
+# `--safe-mode` runs the generator hermetically, so it never sees CLAUDE.md.
+# These rules have to live here to reach it. `template-append` adds to
+# worktrunk's default prompt rather than replacing it, so upstream prompt
+# improvements still land.
+template-append = """
+- Follow Conventional Commits: `type(scope): subject`.
+- Types: feat, fix, docs, refactor, perf, test, build, ci, chore.
+- Scope is optional; include it only when the affected area is obvious.
+- Subject: imperative mood, lowercase after the colon, no trailing period, 72 chars max.
+- Add a body only for non-obvious reasoning, trade-offs, or consequences.
+- Never add AI attribution, Co-Authored-By, or "Generated with" trailers.
+"""
+
 [list]
 summary = true

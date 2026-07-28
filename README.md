@@ -52,6 +52,25 @@ install/ai.sh             # claude, codex, plannotator, pi (curl) + agent skills
 - **codex**: run `codex` once to sign in. The **plannotator** Claude plugin loads
   from `home/.claude/settings.json`.
 
+## Setting a repo up
+
+The `setup-repo` skill is the entry point: it reports Entire, git hooks,
+worktrunk and GitHub settings in one pass, then converges each in the order that
+costs the fewest decisions — and lands the local changes in a single commit.
+
+Each area is also its own skill, for when only one of them needs attention:
+`setup-entire`, `setup-git-hooks`, `setup-worktrunk`, `setup-github`.
+
+## Worktrees
+
+`wta` builds a git worktree for agent work and drops the shell in it. Worktrunk
+(`wt`) makes the worktree, and the agent is launched for you.
+
+In a repo with `.config/wt.toml`, `wta` launches no agent: that project's
+worktrunk hooks open a herdr workspace instead, with the agent and dev servers
+already running in their own panes. Write that config with the
+`setup-worktrunk` skill.
+
 ## Layout
 
 - `home/` — dotfiles; each is symlinked into `$HOME` by `script/setup`.

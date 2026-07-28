@@ -1,0 +1,12 @@
+interface:
+  display_name: Setup Worktrunk
+  short_description: Give a repo worktrunk hooks that open a herdr workspace per worktree
+  default_prompt: Use $setup-worktrunk to inspect this repository, propose the panes
+    a new worktree should open, and write .config/wt.toml.
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

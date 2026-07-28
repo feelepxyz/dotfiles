@@ -1,0 +1,54 @@
+# managed by the setup-git-hooks skill — re-run it to change hooks
+# regenerate: bash ~/.claude/skills/setup-git-hooks/setup-git-hooks.sh --apply --accept
+
+[[repos]]
+repo = "builtin"
+
+[[repos.hooks]]
+id = "trailing-whitespace"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "end-of-file-fixer"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "check-merge-conflict"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "detect-private-key"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "check-added-large-files"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "mixed-line-ending"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "check-yaml"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "check-json"
+exclude = "(^|/)(tsconfig|jsconfig|devcontainer)\\.json$|(^|/)\\.vscode/"
+stages = ["pre-commit"]
+
+[[repos.hooks]]
+id = "check-toml"
+stages = ["pre-commit"]
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "shellcheck"
+name = "shellcheck"
+language = "system"
+entry = "shellcheck"
+files = "\\.(sh|bash)$"
+pass_filenames = true
+stages = ["pre-commit"]

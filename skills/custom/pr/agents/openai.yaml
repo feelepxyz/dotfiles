@@ -1,0 +1,13 @@
+interface:
+  display_name: Pull Request
+  short_description: Squash, rebase, run hooks, push, open a pull request for this
+    branch, and watch its checks
+  default_prompt: Use $pr to open a pull request for the current branch and watch
+    its checks.
+policy:
+  allow_implicit_invocation: true
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

@@ -6,11 +6,6 @@
 # bun completions
 [ -s "/Users/feelepxyz/.bun/_bun" ] && source "/Users/feelepxyz/.bun/_bun"
 
-# herdr completions
-fpath=(~/.zfunc $fpath)
-autoload -Uz compinit
-compinit
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"

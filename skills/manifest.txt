@@ -2,15 +2,12 @@
 # Format: owner/repo [selector]   (selector defaults to '*' = all skills)
 # Comment a repo out to disable it; --generate will not re-add it.
 # Regenerate from installed skills with: install/skills.sh --generate
-anthropics/skills skill-creator
 # diffusionstudio/lottie
+anthropics/skills skill-creator
 mattpocock/skills ask-matt batch-grill-me claude-handoff grill-me grill-with-docs grilling handoff improve-codebase-architecture loop-me setup-matt-pocock-skills teach to-spec to-tickets triage wayfinder wizard writing-beats writing-fragments writing-great-skills writing-shape
 ogulcancelik/herdr herdr
 petergyang/no-ai-slop no-ai-slop
 rjyo/moshi-skill moshi-best-practices
 entireio/skills explain recall search using-entire
 j178/prek prek
-# supabase/agent-skills
-# vercel-labs/agent-browser
-# vercel-labs/agent-skills
-# vercel-labs/skills
+kunchenguid/axi axi

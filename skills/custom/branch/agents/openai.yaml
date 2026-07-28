@@ -1,0 +1,13 @@
+interface:
+  display_name: Branch
+  short_description: Assess the repository and land on a branch worth working on,
+    carrying uncommitted work across
+  default_prompt: Use $branch to put me on a good branch for the work I am about
+    to do.
+policy:
+  allow_implicit_invocation: true
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

@@ -1,0 +1,13 @@
+interface:
+  display_name: Hunk
+  short_description: Open the working diff, last commit, or branch range in the Hunk
+    terminal viewer
+  default_prompt: Use $hunk auto to open this repository's changeset in Hunk and review
+    it inline.
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

@@ -1,0 +1,13 @@
+interface:
+  display_name: Setup Repo
+  short_description: Set a repo up across Entire, git hooks, worktrunk and GitHub in
+    one pass and one commit
+  default_prompt: Use $setup-repo to report what setup this repository is missing,
+    then converge each area in order.
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
