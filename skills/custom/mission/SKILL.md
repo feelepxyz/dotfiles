@@ -12,6 +12,10 @@ validation.
 
 ## Separate the roles
 
+Invoking this skill is the request to delegate: run workers and validators as
+subagents, each in a fresh context. You are the orchestrator — do not collapse
+the three roles into this one.
+
 - **Orchestrator:** Own the destination, validation contract, decomposition,
   shared state, scheduling, and completion decision. Do not implement features
   or perform their final validation.
@@ -132,7 +136,5 @@ Complete the mission only when every validation contract has independently
 produced its required evidence, all features are complete, and no in-scope
 blocker remains.
 
-If progress requires unavailable access, a user decision, unsafe boundary
-expansion, or an unresolvable dependency, halt and return the exact blocker,
-affected contract and feature IDs, attempts made, and the action needed from the
-user.
+On a genuine blocker, halt and return it exactly: the affected contract and
+feature IDs, the attempts made, and the action needed from the user.

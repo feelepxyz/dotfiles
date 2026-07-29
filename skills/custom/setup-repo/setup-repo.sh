@@ -305,14 +305,43 @@ fi
 
 # --- report ----------------------------------------------------------------
 
+# The state column is only useful if its vocabulary travels with it, so the
+# report carries its own legend rather than leaving SKILL.md to hold a glossary
+# that drifts. Only the states this run produced are printed — a converged repo
+# should not pay to be told what `drifted` means.
+state_means() {
+	case "$1" in
+	converged) printf 'done — settings reconciled' ;;
+	configured) printf 'done — config file written' ;;
+	pending) printf 'never set up, or set up but still needs something from the user; follow next[]' ;;
+	drifted) printf 'a config exists but is wrong; the area skill --heal names it — ask before repairing' ;;
+	unmanaged) printf 'a config exists but belongs to someone else; --heal or --force, and the user chooses' ;;
+	skipped) printf 'no GitHub remote — nothing to do, and not a failure' ;;
+	blocked) printf 'the sibling ran but cannot act: no admin on the GitHub repo; only the user resolves it' ;;
+	error) printf 'the sibling exited non-zero — act on its own error: line, not this table' ;;
+	unavailable) printf 'that sibling skill is not installed — re-run install/skills.sh' ;;
+	unknown) printf 'could not parse that sibling — run it directly and trust its output over this table' ;;
+	*) return 1 ;;
+	esac
+}
+
 printf 'bin: %s\n' "${SELF/#$HOME/\~}"
 printf 'repo: %s\n' "$(basename "$REPO_ROOT")"
 
 rows=()
+legend=()
+seen=""
 pending_areas=0
 for rec in ${AREAS[@]+"${AREAS[@]}"}; do
 	IFS="$SEP" read -r area state detail <<<"$rec"
 	rows+=("  $area,$state,\"$detail\"")
+	case "$seen" in
+	*"|$state|"*) ;;
+	*)
+		seen="$seen|$state|"
+		if means=$(state_means "$state"); then legend+=("  $state,\"$means\""); fi
+		;;
+	esac
 	case "$state" in
 	converged | configured | skipped) ;;
 	*) pending_areas=$((pending_areas + 1)) ;;
@@ -320,6 +349,10 @@ for rec in ${AREAS[@]+"${AREAS[@]}"}; do
 done
 printf 'areas[%s]{area,state,detail}:\n' "${#rows[@]}"
 printf '%s\n' "${rows[@]}"
+if [ "${#legend[@]}" -gt 0 ]; then
+	printf 'legend[%s]{state,means}:\n' "${#legend[@]}"
+	printf '%s\n' "${legend[@]}"
+fi
 
 if [ "$pending_areas" -eq 0 ]; then
 	printf 'pending: 0 of %s areas — this repo is set up (no-op)\n' "${#rows[@]}"

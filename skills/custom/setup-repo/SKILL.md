@@ -14,21 +14,20 @@ three calls that report one each. It only reads — two of the three areas need 
 user to choose from a table first, so converging stays with the individual
 skills.
 
-Those three carry `disable-model-invocation` (and `allow_implicit_invocation:
-false` for the OpenAI agents), so they cost nothing in a session that is not
-setting a repo up, and no agent fires one on its own. **That is why this skill
-drives them by reading their `SKILL.md` and following it, rather than invoking
-them as skills** — the read delivers exactly what a skill invocation would have,
-and it works the same in every agent. Only the user typing `/setup-git-hooks`
+Those three carry `disable-model-invocation`, so they cost nothing in a session
+that is not setting a repo up and no agent fires one on its own. **That is why
+this skill drives them by reading their `SKILL.md` and following it rather than
+invoking them as skills** — the read delivers what a skill invocation would
+have, and works the same in every agent. Only the user typing `/setup-git-hooks`
 reaches one directly.
 
 ## Run it
 
     bash ~/.agents/skills/setup-repo/setup-repo.sh
 
-The script sits beside this file; run it through `bash`, since skills install
-without the executable bit. It finds its siblings as sibling directories, so it
-works from the installed copy and from `~/.dotfiles/skills/custom/` alike.
+Run through `bash` — skills install without the exec bit. It finds its siblings
+as sibling directories, so it works from the installed copy and from
+`~/.dotfiles/skills/custom/` alike.
 
 | Area | Skill | Asks the user? |
 | --- | --- | --- |
@@ -73,35 +72,16 @@ finished too — say which, rather than leaving it looking unfinished.
 
 ## Reading the roll-up
 
-The `state` column decides what happens next:
-
-- **converged** / **configured** — done. Two words for one outcome: `converged`
-  is what the area that reconciles settings reports (github), `configured` what
-  the areas that write a config file report (git-hooks, worktrunk). Nothing to do
-  either way.
-- **pending** — the area has never been set up, or it is set up but still needs
-  something from the user. Follow the step in `next[]`.
-- **drifted** / **unmanaged** — a config exists but is wrong or belongs to
-  someone else. The skill's `--heal` names it; ask before repairing.
-- **skipped** — no GitHub remote. Nothing to do, and not a failure.
-- **blocked** — the sibling ran fine but cannot act: no admin on the GitHub repo.
-  Normal on a repo the user does not own. Only they can resolve it, by getting
-  admin or deciding to skip GitHub.
-- **error** — the sibling exited non-zero. The detail carries its `error:` line;
-  act on that, not on this table.
-- **unavailable** — that sibling skill is not installed. Re-run
-  `~/.dotfiles/install/skills.sh`.
-- **unknown** — the roll-up could not parse that sibling. Run the sibling
-  directly and trust its own output over this table.
-
-Only `converged`, `configured` and `skipped` count as done. Everything else adds
-to the pending tally and carries a `next[]` entry.
+The `state` column decides what happens next, and the run prints a `legend[]`
+for the states it actually produced — read the meanings there. Only `converged`,
+`configured` and `skipped` count as done; everything else adds to the pending
+tally and carries a `next[]` entry.
 
 A `next[]` entry naming a `SKILL.md` to read is a step that asks the user a
 question. A `next[]` entry that is a shell command does not.
 
 ## Boundary
 
-Sequencing the four areas is the whole job. What each area proposes, how it heals
+Sequencing the three areas is the whole job. What each area proposes, how it heals
 drift, and how it explains itself belong to that area's own skill — read those
 rather than second-guessing them from here.

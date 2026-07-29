@@ -17,15 +17,9 @@ them the moment they land — `--apply` therefore refuses to imply a set.
 
     bash ~/.agents/skills/setup-github/setup-github.sh
 
-The script sits beside this file; run it through `bash`, since skills install
-without the executable bit.
-
-| Mode | Writes | Job |
-| --- | --- | --- |
-| _(none)_ / `--plan` | nothing | Probe and print the item table |
-| `--apply --accept` | GitHub settings | Take the recommended set |
-| `--apply --items=a,b` | GitHub settings | Take an exact selection |
-| `--status` | nothing | What is set right now |
+Run through `bash` — skills install without the exec bit. No flags probes and
+prints the item table; `--apply` converges; `--help` lists the modes, the flags
+and the item ids.
 
 `--repo=owner/name` acts on a repo you are not sitting in. `--force` adds the
 ruleset alongside a foreign one that already governs the default branch.
@@ -39,7 +33,7 @@ ruleset alongside a foreign one that already governs the default branch.
    of the ids, recommended ones first.
 3. **Apply.** `--apply --accept`, or `--apply --items=<ids>`.
 4. **Verify.** The script re-reads the repo and prints an `achieved[]` table.
-   Report it. Any row that did not reach its target is a failure to say plainly.
+   Report it; a row that did not reach its target is a failure.
 
 Done when step 4 has actually been run, not merely suggested. Nothing here needs
 committing — say so, rather than leaving the user looking for a diff.

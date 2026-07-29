@@ -13,10 +13,9 @@ call, a handful of lines back.
 
 ## Run it
 
-    bash ~/.claude/skills/hunk/hunk.sh $ARGUMENTS
+    bash ~/.agents/skills/hunk/hunk.sh $ARGUMENTS
 
-The script sits beside this file; run it through `bash`, since skills install
-without the executable bit.
+Run through `bash` — skills install without the exec bit.
 
 It picks the target from the repository's own state, so pass nothing else:
 
@@ -42,11 +41,9 @@ the user, since the viewer is theirs.
    command below.
 2. `hunk session review --repo . --json` for the file and hunk structure. Add
    `--include-patch` only for files whose diff text you actually need to read.
-3. Review against `~/.claude/CLAUDE.md` — root causes over symptoms, the
-   repository's existing conventions, the smallest coherent change.
-4. Batch every finding into one `hunk session comment apply --repo . --stdin`
+3. Batch every finding into one `hunk session comment apply --repo . --stdin`
    call, each anchored to the line it concerns.
-5. Report the count and the single most consequential finding.
+4. Report the count and the single most consequential finding.
 
 Comment where you carry information the user does not: a root cause, a broken
 invariant, a case the change misses. Silence on a hunk is a valid review.

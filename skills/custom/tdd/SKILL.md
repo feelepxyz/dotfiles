@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Implement or change software through a focused test-driven loop. Use when user or agent explicitly uses 'tdd' or invoked for behavior with an appropriate automated test seam, including a shape-work validation contract or mission worker feature.
+description: Implement or change software through a focused test-driven loop. Use when user or agent explicitly uses 'tdd' or invoked for behavior with an appropriate automated test seam, including a shape validation contract or mission worker feature.
 ---
 
 # TDD
@@ -10,7 +10,7 @@ for the next one.
 
 ## Establish the boundary
 
-Read the request, relevant `shape-work` validation contracts or mission feature,
+Read the request, relevant `shape` validation contracts or mission feature,
 repository instructions, current behavior, and nearby tests.
 
 - Treat validation contracts as the required outcome. Do not rewrite them into
@@ -38,11 +38,9 @@ Keep the list behavioral; defer implementation design. Do not turn the whole
 list into test code upfront. Select the next scenario that yields useful
 behavior or design information with the least setup.
 
-Scale the list to risk rather than coverage targets. Add generative or fuzz
-tests when correctness is better expressed as an invariant over a large,
-hostile, or combinatorial input space. Run fuzzing only in a disposable,
-bounded environment; retain the seed and reduce any failure to a deterministic
-regression case.
+Scale the list to risk rather than coverage targets. Where correctness is an
+invariant over a large or hostile input space, add bounded generative tests and
+reduce any failure to a deterministic regression case.
 
 ## Evolve one example at a time
 
@@ -65,13 +63,9 @@ the executable explanation of behavior.
 
 ## Hand off
 
-Return:
-
-- scenarios completed, deferred, or discovered, with contract mappings;
-- tests and production behavior changed;
-- the failing and passing commands and what each demonstrated;
-- consequential design feedback or deviations; and
-- remaining gaps or unsuitable seams.
+Beyond the usual report of what changed and what was verified: map the scenarios
+completed, deferred, and discovered to contract IDs, and name the design
+feedback the tests produced — friction, deviations, seams that were not honest.
 
 In a mission, report which contracts the work contributes to but do not mark
 them passed. Worker tests guide implementation; fresh validators still produce

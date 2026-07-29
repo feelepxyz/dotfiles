@@ -10,10 +10,9 @@ worth working on, and names the next step — one call, a handful of lines back.
 
 ## Run it
 
-    bash ~/.claude/skills/branch/branch.sh <name>
+    bash ~/.agents/skills/branch/branch.sh <name>
 
-The script sits beside this file; run it through `bash`, since skills install
-without the executable bit.
+Run through `bash` — skills install without the exec bit.
 
 **Always pass a name**, with the one exception noted under `--rebase`. The
 repository state decides what happens; the name is consumed only when a fresh
@@ -21,7 +20,7 @@ cut is actually needed. On a branch that already carries live work the script
 reports it and changes nothing, whatever name you passed — so passing one is
 always safe. Derive it in kebab-case from the work this session is about to do.
 
-Five flags narrow the job:
+Three flags carry more than `--help` says; `--help` lists all six:
 
 - `--status` — assess and report the plan, change nothing. Every refusal a run
   would raise comes back as a `plan:` line instead, so this always reports.
@@ -31,14 +30,11 @@ Five flags narrow the job:
   which fast-forwards the default on the way past.
 - `--new` — cut a fresh branch even when this one carries live work. It does
   not override the unpushed-commits refusal below.
-- `--push` — after landing, run the commit skill, which opens the pull request
-- `--base <branch>` — cut from this branch instead of the repository default
 
 ## Relay what it returns
 
-The output is the answer. Report the outcome line and the `next:` line. The
-script reads its result back from git after acting, so it already reflects
-reality — go straight to reporting it.
+Report the outcome line and the `next:` line as they come — the script re-reads
+git after acting, so its output is already reality.
 
 | Outcome | What happened |
 | --- | --- |
