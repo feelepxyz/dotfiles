@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2016 # backticks in help prose are literal markup, not substitution
-# Roll four repository-setup checks into one report: Entire, git hooks,
-# worktrunk and GitHub housekeeping.
+# Roll three repository-setup checks into one report: git hooks, worktrunk and
+# GitHub housekeeping.
 #
-# This script only reads. Two of the four areas need the user to choose from a
+# This script only reads. Two of the three areas need the user to choose from a
 # table before anything is written, which a script cannot do, so converging is
 # left to the individual skills and sequenced by SKILL.md.
 #
@@ -20,17 +20,18 @@ SELF=${BASH_SOURCE[0]}
 SEP=$'\037'
 
 # Siblings are resolved as sibling *directories*, which holds in both layouts:
-# ~/.agents/skills/setup-repo/../setup-entire/setup-entire.sh when installed,
-# and ~/.dotfiles/skills/custom/setup-repo/../setup-entire/... at the source.
+# ~/.agents/skills/setup-repo/../setup-git-hooks/setup-git-hooks.sh when
+# installed, and ~/.dotfiles/skills/custom/setup-repo/../setup-git-hooks/... at
+# the source.
 SKILL_DIR=$(cd "$(dirname "$SELF")" && pwd)
 SIBLINGS=$(dirname "$SKILL_DIR")
 SIBLINGS_SHOWN=${SIBLINGS/#$HOME/\~}
 
 usage() {
 	printf 'bin: %s\n' "${SELF/#$HOME/\~}"
-	printf 'description: Report Entire, git hook, worktrunk and GitHub setup for this repo in one pass\n'
+	printf 'description: Report git hook, worktrunk and GitHub setup for this repo in one pass\n'
 	printf 'modes[1]{mode,writes,job}:\n'
-	printf '  --check,nothing,"Roll the four area checks into one report (default)"\n'
+	printf '  --check,nothing,"Roll the three area checks into one report (default)"\n'
 	printf 'note: this script never writes — converging each area is its own skill\n'
 	printf 'examples[1]:\n'
 	printf '  bash %s\n' "${SELF/#$HOME/\~}"
@@ -56,7 +57,7 @@ done
 if ! REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || [ -z "$REPO_ROOT" ]; then
 	printf 'error: not a git repository\n'
 	printf 'cwd: %s\n' "${PWD/#$HOME/\~}"
-	printf 'cause: all four areas configure a repository, and there is none here\n'
+	printf 'cause: all three areas configure a repository, and there is none here\n'
 	printf 'help: cd into a repository, or run `git init` yourself first\n'
 	exit 1
 fi
@@ -157,32 +158,10 @@ error_line() {
 unavailable() {
 	add_area "$1" unavailable "$2/$2.sh is not installed beside this skill"
 	# Unavailable counts as unfinished, so it needs a step of its own — otherwise
-	# a run with no siblings reports four pending areas and an empty next[].
+	# a run with no siblings reports three pending areas and an empty next[].
 	NEXT+=("bash ~/.dotfiles/install/skills.sh   # reinstall skills; $2 is missing")
 	return 0
 }
-
-# --- entire ----------------------------------------------------------------
-
-run_sibling setup-entire
-if [ "$RC" = 127 ]; then
-	unavailable entire setup-entire
-elif [ "$RC" != 0 ]; then
-	add_area entire error "$(error_line || printf 'exited %s' "$RC")"
-	NEXT+=("bash $SIBLINGS_SHOWN/setup-entire/setup-entire.sh   # resolve the error above")
-else
-	n=$(pending_count) || n=""
-	enabled=$(field enabled) || enabled=unknown
-	if [ -z "$n" ]; then
-		add_area entire unknown "could not read a pending count from setup-entire"
-		NEXT+=("bash $SIBLINGS_SHOWN/setup-entire/setup-entire.sh")
-	elif [ "$n" = 0 ]; then
-		add_area entire converged "enabled=$enabled, hooks installed, commit_linking=$(field commit_linking || printf unset)"
-	else
-		add_area entire pending "$n change(s): enabled=$enabled, commit_linking=$(field commit_linking || printf unset)"
-		NEXT+=("bash $SIBLINGS_SHOWN/setup-entire/setup-entire.sh --apply   # autonomous, asks nothing")
-	fi
-fi
 
 # --- git hooks -------------------------------------------------------------
 

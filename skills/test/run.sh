@@ -166,7 +166,7 @@ case_heal-parses-prefix-entries() {
 
 # `${NEXT[@]}` unguarded aborts under bash 3.2 with set -u. It is reachable
 # whenever every area lands in a state that pushes no next[] entry — copying
-# setup-repo.sh somewhere with no sibling skills makes all four `unavailable`,
+# setup-repo.sh somewhere with no sibling skills makes all three `unavailable`,
 # which is the cheapest way to produce exactly that.
 case_rollup-survives-empty-next() {
 	local lonely repo out

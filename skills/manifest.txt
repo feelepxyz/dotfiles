@@ -8,6 +8,5 @@ mattpocock/skills ask-matt batch-grill-me claude-handoff grill-me grill-with-doc
 ogulcancelik/herdr herdr
 petergyang/no-ai-slop no-ai-slop
 rjyo/moshi-skill moshi-best-practices
-entireio/skills explain recall search using-entire
 j178/prek prek
 kunchenguid/axi axi

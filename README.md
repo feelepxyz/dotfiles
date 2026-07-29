@@ -54,12 +54,12 @@ install/ai.sh             # claude, codex, plannotator, pi (curl) + agent skills
 
 ## Setting a repo up
 
-The `setup-repo` skill is the entry point: it reports Entire, git hooks,
-worktrunk and GitHub settings in one pass, then converges each in the order that
-costs the fewest decisions — and lands the local changes in a single commit.
+The `setup-repo` skill is the entry point: it reports git hooks, worktrunk and
+GitHub settings in one pass, then converges each in the order that costs the
+fewest decisions — and lands the local changes in a single commit.
 
 Each area is also its own skill, for when only one of them needs attention:
-`setup-entire`, `setup-git-hooks`, `setup-worktrunk`, `setup-github`.
+`setup-git-hooks`, `setup-worktrunk`, `setup-github`.
 
 ## Worktrees
 

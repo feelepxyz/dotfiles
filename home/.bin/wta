@@ -3,8 +3,7 @@
 # wta - worktree agent. Create a git worktree for agent work and launch the
 # agent in it, deciding what happens to any uncommitted changes on the way.
 #
-# Worktrunk creates the worktree; Entire must already be enabled in the repo so
-# the agent session gets checkpointed. See `wta --help`.
+# Worktrunk creates the worktree. See `wta --help`.
 #
 # The shell cannot be moved by a child process, so when $WTA_CD_FILE is set the
 # worktree path is written there for the zsh wrapper in ~/.zsh/scripts to cd to.
@@ -59,9 +58,9 @@ Examples:
   wta --dirty carry             On a feature branch: move it out, bring changes
   wta spike --no-agent          Just create the worktree
 
-Requires worktrunk (wt) and Entire enabled in the repository. The agent is
-skipped automatically when the repo has .config/wt.toml, since those projects
-launch agents from their own worktrunk hooks; pass --agent to override.
+Requires worktrunk (wt). The agent is skipped automatically when the repo has
+.config/wt.toml, since those projects launch agents from their own worktrunk
+hooks; pass --agent to override.
 EOF
 }
 
@@ -139,10 +138,6 @@ command -v wt >/dev/null 2>&1 || die 1 \
   'error: worktrunk (wt) is not installed' \
   'help: brew install worktrunk'
 
-command -v jq >/dev/null 2>&1 || die 1 \
-  'error: jq is not installed' \
-  'help: brew install jq'
-
 toplevel="$(git rev-parse --show-toplevel 2>/dev/null)" || die 1 \
   'error: not in a git repository' \
   'help: cd into a repository and re-run wta'
@@ -151,18 +146,6 @@ here="$(pwd -P)"
 [ "$here" = "$toplevel" ] || die 1 \
   'error: wta must run from the repository root' \
   "help: cd $toplevel"
-
-entire_settings="$toplevel/.entire/settings.json"
-if [ ! -f "$entire_settings" ] ||
-  [ "$(jq -r '.enabled // false' "$entire_settings" 2>/dev/null)" != 'true' ]; then
-  die 1 \
-    'error: Entire is not enabled in this repository' \
-    'help: entire enable --agent claude-code' \
-    'help: entire enable -y --agent codex' \
-    'help: entire enable -y --agent pi' \
-    'help: entire enable -y --agent gemini' \
-    'help: then commit the files those wrote and re-run wta'
-fi
 
 # --- repository state --------------------------------------------------------
 
@@ -335,19 +318,6 @@ if [ "$stashed" -eq 1 ]; then
   else
     pop_conflict=1
   fi
-fi
-
-# .entire/settings.local.json is gitignored, so it never reaches a new worktree
-# and `wt step copy-ignored` skips .entire/ by design. Write it here instead.
-entire_local="$worktree/.entire/settings.local.json"
-mkdir -p "$worktree/.entire"
-if [ -s "$entire_local" ]; then
-  scratch="$(mktemp)"
-  trap 'rm -f "$scratch"' EXIT
-  jq '.commit_linking = "always"' "$entire_local" >"$scratch"
-  cat "$scratch" >"$entire_local"
-else
-  printf '{\n  "commit_linking": "always"\n}\n' >"$entire_local"
 fi
 
 # Written before exec'ing the agent, so quitting the agent still lands the
