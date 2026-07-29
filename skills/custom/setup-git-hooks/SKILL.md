@@ -17,18 +17,10 @@ wording the README.
 
     bash ~/.agents/skills/setup-git-hooks/setup-git-hooks.sh
 
-The script sits beside this file; run it through `bash`, since skills install
-without the executable bit.
-
-| Mode | Writes | Job |
-| --- | --- | --- |
-| _(none)_ / `--plan` | nothing | Inspect and print the candidate table |
-| `--scan` | nothing | `--plan` plus a detection baseline and probe list |
-| `--apply --accept` | `prek.toml`, shims | Take the recommended set |
-| `--apply --pre-commit=a,b --pre-push=c` | `prek.toml`, shims | Take an exact selection |
-| `--apply … --extra=<file.json>` | `prek.toml`, shims | Merge hooks you found yourself |
-| `--heal` / `--heal --fix` | shims, managed config | Diagnose, then repair, an existing setup |
-| `--status` | nothing | What is configured and installed right now |
+Run through `bash` — skills install without the exec bit. No flags inspects and
+prints the candidate table; `--apply` writes `prek.toml` and the shims, `--heal`
+repairs an existing setup, `--scan` widens detection, `--status` reports. `--help`
+lists every flag.
 
 ## The main line
 
@@ -54,7 +46,7 @@ so pass the complete list for both stages. Naming no ids for a stage empties it.
 candidate table as recommended, so `--accept` takes it. With an explicit
 `--pre-commit=`/`--pre-push=` list you must name it there too — passing an extra
 you do not name is an error, not a silent drop. Its `stage` field says which list
-it belongs in. `setup-worktrunk` treats `--extra` the same way.
+it belongs in.
 
 **The placement rule:** correctness blocks the commit — formatters, linters,
 typecheck, hygiene, secrets. Running the code blocks the push — tests, build.
@@ -89,21 +81,8 @@ Then:
 1. Explore the repo yourself and find the checks it really runs.
 2. Write them to a JSON array of `{id, name, entry, stage, files, pass_filenames}`
    and apply with `--extra=<file.json>`.
-3. **Fold the gap back in.** For each hook you found that the script did not, ask
-   whether a file or naming rule would catch it in *any* repo:
-   - **Generalizes** — add a detector to `setup-git-hooks.sh` beside the
-     neighbouring ones, drop the marker from `UNKNOWN_MARKERS`, and prove it by
-     re-running plain `--plan`. It must find the hook with no scan.
-   - **Peculiar to this repo** — say so and change nothing.
-
-   Edit the source at `~/.dotfiles/skills/custom/setup-git-hooks/`, then re-run
-   `~/.dotfiles/install/skills.sh` before testing. The installed skill is a
-   **copy**, not a symlink, so an unsynced edit leaves you testing the old
-   script and reading the result as a failed detector.
-
-Propose the edit and get consent before making it: the script lives in the user's
-dotfiles. A scan spent this way is spent once — the next repo of that shape needs
-none.
+3. **Fold the gap back in** — teach the detectors what the scan found, following
+   `references/extending.md`.
 
 ## When it reports an error
 

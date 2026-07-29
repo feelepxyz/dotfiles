@@ -22,18 +22,10 @@ wording the README, and handing over the approval command.
 
     bash ~/.agents/skills/setup-worktrunk/setup-worktrunk.sh
 
-The script sits beside this file; run it through `bash`, since skills install
-without the executable bit.
-
-| Mode | Writes | Job |
-| --- | --- | --- |
-| _(none)_ / `--plan` | nothing | Inspect and print the pane and step tables |
-| `--scan` | nothing | `--plan` plus a probe list of where detection has looked |
-| `--apply --accept` | `.config/wt.toml` | Take the recommended set |
-| `--apply --panes=a,b --steps=c` | `.config/wt.toml` | Take an exact selection |
-| `--apply … --extra=<file.json>` | `.config/wt.toml` | Merge panes you found yourself |
-| `--heal` / `--heal --fix` | managed config | Diagnose, then repair, drift |
-| `--status` | nothing | What is configured right now |
+Run through `bash` — skills install without the exec bit. No flags inspects and
+prints the pane and step tables; `--apply` writes `.config/wt.toml`, `--heal`
+repairs drift, `--scan` widens detection, `--status` reports. `--help` lists
+every flag.
 
 ## The main line
 
@@ -56,7 +48,7 @@ the approvals command in hand — not merely been told one exists.
 **`--extra` offers panes; the selection still decides.** An extra joins the
 candidate table as recommended, so `--accept` takes it. With an explicit
 `--panes=` list you must name it there too — passing an extra you do not name is
-an error, not a silent drop. `setup-git-hooks` treats `--extra` the same way.
+an error, not a silent drop.
 
 **Apply is declarative.** It writes exactly the ids you name and drops the rest,
 so pass the complete list. Naming no panes is an error rather than an empty
@@ -96,20 +88,8 @@ Then:
 1. Explore the repo yourself and find the processes it really runs.
 2. Write them to a JSON array of `{id, dir, command}` and apply with
    `--extra=<file.json>`.
-3. **Fold the gap back in.** For each pane you found that the script did not, ask
-   whether a file or naming rule would catch it in *any* repo:
-   - **Generalizes** — add a branch to `detect_one_component` beside the
-     neighbouring ones, drop the marker from `UNKNOWN_MARKERS`, and prove it by
-     re-running plain `--plan`. It must find the pane with no scan.
-   - **Peculiar to this repo** — say so and change nothing.
-
-   Edit the source at `~/.dotfiles/skills/custom/setup-worktrunk/`, then re-run
-   `~/.dotfiles/install/skills.sh` before testing. The installed skill is a
-   **copy**, not a symlink, so an unsynced edit leaves you testing the old script
-   and reading the result as a failed detector.
-
-Propose the edit and get consent before making it: the script lives in the user's
-dotfiles.
+3. **Fold the gap back in** — teach the detectors what the scan found, following
+   `references/extending.md`.
 
 ## When it reports an error
 
@@ -121,9 +101,8 @@ Three are refusals rather than failures, and all three are correct:
   touched. Offer `--heal` or `--apply --force`, and let the user choose, since
   `--force` discards their config.
 - **unknown pane id** — the valid ids are printed with it.
-- **`approval:` on any run.** The script never approves hooks itself. Approving
-  decides whether this repo may run arbitrary commands on the user's machine, so
-  hand them `wt config approvals add` and let them review it.
+- **`approval:` on any run.** The script never approves hooks itself — hand the
+  user `wt config approvals add`; never run it yourself.
 
 ## Boundary
 

@@ -12,16 +12,10 @@ of it. `pr.sh --merge` lands the request and takes the worktree with it.
 
 ## Run it
 
-    bash ~/.claude/skills/pr/pr.sh
+    bash ~/.agents/skills/pr/pr.sh
 
-The scripts sit beside this file; run them through `bash`, since skills install
-without the executable bit. The flags that narrow the job:
-
-- `--status` / `--dry-run` — report the plan, change nothing
-- `--no-squash` / `--no-rebase` — leave the branch history alone
-- `--draft`, `--title <text>`, `--body <text>`, `--base <branch>`
-- `--no-watch` — skip the watch handoff
-- `--merge` — land an already-open request
+Run through `bash` — skills install without the exec bit. `--merge` lands an
+already-open request and has its own section below; `--help` lists the rest.
 
 Opening a request leaves the worktree standing. Nothing to `cd` to, nothing
 gone — the checkout stays until the request merges, because that is where a red
@@ -29,9 +23,8 @@ run gets investigated.
 
 ## Relay what it returns
 
-The output is the answer. Report the pipeline lines, the `pr:` URL, and the
-`next:` line. The script reads its result back from git and gh after acting, so
-it already reflects reality — go straight to reporting it.
+Report the pipeline lines, the `pr:` URL, and the `next:` line as they come —
+the script re-reads git and gh after acting, so its output is already reality.
 
 A branch carrying nothing the base lacks is a complete answer: say so and stop.
 
@@ -56,12 +49,13 @@ and exist for tighter loops; `--once` polls a single time and reports.
 The `checks:` line says which of four things happened.
 
 **`checks: pass`** — open the request: `gh pr view <url> --web`. Then offer to
-land it with `bash ~/.claude/skills/pr/pr.sh --merge` and wait for an answer.
+land it with `bash ~/.agents/skills/pr/pr.sh --merge` and wait for an answer.
 Review is the user's gate; do not walk through it for them.
 
-**`checks: fail`** — open the request the same way, then investigate. Launch one
-`general-purpose` agent with the failing check names from the `failed[...]`
-block and the `log:` path, and tell it to:
+**`checks: fail`** — open the request the same way, then investigate. Invoking
+this skill is the request for it: launch one `general-purpose` agent with the
+failing check names from the `failed[...]` block and the `log:` path, and tell
+it to:
 
 - read the log and the branch's diff against the base;
 - name the root cause of each failing check;
@@ -78,7 +72,7 @@ restarts the watch. Do not launch an agent; nothing has failed yet.
 
 ## Land it
 
-    bash ~/.claude/skills/pr/pr.sh --merge
+    bash ~/.agents/skills/pr/pr.sh --merge
 
 Squash-merges the open request, removes the worktree, deletes the branch local
 and remote, and fast-forwards the local default branch. This is the one path
@@ -101,19 +95,15 @@ behind. On a failed `--merge`, `removed:` says the same about the cleanup.
 
 Two cases stay with the user:
 
-- An unapproved hook asks them to run `wt config approvals add`. Approving a
-  repository's hooks decides whether it may run arbitrary commands on their
-  machine, so hand them the command and let them review it.
+- `approval:` — hand them `wt config approvals add`; never run it yourself.
 - The default branch is refused with two runnable options. Ask which they want
   rather than choosing.
 
 ## Boundary
 
-`wt merge` has no part in this. It fast-forwards the default branch, so the work
-would sit unmerged on local `main` until the pull request lands and every branch
-cut in the meantime would inherit it. The steps it bundles are run individually
-here instead, and `--merge` catches the default branch up only after GitHub has
-actually merged.
+`wt merge` has no part in this — it fast-forwards the default branch, so the
+work would sit unmerged on local `main` and every branch cut in the meantime
+would inherit it. `--merge` catches the default up only after GitHub has merged.
 
 Reviewing the request, re-running failed checks, and fixing what an
 investigation proposes are all separate asks.

@@ -1,12 +1,14 @@
 ---
 name: shape
-description: Create clear, actionable contracts that define project goals, implementation details, and success validation criteria. Use this skill when you need to outline project objectives and ensure all key factors are addressed before moving forward with implementation.
+description: Turn a request into a compact contract — the observable destination, the implementation brief, and the validation contracts that prove it. Use before committing to implementation.
 disable-model-invocation: true
 ---
 
 # Shape
 
-Enter /plan mode and create a compact contract between intent, implementation, and validation.
+Create a compact contract between intent, implementation, and validation. Use
+EnterPlanMode when the shaped work will be implemented in this session; shaping
+an analysis or a decision needs no plan mode.
 
 ## 1. Make the destination clear
 
@@ -14,20 +16,14 @@ Name the observable destination first: what must become true and what lies
 outside this effort.
 
 - Inspect the relevant territory before prescribing the solution.
-- Resolve facts from available sources. Put consequential decisions to the
-  user, with a recommended answer.
 - Choose the cheapest method that reduces material uncertainty: inspection,
   research, comparison, prototype, or question.
 - When quality is difficult to describe, use reference artifacts and name the properties that should transfer.
 - Reframe the work when evidence invalidates the original premise.
 
-When useful, distinguish:
-
-- **known knowns:** explicit outcomes, constraints, facts, and decisions;
-- **known unknowns:** recognized gaps that may change the work;
-- **unknown knowns:** tacit preferences or criteria to surface as hypotheses;
-  and
-- **unknown unknowns:** relevant blind spots outside the current framing.
+Surface tacit criteria as explicit hypotheses, and name the blind spots outside
+the current framing — those are the gaps that reshape the work, not the ones
+already on the list.
 
 Ask together only decisions whose prerequisites are settled. Leave dependent
 questions as fog until earlier answers make them precise. Stop exploring when
