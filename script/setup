@@ -32,6 +32,12 @@ case "$(uname -s)" in
   *) echo "Supported platforms: macOS and Omarchy (Linux)" >&2; exit 1 ;;
 esac
 
+# Snapshot the NUL-delimited list before making changes. Process substitution
+# would hide a Git failure and could install only a partial list.
+TRACKED_FILES="$(mktemp "${TMPDIR:-/tmp}/dotfiles-files.XXXXXX")"
+trap 'rm -f "$TRACKED_FILES"' EXIT
+git -C "$DOTFILES" ls-files -z -- home/ > "$TRACKED_FILES"
+
 if $PACKAGES; then
   if [ "$PLATFORM" = macos ]; then
     brew bundle check --file "$DOTFILES/home/.Brewfile" ||
@@ -58,7 +64,6 @@ if $SKILLS && ! command -v npx >/dev/null 2>&1; then
   exit 1
 fi
 
-# Restore public skill sources before installing the Git config's SSH rewrite.
 if $SKILLS; then
   "$DOTFILES/install/skills.sh"
 fi
@@ -97,7 +102,7 @@ while IFS= read -r -d '' file; do
   if [ "$PLATFORM" = linux ] && [[ "$relative" = .bin/* ]]; then
     link_file "$DOTFILES/$file" ".local/bin/${relative#.bin/}"
   fi
-done < <(git -C "$DOTFILES" ls-files -z -- home/)
+done < "$TRACKED_FILES"
 
 link_file "$DOTFILES/home/.config/nvim" .config/nvim
 link_file "$DOTFILES/home/.pi/agent/extensions" .pi/agent/extensions

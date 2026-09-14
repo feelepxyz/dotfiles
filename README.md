@@ -22,6 +22,8 @@ Setup links tracked files from `home/` at any depth and restores both
 `skills/manifest.txt` and `skills/custom/` through `install/skills.sh`. Stage new
 files with `git add` before relinking. Existing files and conflicting directories
 are moved to `~/.dotfiles-backup.XXXXXX/`; rerunning leaves correct links alone.
+Setup validates the tracked-file list before installing anything. Public skill
+sources ignore global Git settings so SSH rewrites do not require a login.
 Neovim and Pi extensions are linked as whole directories. Other config
 directories are kept so unrelated files and agent credentials survive.
 
@@ -119,7 +121,9 @@ already running in their own panes. Write that config with the
 - `home/.config/` — `starship.toml`, `herdr/`, `ghostty/`, `ripgrep/`.
 - `install/`, `script/` — provisioning and bootstrap.
 
-Check setup changes with `python3 script/test-setup.py` and
-`shellcheck script/setup install/skills.sh`.
+Check setup changes with `bash script/test-setup.sh` (Bash, Git, and jq required)
+and `shellcheck script/setup script/test-setup.sh install/skills.sh`.
+The setup-skill regression suite is `bash skills/test/run.sh` (also requires
+prek and worktrunk). Both runners support `--only`, `--bash`, and `--keep`.
 
 See `AGENTS.md` for how the repo works and tool-preference rules when coding here.
