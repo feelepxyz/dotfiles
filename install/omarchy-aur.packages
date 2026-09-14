@@ -1,0 +1,6 @@
+# Personal tools from the AUR, one package per line.
+# Install with script/setup --packages via omarchy pkg aur add.
+
+hunk-bin
+prek-bin
+somo

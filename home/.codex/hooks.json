@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/feelepxyz/.local/bin/plannotator",
+            "command": "\"$HOME/.local/bin/plannotator\"",
             "timeout": 345600
           }
         ]

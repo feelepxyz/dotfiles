@@ -25,12 +25,13 @@ restore() {
     selectors=("${fields[@]:1}")
     [ "${#selectors[@]}" -gt 0 ] || selectors=('*')
     echo "==> $repo (${selectors[*]})"
-    npx skills@latest add "$repo" -g -s "${selectors[@]}" -a "${AGENTS[@]}" -y
+    # Public sources need no Git identity or SSH rewrite, including on reruns.
+    GIT_CONFIG_GLOBAL=/dev/null npx --yes skills@latest add "$repo" -g -s "${selectors[@]}" -a "${AGENTS[@]}" -y
   done 3< "$MANIFEST"
 
   if [ -d "$CUSTOM" ]; then
     echo "==> custom skills ($CUSTOM)"
-    npx skills@latest add "$CUSTOM" -g -s '*' -a "${AGENTS[@]}" -y
+    npx --yes skills@latest add "$CUSTOM" -g -s '*' -a "${AGENTS[@]}" -y
   fi
 }
 

@@ -27,6 +27,9 @@ setopt share_history
 
 # Editor
 export EDITOR="zed"
+if [[ "$OSTYPE" == linux* ]]; then
+  export EDITOR="zeditor"
+fi
 export GIT_EDITOR="$EDITOR --wait"
 export VISUAL=$EDITOR
 
@@ -49,23 +52,21 @@ export GOPATH=$HOME/go
 # Load ripgrep flags from ~/.config/ripgrep/config
 [ -f "$HOME/.config/ripgrep/config" ] && export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
 
-# Detect Homebrew prefix based on architecture
-if [[ "$(uname -m)" == "arm64" ]]; then
-  export HOMEBREW_PREFIX=/opt/homebrew
-else
-  export HOMEBREW_PREFIX=/usr/local
+# Homebrew and its compiler paths are only needed on macOS.
+if [[ "$OSTYPE" == darwin* ]]; then
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+
+  export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl@3/lib"
+  export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl@3/include"
+  export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl@3/lib/pkgconfig"
+
+  PATH="$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+  PATH="$HOMEBREW_PREFIX/opt/openssl/bin:$PATH"
 fi
-eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
-
-# Tell compilers where to find openssl@3
-export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl@3/lib"
-export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl@3/include"
-
-# Tell pkg-config where to find openssl@3
-export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl@3/lib/pkgconfig"
-
-PATH="$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
-PATH="$HOMEBREW_PREFIX/opt/openssl/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/.cargo/bin:$PATH"
@@ -80,12 +81,22 @@ export PATH="bin:$PATH"
 # Setup zoxide to replace cd
 eval "$(zoxide init zsh)"
 
-# Load plugins
-source $HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Load plugins from the native package manager.
+if [[ "$OSTYPE" == darwin* ]]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+else
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 
-# asdf package manager
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+# Keep Omarchy's environment and mise; macOS continues to use asdf.
+if [[ "$OSTYPE" == linux* ]]; then
+  [[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] && source /usr/share/omarchy/default/bash/env-bootstrap
+  eval "$(mise activate zsh)"
+else
+  export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+fi
 
 # Source rust/cargo env
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"

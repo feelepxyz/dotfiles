@@ -6,12 +6,20 @@ f() {
 # Start an HTTP server from a directory, optionally specifying the port
 static-server() {
   local port="${1:-8000}"
-  open "http://localhost:${port}/"
+  if [[ "$OSTYPE" == darwin* ]]; then
+    open "http://localhost:${port}/"
+  else
+    xdg-open "http://localhost:${port}/"
+  fi
   python3 -m http.server $port
 }
 
 chrome() {
-  /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary \
+  local browser=chromium
+  if [[ "$OSTYPE" == darwin* ]]; then
+    browser="/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
+  fi
+  "$browser" \
       --js-flags="--trace-opt --trace-deopt --trace-bailout" \
       --allow-file-access \
       --disable-web-security \

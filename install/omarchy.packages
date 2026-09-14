@@ -1,0 +1,27 @@
+# Personal additions to Omarchy, one Arch/OPR package per line.
+# Install with script/setup --packages. Omarchy supplies mise, nvim, etc.
+
+1password
+1password-cli
+cloudflared
+direnv
+dive
+doggo
+fzy
+ghostty
+git-delta
+git-lfs
+github-cli
+go
+htop
+jujutsu
+mosh
+nodejs
+npm
+shellcheck
+uv
+worktrunk
+zed
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting

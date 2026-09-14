@@ -1,13 +1,55 @@
 # dotfiles
 
-Personal macOS dotfiles — shell, git, terminal, and a curated CLI toolchain.
+Personal macOS and Omarchy dotfiles — shared Zsh, Git, Ghostty, editor configs,
+and agent skills, with native package lists for each OS.
 
 ## Install
 
 ```bash
 git clone https://github.com/feelepxyz/dotfiles.git ~/.dotfiles && cd ~/.dotfiles
-script/strap
+script/setup
 ```
+
+Requires Git and Node.js/npm for skills. On macOS, install Node via Homebrew or
+the existing runtime installer. On Omarchy, `--packages` includes Node and npm.
+
+```bash
+script/setup --packages     # also install Homebrew or Arch/OPR + AUR packages
+script/setup --skip-skills  # just link dotfiles, offline
+```
+
+Setup links tracked files from `home/` at any depth and restores both
+`skills/manifest.txt` and `skills/custom/` through `install/skills.sh`. Stage new
+files with `git add` before relinking. Existing files and conflicting directories
+are moved to `~/.dotfiles-backup.XXXXXX/`; rerunning leaves correct links alone.
+Setup validates the tracked-file list before installing anything. Public skill
+sources ignore global Git settings so SSH rewrites do not require a login.
+Neovim and Pi extensions are linked as whole directories. Other config
+directories are kept so unrelated files and agent credentials survive.
+
+Package lists stay in their native formats:
+
+- macOS: `home/.Brewfile` (Homebrew Bundle).
+- Omarchy: `install/omarchy.packages` (Arch/OPR) and
+  `install/omarchy-aur.packages` (AUR), one package per line, with `#` comments.
+  Setup passes them to `omarchy pkg add` and `omarchy pkg aur add`. These are
+  personal additions to an existing Omarchy install, not a full system manifest.
+  Mac-only apps and tools without a listed Linux package, such as Moshi's hook
+  and Doppler, remain separate installs; the Moshi hook runs only when available.
+
+Both platforms use the same Zsh and Ghostty configs. Ghostty starts Zsh directly;
+setup does not change your login shell or Omarchy's default terminal selection.
+To use Zsh elsewhere too, run `chsh -s "$(command -v zsh)"` and log in again.
+Omarchy keeps mise for runtimes; macOS keeps asdf and `home/.tool-versions`.
+The Brewfile and `.tool-versions` are only linked on macOS. Input Mono remains the
+preferred font, with Omarchy's JetBrainsMono Nerd Font as a fallback.
+
+Git settings are shared, with one small platform include for 1Password signing
+and macOS credentials. Enable the 1Password SSH agent and run `gh auth login`
+after provisioning a new machine.
+
+`script/strap` remains available for the older full macOS bootstrap (system
+settings, Homebrew installation, etc.). It is not needed to link dotfiles.
 
 ## Tools
 
@@ -29,25 +71,26 @@ These replace the common defaults — prefer the right column.
 | `ssh` (flaky net)   | `mosh`           | resilient mobile shell                             |
 
 Plus core dev tools: `gh` (GitHub CLI + git credentials/auth), `jj` (Jujutsu,
-git-compatible VCS), `direnv` (per-dir `.envrc`), `asdf` (runtime versions from
-`.tool-versions`), `doppler` (secrets), `jq`, `shellcheck`.
+git-compatible VCS), `direnv` (per-dir `.envrc`), `asdf` on macOS / `mise` on
+Omarchy (runtime versions), `doppler` (secrets), `jq`, `shellcheck`.
 
 ## Reinstalling AI tooling
 
-These CLIs, runtimes, and agent skills aren't part of `script/strap` (they're
-interactive and need logins). Reprovision them on demand:
+AI CLIs and runtimes remain separate from dotfile setup. Reprovision them on
+demand; skills are also restored by `script/setup`:
 
 ```bash
-brew bundle --global      # base toolchain (asdf, etc.)
-install/runtimes.sh       # latest node/ruby/rust via asdf; Python via uv
+script/setup --packages   # native toolchain + dotfiles + skills
+install/runtimes.sh       # macOS: latest node/ruby/rust via asdf; Python via uv
 install/ai.sh             # claude, codex, plannotator, pi (curl) + agent skills
 ```
 
-- **Runtimes**: `asdf` manages node/ruby/rust/uv from `home/.tool-versions`.
+- **Runtimes**: on macOS, `asdf` manages node/ruby/rust/uv from `home/.tool-versions`.
+  On Omarchy, use its existing mise setup (`mise use --global node@lts`, etc.).
   **Python is uv-managed** — use `uv python`, `uv venv`, `uvx`, `uv tool install`.
 - **Skills**: restored from `skills/manifest.txt` via `npx skills`. Regenerate the
   manifest from what's installed with `install/skills.sh --generate`. Personal
-  skills live in `skills/custom/` (symlinked in); add one with the
+  skills live in `skills/custom/` (copied by the skills CLI); add one with the
   `add-dotfiles-skill` skill.
 - **codex**: run `codex` once to sign in. The **plannotator** Claude plugin loads
   from `home/.claude/settings.json`.
@@ -77,5 +120,10 @@ already running in their own panes. Write that config with the
 - `home/.zsh/` — `config`, `aliases`, `scripts`, `autocompletion`.
 - `home/.config/` — `starship.toml`, `herdr/`, `ghostty/`, `ripgrep/`.
 - `install/`, `script/` — provisioning and bootstrap.
+
+Check setup changes with `bash script/test-setup.sh` (Bash, Git, and jq required)
+and `shellcheck script/setup script/test-setup.sh install/skills.sh`.
+The setup-skill regression suite is `bash skills/test/run.sh` (also requires
+prek and worktrunk). Both runners support `--only`, `--bash`, and `--keep`.
 
 See `AGENTS.md` for how the repo works and tool-preference rules when coding here.
