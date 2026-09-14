@@ -66,7 +66,7 @@ local function open_link()
 		end
 
 		if col >= md_start and col <= md_end then
-			vim.fn.system("open " .. vim.fn.shellescape(url))
+			vim.ui.open(url)
 			return
 		end
 		start_pos = md_end + 1
@@ -82,14 +82,14 @@ local function open_link()
 
 		if col >= url_start and col <= url_end then
 			local url = line:sub(url_start, url_end)
-			vim.fn.system("open " .. vim.fn.shellescape(url))
+			vim.ui.open(url)
 			return
 		end
 		start_pos = url_end + 1
 	end
 
 	-- Fallback to original behavior using cWORD
-	vim.cmd("sil !open <cWORD>")
+	vim.ui.open(vim.fn.expand("<cWORD>"))
 end
 
 M.open_link = open_link

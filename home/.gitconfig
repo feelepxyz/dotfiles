@@ -72,8 +72,9 @@
 [gpg]
     format = ssh
 
-[gpg "ssh"]
-    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+# Selected by script/setup; the rest of the Git config is shared.
+[include]
+    path = ~/.config/git/dotfiles-platform.conf
 
 [commit]
     gpgsign = true
@@ -114,11 +115,9 @@
     # Use Git v2 protocol for better performance
     version = 2
 
-[credential]
-	helper = osxkeychain
 [credential "https://github.com"]
 	helper =
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper =
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential

@@ -4,11 +4,13 @@ cursor-style-blink = true
 auto-update-channel = tip
 
 # Shell integrations
+command = zsh
 shell-integration = zsh
 quit-after-last-window-closed = true
 shell-integration-features = no-cursor
 
 font-family = Input Mono
+font-family = JetBrainsMono Nerd Font
 font-thicken = true
 font-feature = -calt
 font-variation = wght=400
@@ -20,8 +22,7 @@ macos-titlebar-style = tabs
 macos-option-as-alt = true
 macos-titlebar-proxy-icon = hidden
 
-theme = light:dawnfox,dark:ayu
-theme = light:ayu,dark:ayu
+theme = Ayu
 split-divider-color = 203040
 
 # Scrollback limit (in bytes) - 100MB

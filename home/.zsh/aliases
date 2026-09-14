@@ -12,7 +12,9 @@ alias mmv="noglob zmv -vW"
 alias mv="mv -iv"
 alias rm="rm -iv"
 
-alias cleardns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
 alias edotfiles="$EDITOR ~/.dotfiles"
 alias externalip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias cleardns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
+  alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+fi

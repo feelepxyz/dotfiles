@@ -377,7 +377,12 @@ if [ -n "$STRAP_GITHUB_USER" ]; then
         git pull $Q --rebase --autostash
       )
     fi
-    run_dotfile_scripts script/setup script/bootstrap
+    # Restore skills separately once a Node runtime is available.
+    if [ -x "$HOME/.dotfiles/script/setup" ]; then
+      "$HOME/.dotfiles/script/setup" --skip-skills
+    else
+      run_dotfile_scripts script/bootstrap
+    fi
     logk
   fi
 fi

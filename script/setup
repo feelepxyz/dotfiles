@@ -1,72 +1,106 @@
 #!/usr/bin/env bash
-# Add logging
-exec > >(tee -i $HOME/dotfiles_install.log)
-exec 2>&1
-set -x
+# Link shared dotfiles and restore skills; optionally install native packages.
+set -euo pipefail
 
-# Install all dotfiles into the home directory
-if [ -L "$0" ]
-then
-  SCRIPTSETUP="$(readlink "$0")"
-else
-  SCRIPTSETUP="$0"
-fi
-
-DOTFILESDIRREL=$(dirname $SCRIPTSETUP)
-cd $DOTFILESDIRREL/../home/
-DOTFILESDIR=$(pwd -P)
-
-[ $(uname -s) = "Darwin" ] && export MACOS=1 && export UNIX=1
-[ $(uname -s) = "Linux" ] && export LINUX=1 && export UNIX=1
-uname -s | grep -q "_NT-" && export WINDOWS=1
-
-if [ $MACOS ]
-then
-  echo "Installing from user Brewfile"
-  brew bundle check --file .Brewfile || brew bundle --file .Brewfile 2> /dev/null
-fi
-
-for DOTFILE in .[^.]* .[^.]*/* .[^.]*/.[^.]*; do
-  HOMEFILE="$HOME/$DOTFILE"
-  [ -d $DOTFILE ] && DOTFILE="$DOTFILE/"
-  DIRFILE="$DOTFILESDIR/$DOTFILE"
-  # Skip glob paths
-  [ ! -d $DIRFILE ] && [ ! -f $DIRFILE ] && continue
-
-  if [ $UNIX ]
-  then
-    if [ -L "$HOMEFILE" ] && ! [ -d $DOTFILE ]
-    then
-      ln -sfv "$DIRFILE" "$HOMEFILE"
-    else
-      if [ -d $DOTFILE ]
-      then
-        mkdir -p "$HOMEFILE"
-      else
-        rm -rv "$HOMEFILE" 2>/dev/null && true
-        ln -sv "$DIRFILE" "$HOMEFILE"
-      fi
-    fi
-  else
-    cp -rv "$DIRFILE" "$HOMEFILE"
-  fi
+PACKAGES=false
+SKILLS=true
+for arg in "$@"; do
+  case "$arg" in
+    --packages) PACKAGES=true ;;
+    --skip-skills) SKILLS=false ;;
+    -h|--help)
+      echo "usage: script/setup [--packages] [--skip-skills]"
+      echo "Link dotfiles and restore skills on macOS or Omarchy."
+      echo "--packages installs the Brewfile or Omarchy package lists first."
+      echo "--skip-skills links dotfiles without Node.js or network access."
+      exit 0 ;;
+    *) echo "Unknown option: $arg" >&2; exit 2 ;;
+  esac
 done
 
-# nvim + worktrunk + pi configs live too deep for the loop above; link them
-# explicitly.
-if [ $UNIX ]; then
-  rmdir "$HOME/.config/nvim" 2>/dev/null || true   # loop pre-mkdir'd it empty
-  ln -sfn "$DOTFILESDIR/.config/nvim" "$HOME/.config/nvim"
+# Resolve symlinks without GNU-only readlink -f (macOS ships BSD readlink).
+SCRIPT="${BASH_SOURCE[0]}"
+while [ -L "$SCRIPT" ]; do
+  SCRIPT_DIR="$(cd "$(dirname "$SCRIPT")" && pwd)"
+  SCRIPT="$(readlink "$SCRIPT")"
+  [[ "$SCRIPT" = /* ]] || SCRIPT="$SCRIPT_DIR/$SCRIPT"
+done
+DOTFILES="$(cd "$(dirname "$SCRIPT")/.." && pwd -P)"
+case "$(uname -s)" in
+  Darwin) PLATFORM=macos ;;
+  Linux) PLATFORM=linux ;;
+  *) echo "Supported platforms: macOS and Omarchy (Linux)" >&2; exit 1 ;;
+esac
 
-  # worktrunk writes state alongside its config, so link the file not the dir.
-  mkdir -p "$HOME/.config/worktrunk"
-  ln -sf "$DOTFILESDIR/.config/worktrunk/config.toml" "$HOME/.config/worktrunk/config.toml"
-
-  mkdir -p "$HOME/.pi/agent"
-  # extensions is a whole-dir symlink; replace any real dir left by herdr (it
-  # re-installs its own extension into the linked dir, which .gitignore excludes).
-  [ -L "$HOME/.pi/agent/extensions" ] || rm -rf "$HOME/.pi/agent/extensions"
-  ln -sfn "$DOTFILESDIR/.pi/agent/extensions"    "$HOME/.pi/agent/extensions"
-  ln -sf  "$DOTFILESDIR/.pi/agent/settings.json" "$HOME/.pi/agent/settings.json"
-  ln -sf  "$DOTFILESDIR/.pi/agent/cloak.json"    "$HOME/.pi/agent/cloak.json"
+if $PACKAGES; then
+  if [ "$PLATFORM" = macos ]; then
+    brew bundle check --file "$DOTFILES/home/.Brewfile" ||
+      brew bundle --file "$DOTFILES/home/.Brewfile"
+  else
+    for manifest in omarchy omarchy-aur; do
+      packages=()
+      while read -r package _ || [ -n "$package" ]; do
+        case "$package" in ''|\#*) continue ;; esac
+        packages+=("$package")
+      done < "$DOTFILES/install/$manifest.packages"
+      [ "${#packages[@]}" -gt 0 ] || continue
+      if [ "$manifest" = omarchy ]; then
+        omarchy pkg add "${packages[@]}"
+      else
+        omarchy pkg aur add "${packages[@]}"
+      fi
+    done
+  fi
 fi
+
+if $SKILLS && ! command -v npx >/dev/null 2>&1; then
+  echo "Skills need Node.js/npm. Install them, or use --skip-skills to link dotfiles only." >&2
+  exit 1
+fi
+
+# Restore public skill sources before installing the Git config's SSH rewrite.
+if $SKILLS; then
+  "$DOTFILES/install/skills.sh"
+fi
+
+BACKUP=""
+link_file() {
+  local source="$1" relative="$2" target="$HOME/$2"
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+    return
+  fi
+  if [ -e "$target" ] || [ -L "$target" ]; then
+    if [ -z "$BACKUP" ]; then
+      BACKUP="$(mktemp -d "$HOME/.dotfiles-backup.XXXXXX")"
+      echo "Backing up existing dotfiles to $BACKUP"
+    fi
+    mkdir -p "$BACKUP/$(dirname "$relative")"
+    mv "$target" "$BACKUP/$relative"
+  fi
+  mkdir -p "$(dirname "$target")"
+  ln -s "$source" "$target"
+  echo "Linked $relative"
+}
+
+# Link tracked files at any depth; never install generated state or credentials.
+# Keep shared directories (.config, .ssh, .claude, etc.) as real directories.
+while IFS= read -r -d '' file; do
+  relative="${file#home/}"
+  if [ "$PLATFORM" = linux ]; then
+    # Homebrew/asdf are macOS-only; Omarchy uses its existing mise installation.
+    case "$relative" in .Brewfile|.tool-versions) continue ;; esac
+  fi
+  # These are self-contained configs, linked as directories below.
+  case "$relative" in .config/nvim/*|.pi/agent/extensions/*) continue ;; esac
+  link_file "$DOTFILES/$file" "$relative"
+  # Omarchy already includes ~/.local/bin in PATH (also outside Zsh).
+  if [ "$PLATFORM" = linux ] && [[ "$relative" = .bin/* ]]; then
+    link_file "$DOTFILES/$file" ".local/bin/${relative#.bin/}"
+  fi
+done < <(git -C "$DOTFILES" ls-files -z -- home/)
+
+link_file "$DOTFILES/home/.config/nvim" .config/nvim
+link_file "$DOTFILES/home/.pi/agent/extensions" .pi/agent/extensions
+link_file "$DOTFILES/install/git-$PLATFORM.conf" .config/git/dotfiles-platform.conf
+
+echo "Dotfiles installed ($PLATFORM)."
