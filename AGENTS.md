@@ -7,7 +7,7 @@ over the common defaults.
 
 - Search / nav: `rg` over grep, `fd` over find, `eza` / `l` over ls, `bat` over
   cat, `z` (zoxide) over cd.
-- Git: `delta` is the diff pager; `main` is the default branch; rebase-by-default;
+- Git: `hunk pager` is the diff pager; `main` is the default branch; rebase-by-default;
   commits are SSH-signed via 1Password. Handy aliases: `g`, `git c/com/s/co/cob/l/lg`.
   `jj` (Jujutsu) is available as a git-compatible alternative.
 - Multiplexer: use `herdr` (prefix `C-;`), not tmux.

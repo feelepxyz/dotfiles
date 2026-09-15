@@ -1,18 +1,11 @@
 alias ....="cd ../../.."
 alias ...="cd ../.."
 alias ..="cd .."
-alias cat="bat"
-alias cp="cp -irv"
-dir() { mkdir -p "$1" && cd "$1"; }
+alias dir=mkcd
 alias e="$EDITOR ."
-alias g="git"
-alias l="eza -lha --no-user --color=always"
-alias mkdir="mkdir -vp"
+alias g=git
+alias l="eza -lha --no-user --color=auto"
 alias mmv="noglob zmv -vW"
-alias mv="mv -iv"
-alias rm="rm -iv"
-
-alias edotfiles="$EDITOR ~/.dotfiles"
 alias externalip="dig +short myip.opendns.com @resolver1.opendns.com"
 if [[ "$OSTYPE" == darwin* ]]; then
   alias cleardns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"

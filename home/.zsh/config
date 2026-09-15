@@ -1,107 +1,58 @@
-# Load zsh massive renamer
-# autoload -U zmv
+autoload -Uz zmv
 
-# Turn off auto correct
-unsetopt correct_all
-
-# Don't hang up background jobs
+# Let background jobs survive closing the shell.
 setopt no_hup
 
-# History
-export HISTFILE=~/.zhistory
-export HISTSIZE="100000"
-export SAVEHIST="100000"
+HISTFILE=~/.zhistory
+HISTSIZE=100000
+SAVEHIST=100000
+setopt hist_expire_dups_first extended_history hist_find_no_dups hist_reduce_blanks share_history
 
-setopt append_history
-setopt hist_expire_dups_first
-setopt extended_history
-
-# Don't show duplicate history entires
-setopt hist_find_no_dups
-
-# Remove unnecessary blanks from history
-setopt hist_reduce_blanks
-
-# Share history between instances
-setopt share_history
-
-# Editor
-export EDITOR="zed"
-if [[ "$OSTYPE" == linux* ]]; then
-  export EDITOR="zeditor"
-fi
+export EDITOR=zed
+[[ "$OSTYPE" == linux* ]] && export EDITOR=zeditor
 export GIT_EDITOR="$EDITOR --wait"
 export VISUAL=$EDITOR
 
-# Colored man pages
-# source: https://github.com/imkira/dotfiles/blob/master/.zsh/colored-man-pages.zsh
-export LESS_TERMCAP_mb=$'\E[01;31m'
-export LESS_TERMCAP_md=$'\E[01;38;5;74m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[38;33;246m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[04;38;5;146m'
+[[ -f "$HOME/.config/ripgrep/config" ]] && export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
 
-# Set to number of cpus
-export MAKEFLAGS="-j4"
-export BUNDLE_JOBS="4"
+# Keep one copy of each directory, including across nested shells.
+typeset -U path PATH
+# Drop relative entries inherited from older versions of these dotfiles.
+path=( ${(M)path:#/*} )
 
-export GOPATH=$HOME/go
-
-# Load ripgrep flags from ~/.config/ripgrep/config
-[ -f "$HOME/.config/ripgrep/config" ] && export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
-
-# Homebrew and its compiler paths are only needed on macOS.
 if [[ "$OSTYPE" == darwin* ]]; then
   if [[ -x /opt/homebrew/bin/brew ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
-  else
+  elif [[ -x /usr/local/bin/brew ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
   fi
-
-  export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl@3/lib"
-  export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl@3/include"
-  export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl@3/lib/pkgconfig"
-
-  PATH="$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
-  PATH="$HOMEBREW_PREFIX/opt/openssl/bin:$PATH"
-fi
-PATH="$GOPATH/bin:$PATH"
-PATH="$HOME/.local/bin:$PATH"
-PATH="$HOME/.cargo/bin:$PATH"
-PATH="$HOME/.bin:$PATH"
-export PATH="$HOME/bin:$PATH"
-
-# Add relative bins with highest precedent
-PATH="node_modules/.bin:$PATH"
-PATH=".bundle/bin:$PATH"
-export PATH="bin:$PATH"
-
-# Setup zoxide to replace cd
-eval "$(zoxide init zsh)"
-
-# Load plugins from the native package manager.
-if [[ "$OSTYPE" == darwin* ]]; then
-  source "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
-  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-else
-  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
-# Keep Omarchy's environment and mise; macOS continues to use asdf.
-if [[ "$OSTYPE" == linux* ]]; then
+  if [[ -n "$HOMEBREW_PREFIX" ]]; then
+    for dotfiles_bin in "$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin" "$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin"; do
+      [[ -d "$dotfiles_bin" ]] && path=( "$dotfiles_bin" $path )
+    done
+  fi
+elif [[ "$OSTYPE" == linux* ]]; then
   [[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] && source /usr/share/omarchy/default/bash/env-bootstrap
-  eval "$(mise activate zsh)"
-else
-  export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 fi
 
-# Source rust/cargo env
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+# Optional tools contribute paths only when installed on this machine.
+for dotfiles_bin in "${GOPATH:-$HOME/go}/bin" "$HOME/.local/bin" "$HOME/.cargo/bin" "$HOME/.bin" "$HOME/bin" \
+  "${BUN_INSTALL:-$HOME/.bun}/bin" "${PROTO_HOME:-$HOME/.proto}/bin" "${PROTO_HOME:-$HOME/.proto}/shims" "$HOME/.kimi-code/bin"; do
+  [[ -d "$dotfiles_bin" ]] && path=( "$dotfiles_bin" $path )
+done
+unset dotfiles_bin
+[[ -r "$HOME/.vite-plus/env" ]] && source "$HOME/.vite-plus/env"
 
-# Load env variables from .envrc - to enable: `direnv allow .`
-eval "$(direnv hook zsh)"
+# Keep Omarchy's mise; macOS uses asdf.
+if [[ "$OSTYPE" == linux* ]]; then
+  (( $+commands[mise] )) && eval "$(mise activate zsh)"
+elif [[ -d "${ASDF_DATA_DIR:-$HOME/.asdf}/shims" ]]; then
+  path=( "${ASDF_DATA_DIR:-$HOME/.asdf}/shims" $path )
+fi
 
-eval "$(starship init zsh)"
+if (( $+commands[zoxide] )); then eval "$(zoxide init zsh)"; fi
+if (( $+commands[direnv] )); then eval "$(direnv hook zsh)"; fi
+if (( $+commands[starship] )); then eval "$(starship init zsh)"; fi
+
+# Runtime activation can restore PATH saved by an older parent shell.
+path=( ${(M)path:#/*} )
