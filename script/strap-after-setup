@@ -1,20 +1,17 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-SCRIPTSREL=$(dirname $0)
+SCRIPTSREL="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-[ $(uname -s) = "Darwin" ] && export MACOS=1
+[[ "$(uname -s)" == Darwin ]] || exit 0
 
 # Enable Touch ID for sudo
-bin/touchid-enable-pam-sudo --quiet || true
+"$SCRIPTSREL/touchid-enable-pam-sudo" --quiet || true
 
 # Set zsh as the default shell
-if [ "$SHELL" != "/bin/zsh" ]
+if [ "${SHELL:-}" != "/bin/zsh" ]
 then
-  chsh -s /bin/zsh $USER
+  chsh -s /bin/zsh "$USER"
 fi
 
-if [ $MACOS ]
-then
-  $SCRIPTSREL/../install/mac.sh
-fi
+"$SCRIPTSREL/../install/mac.sh"

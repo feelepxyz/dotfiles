@@ -11,7 +11,7 @@ static-server() {
   else
     xdg-open "http://localhost:${port}/"
   fi
-  python3 -m http.server $port
+  python3 -m http.server "$port"
 }
 
 chrome() {
@@ -19,82 +19,34 @@ chrome() {
   if [[ "$OSTYPE" == darwin* ]]; then
     browser="/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
   fi
-  "$browser" \
-      --js-flags="--trace-opt --trace-deopt --trace-bailout" \
-      --allow-file-access \
-      --disable-web-security \
-      --remote-debugging-port=9222 \
-      --js-flags=--harmony
-}
-
-branch() {
-  if [ ! "$1" ]
-  then
-    echo "You must provide a branch name"
-    return
-  fi
-
-  git checkout master
-  git pull
-  git checkout -b $USER/$1
-}
-
-branch-main() {
-  if [ ! "$1" ]
-  then
-    echo "You must provide a branch name"
-    return
-  fi
-
-  git checkout main
-  git pull
-  git checkout -b $USER/$1
-}
-
-rebase-master() {
-  git fetch origin
-  git rebase --interactive --autostash --autosquash origin/master
-}
-
-rebase-main() {
-  git fetch origin
-  git rebase --interactive --autostash --autosquash origin/main
-}
-
-rebase-branch() {
-  if [ ! "$1" ]
-  then
-    echo "You must provide a branch name"
-    return
-  fi
-
-  git fetch origin
-  git rebase --interactive --autostash --autosquash origin/$1
-}
-
-rebase-continue() {
-  git add --all
-  git commit --no-edit
-  git rebase --continue
+  "$browser" "$@"
 }
 
 # Find processes running on port
 open-port() {
-  lsof -Pn -i4 | grep $1
+  if [[ $# -ne 1 || "$1" != <1-65535> ]]; then
+    print -u2 'usage: open-port PORT'
+    return 1
+  fi
+  lsof -nP -i ":$1"
 }
 
 function gh-clone() {
-  local repo_url=$1
+  local repo_url=${1:-}
   local repo_host
   local repo_path
+  local repo_pattern='^(https?://|git@)([[:alnum:].-]+)[/:]([[:alnum:]_.-]+(/[[:alnum:]_.-]+)+)$'
 
-  # Validate the URL
-  if [[ $repo_url =~ "^(https?|git)[:@\/\/]+([^\/:]+)[\/:](.+)" ]]; then
+  if [[ $# -eq 1 && $repo_url =~ $repo_pattern ]]; then
     repo_host=$match[2]
     repo_path=$match[3]
-    repo_path="${repo_path:s/.git/}"
+    repo_path="${repo_path%.git}"
   else
-    echo "invalid repo - format must be https://|git@host/|:account/name.git"
+    print -u2 'usage: gh-clone https://HOST/OWNER/REPO or git@HOST:OWNER/REPO'
+    return 1
+  fi
+  if [[ "/$repo_path/" == *'/../'* || "/$repo_path/" == *'/./'* || "$repo_host" == . || "$repo_host" == .. ]]; then
+    print -u2 'Repository URL must not contain . or .. path components'
     return 1
   fi
 
@@ -102,16 +54,12 @@ function gh-clone() {
   # Check if the destination folder exists
   if [ -d "$dest_folder" ]; then
     echo "$dest_folder: already exists"
-    cd "$dest_folder"
-    return 0
+    builtin cd -- "$dest_folder"
+    return $?
   fi
 
-  # Create the directory
-  mkdir -p "$dest_folder"
-
   # Clone the repo and cd into it
-  git clone "$repo_url" "$dest_folder"
-  cd "$dest_folder"
+  git clone -- "$repo_url" "$dest_folder" && builtin cd -- "$dest_folder"
 }
 
 docker-debug() {
@@ -122,7 +70,7 @@ docker-debug() {
 
   echo "Starting debug sidecar for container $1"
 
-  [ ! -d "/tmp/debug-$1" ] && mkdir "/tmp/debug-$1"
+  mkdir -p -- "/tmp/debug-$1" || return
   echo "Mounting /scratch to /tmp/debug-$1"
 
   docker run --rm -ti \
@@ -137,24 +85,23 @@ docker-debug() {
 }
 
 docker-debug-latest() {
-  docker-debug "$(docker ps --latest --quiet)"
+  local container
+  container="$(docker ps --latest --quiet)" || return
+  docker-debug "$container"
 }
 
 function mkcd() {
-  if [ ! -n "$1" ]; then
-    echo "Provide a directory"
-    exit 1
-  elif [ -d $1 ]; then
-    cd $1
-  else
-    mkdir -p $@ && cd ${@:$#}
+  if [[ $# -ne 1 || -z "$1" ]]; then
+    print -u2 'usage: mkcd DIRECTORY'
+    return 1
   fi
+  mkdir -p -- "$1" && builtin cd -- "$1"
 }
 
 youtube-dl() {
   yt-dlp -x --audio-format m4a --audio-quality 0 \
   --add-metadata --embed-thumbnail --split-chapters \
-  -o "%(title)s.%(ext)s"s -- "$@";
+  -o "%(title)s.%(ext)s" -- "$@"
 }
 
 # Create/attach a tmux session for a project directory (defaults to $PWD).
@@ -167,7 +114,7 @@ moshi() {
   fi
 
   local abs
-  abs="$(cd "$dir" && pwd)"
+  abs="$(builtin cd -- "$dir" && pwd)" || return
 
   local session
   session="$(basename "$abs" | LC_ALL=C tr -cs '[:alnum:]_-' '-')"
@@ -176,11 +123,11 @@ moshi() {
   [[ -n "$session" ]] || session="main"
 
   if ! tmux has-session -t "$session" 2>/dev/null; then
-    tmux new-session -d -s "$session" -c "$abs" -n agent
-    tmux new-window -t "$session":2 -c "$abs" -n review
-    tmux new-window -t "$session":3 -c "$abs" -n tests
-    tmux new-window -t "$session":4 -c "$abs" -n servers
-    tmux new-window -t "$session":5 -c "$abs" -n misc
+    tmux new-session -d -s "$session" -c "$abs" -n agent || return
+    tmux new-window -t "$session":2 -c "$abs" -n review || return
+    tmux new-window -t "$session":3 -c "$abs" -n tests || return
+    tmux new-window -t "$session":4 -c "$abs" -n servers || return
+    tmux new-window -t "$session":5 -c "$abs" -n misc || return
   fi
 
   tmux attach -t "$session"
@@ -188,11 +135,10 @@ moshi() {
 
 # Create a worktree for agent work and land this shell in it. The wta script
 # execs the agent, so stdout can't carry the path back — it writes the worktree
-# path to $WTA_CD_FILE instead, the same trick `wt` uses. `command rm` skips the
-# `rm -iv` alias, which would otherwise print "removed '/var/…'" every run.
+# path to $WTA_CD_FILE instead, the same trick `wt` uses.
 wta() {
   local cd_file
-  cd_file="$(mktemp)"
+  cd_file="$(mktemp)" || return
   WTA_CD_FILE="$cd_file" command wta "$@"
   local rc=$?
   [[ -s "$cd_file" ]] && builtin cd -- "$(<"$cd_file")"

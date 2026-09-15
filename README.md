@@ -22,8 +22,7 @@ Setup links tracked files from `home/` at any depth and restores both
 `skills/manifest.txt` and `skills/custom/` through `install/skills.sh`. Stage new
 files with `git add` before relinking. Existing files and conflicting directories
 are moved to `~/.dotfiles-backup.XXXXXX/`; rerunning leaves correct links alone.
-Setup validates the tracked-file list before installing anything. Public skill
-sources ignore global Git settings so SSH rewrites do not require a login.
+Setup validates the tracked-file list before installing anything.
 Neovim and Pi extensions are linked as whole directories. Other config
 directories are kept so unrelated files and agent credentials survive.
 
@@ -45,8 +44,15 @@ The Brewfile and `.tool-versions` are only linked on macOS. Input Mono remains t
 preferred font, with Omarchy's JetBrainsMono Nerd Font as a fallback.
 
 Git settings are shared, with one small platform include for 1Password signing
-and macOS credentials. Enable the 1Password SSH agent and run `gh auth login`
-after provisioning a new machine.
+and macOS credentials. GitHub HTTPS URLs use `gh` for authentication; explicit
+SSH URLs still use SSH. Enable the 1Password SSH agent and run `gh auth login`
+after provisioning a new machine. Existing settings in `~/.config/git/config`
+(such as Omarchy's defaults) are read before the shared `~/.gitconfig` overrides.
+
+Zsh keeps standard `cat`, `cp`, `mv`, `rm`, and `mkdir` behavior. Its PATH contains
+absolute directories without duplicates; optional tool paths are added when
+installed. Use `npm exec`, `bundle exec`, or project-specific direnv settings for
+project executables. `mkcd` (also `dir`) creates and enters one directory.
 
 `script/strap` remains available for the older full macOS bootstrap (system
 settings, Homebrew installation, etc.). It is not needed to link dotfiles.
@@ -57,8 +63,8 @@ These replace the common defaults — prefer the right column.
 
 | Instead of          | Use              | Notes                                              |
 | ------------------- | ---------------- | -------------------------------------------------- |
-| `cat`               | `bat`            | aliased to `cat`; syntax highlight + paging        |
-| `ls`                | `eza` (`l`)      | `l` = `eza -lha --no-user --color=always`          |
+| `cat`               | `bat`            | explicit command; syntax highlighting + paging     |
+| `ls`                | `eza` (`l`)      | `l` = `eza -lha --no-user --color=auto`             |
 | `find`              | `fd`             |                                                    |
 | `grep`              | `ripgrep` (`rg`) | flags in `home/.config/ripgrep/config`             |
 | `cd`                | `zoxide` (`z`)   | learns your dirs; inited in `.zsh/config`          |
@@ -66,7 +72,7 @@ These replace the common defaults — prefer the right column.
 | `top`               | `htop`           |                                                    |
 | `dig` / `nslookup`  | `doggo`          | DNS client                                         |
 | `netstat` / `lsof -i` | `somo`         | sockets / connections                              |
-| `git diff`          | `delta`          | pager, side-by-side (in `.gitconfig`)              |
+| Git's default pager | `hunk pager`     | configured in `.gitconfig`                         |
 | shell prompt        | `starship`       | config `home/.config/starship.toml`                |
 | `ssh` (flaky net)   | `mosh`           | resilient mobile shell                             |
 
@@ -121,8 +127,11 @@ already running in their own panes. Write that config with the
 - `home/.config/` — `starship.toml`, `herdr/`, `ghostty/`, `ripgrep/`.
 - `install/`, `script/` — provisioning and bootstrap.
 
-Check setup changes with `bash script/test-setup.sh` (Bash, Git, and jq required)
-and `shellcheck script/setup script/test-setup.sh install/skills.sh`.
+Check setup and shell changes with `bash script/test-setup.sh` (Bash, Git, Zsh,
+and jq required) and
+`shellcheck script/setup script/test-setup.sh script/strap-after-setup install/skills.sh`.
+The suite checks isolated installs, Zsh startup and helper failures, and Git push
+behavior against temporary local repositories.
 The setup-skill regression suite is `bash skills/test/run.sh` (also requires
 prek and worktrunk). Both runners support `--only`, `--bash`, and `--keep`.
 

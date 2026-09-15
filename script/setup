@@ -108,4 +108,10 @@ link_file "$DOTFILES/home/.config/nvim" .config/nvim
 link_file "$DOTFILES/home/.pi/agent/extensions" .pi/agent/extensions
 link_file "$DOTFILES/install/git-$PLATFORM.conf" .config/git/dotfiles-platform.conf
 
+# Retire the empty attributes file, preserving any independently managed file.
+if [ -L "$HOME/.gitattributes" ] &&
+  [ "$(readlink "$HOME/.gitattributes")" = "$DOTFILES/home/.gitattributes" ]; then
+  rm "$HOME/.gitattributes"
+fi
+
 echo "Dotfiles installed ($PLATFORM)."

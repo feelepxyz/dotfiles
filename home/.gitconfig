@@ -8,12 +8,10 @@
 
 [core]
     excludesfile = ~/.gitignore
+    pager = hunk pager
 
 [init]
     defaultBranch = main
-
-[push]
-    default = current
 
 [pull]
     # Default to rebasing on pulls
@@ -22,10 +20,6 @@
 [fetch]
     # Always prune when fetching (and pulling).
     prune = true
-
-[gc]
-    # Write commit graph to speed up some repositories.
-    writeCommitGraph = true
 
 [rerere]
     # Store and re-use manual conflict resolution changes.
@@ -40,12 +34,6 @@
 [diff]
     # Use the slower but better patience diff algorithm
     algorithm = patience
-    # Use new diff algorithm to make e.g. function diffs look better.
-    compactionheuristic = true
-    tool = vscode
-
-[color]
-    ui = auto
 
 [alias]
     all = add -A
@@ -53,7 +41,7 @@
     com = commit -s -m
     d = diff
     pullr = pull --rebase
-    pushf = push --force-if-includes
+    pushf = push --force-with-lease --force-if-includes
     amd = commit --amend --no-edit -s
     s = status -sb
     co = checkout
@@ -62,10 +50,8 @@
     lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     unstage = reset HEAD
     undo = reset HEAD~1 --mixed
-    grep = grep -nw
     bra = !git branch --color -v | cut -c1-100
     prune-remote = !git remote | xargs -n 1 git remote prune
-    prune-local = !git branch --merged | tr -d '*' | grep -v dev | xargs -n1 git branch -d
     fix-conflict = mergetool
     brup = "!git branch --set-upstream-to origin/\"$(git branch --show-current)\" \"$(git branch --show-current)\""
 
@@ -87,37 +73,10 @@
     clean = git-lfs clean -- %f
     smudge = git-lfs smudge -- %f
 
-[core]
-    # Exclude everything this file. Used for general exclusions.
-    excludesfile = ~/.gitignore
-    # Set attributes on files. Used for general diff improvements.
-    attributesfile = ~/.gitattributes
-    # Don't prompt for commit messages for merge commits.
-    mergeoptions = --no-edit
-    # Speed up some repositories.
-    commitGraph = true
-	pager = hunk pager
-
-[delta]
-    side-by-side = true
-
-[interactive]
-    diffFilter = delta --color-only
-
-[url "git@github.com:"]
-	insteadof = git://github.com/
-	insteadof = https://github.com/
-    # Use GitHub SSH protocol instead of HTTPS and GIT
-    # Allows use of git:// for public repositories with push access and cloning
-    # private https:// repositories
-
-[protocol]
-    # Use Git v2 protocol for better performance
-    version = 2
-
 [credential "https://github.com"]
-	helper =
-	helper = !gh auth git-credential
+    helper =
+    helper = !gh auth git-credential
+
 [credential "https://gist.github.com"]
-	helper =
-	helper = !gh auth git-credential
+    helper =
+    helper = !gh auth git-credential

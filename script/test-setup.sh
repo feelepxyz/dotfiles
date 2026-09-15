@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Exercise setup in disposable homes; never install packages or remote skills.
 # Follows skills/test/run.sh: named cases, --only, --bash, --keep, and a summary.
+# shellcheck disable=SC2016 # Shell snippets are interpreted in fixture processes.
 set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
@@ -52,7 +53,7 @@ EOF
 #!/usr/bin/env bash
 name=${0##*/}
 printf '%s' "$name" >>"$CALLS"
-printf ' <%s>' "$@" >>"$CALLS"
+if [ "$#" -gt 0 ]; then printf ' <%s>' "$@" >>"$CALLS"; fi
 printf '\n' >>"$CALLS"
 if [ "$name" = "$FAIL_TOOL" ]; then exit 1; fi
 # Model a CLI that consumes stdin: skill restoration must keep reading its
@@ -125,17 +126,25 @@ case_links-backups-and-rerun() {
 	check [ ! -e "$CALLS" ]
 }
 
-case_public-skills-ignore-global-ssh-rewrite() {
+case_public-skills-use-https() {
 	setup 0 --skip-skills || return 1
 	awk 'NF && $1 !~ /^#/ { print "https://github.com/" $1 }' \
 		"$ROOT/skills/manifest.txt" >"$FIXTURE/expected-urls"
-	# Both setup reruns and standalone skill restoration must work after the
-	# shared Git config has installed its HTTPS-to-SSH rewrite.
+	# Setup reruns and standalone skill restoration keep public sources on HTTPS.
 	for ENTRY in "$ROOT/script/setup" "$ROOT/install/skills.sh"; do
 		: >"$CALLS.urls"
 		setup 0 || return 1
 		check cmp "$FIXTURE/expected-urls" "$CALLS.urls" || return 1
 	done
+}
+
+case_retired-attributes-link() {
+	ln -s "$ROOT/home/.gitattributes" "$TEST_HOME/.gitattributes" || return 1
+	setup 0 --skip-skills || return 1
+	check [ ! -L "$TEST_HOME/.gitattributes" ] || return 1
+	printf '*.rb diff=ruby\n' >"$TEST_HOME/.gitattributes"
+	setup 0 --skip-skills || return 1
+	check [ "$(cat "$TEST_HOME/.gitattributes")" = '*.rb diff=ruby' ]
 }
 
 case_failed-file-list-stops-before-installing() {
@@ -217,6 +226,126 @@ case_shared-agent-json-is-valid() {
 	check jq empty "$ROOT/home/.codex/hooks.json" "$ROOT/home/.claude/settings.json"
 }
 
+case_zsh-mkcd() {
+	local output
+	output=$(env -i HOME="$TEST_HOME" PATH="$BIN" DOTFILES="$ROOT" \
+		"$(command -v zsh)" -f -c '
+			source "$DOTFILES/home/.zsh/scripts"
+			mkcd >/dev/null 2>&1
+			[[ $? -ne 0 ]] || exit 1
+			print survived
+			mkcd "$HOME/directory with spaces" || exit 1
+			[[ "$PWD" == "$HOME/directory with spaces" ]] || exit 1
+			mkcd "$HOME/directory with spaces" || exit 1
+			print entered
+		') || return 1
+	check [ "$output" = $'survived\nentered' ]
+}
+
+case_zsh-clone-failure() {
+	check env -i HOME="$TEST_HOME" PATH="$BIN" DOTFILES="$ROOT" \
+		"$(command -v zsh)" -f -c '
+			source "$DOTFILES/home/.zsh/scripts"
+			builtin cd "$HOME" || exit 1
+			git() { return 42; }
+			gh-clone https://github.com/example/repo.git >/dev/null 2>&1
+			[[ $? -eq 42 && "$PWD" == "$HOME" ]]
+		'
+}
+
+case_zsh-clone-destination() {
+	check env -i HOME="$TEST_HOME" PATH="$BIN" DOTFILES="$ROOT" \
+		"$(command -v zsh)" -f -c '
+			source "$DOTFILES/home/.zsh/scripts"
+			git() { mkdir -p -- "${@[-1]}"; }
+			gh-clone https://github.com/example/project.github.git || exit 1
+			[[ "$PWD" == "$HOME/src/github.com/example/project.github" ]] || exit 1
+			gh-clone git@github.com:example/ssh-repo.git || exit 1
+			[[ "$PWD" == "$HOME/src/github.com/example/ssh-repo" ]] || exit 1
+			gh-clone https://github.com/../../outside >/dev/null 2>&1
+			[[ $? -ne 0 && "$PWD" == "$HOME/src/github.com/example/ssh-repo" ]]
+		'
+}
+
+case_zsh-startup() {
+	setup 0 --skip-skills || return 1
+	# Environment managers can restore PATH saved by an older parent shell.
+	cat >"$BIN/mise" <<'EOF'
+#!/usr/bin/env bash
+printf '%s\n' 'path=( bin .bundle/bin node_modules/.bin $path )'
+EOF
+	chmod +x "$BIN/mise" || return 1
+	local output
+	output=$(cd "$TEST_HOME" && env -i HOME="$TEST_HOME" \
+		PATH="$BIN:bin:/usr/bin:$BIN:.bundle/bin:node_modules/.bin" \
+		TERM=xterm-256color DOTFILES="$ROOT" "$(command -v zsh)" -f -i -c '
+			source "$DOTFILES/home/.zshrc"
+			source "$DOTFILES/home/.zshrc"
+			for entry in $path; do [[ "$entry" == /* ]] || exit 1; done
+			typeset -a unique_path
+			unique_path=( ${(u)path} )
+			[[ $#path -eq $#unique_path ]] || exit 1
+			for name in cat cp mv rm mkdir; do
+				(( ! $+aliases[$name] )) || exit 1
+			done
+			(( ! $+aliases[edotfiles] && $+functions[zmv] )) || exit 1
+			print ready
+		' 2>&1) || { DIAG="$output"; return 1; }
+	check [ "$output" = ready ]
+}
+
+case_zsh-macos-startup() {
+	setup 0 --skip-skills || return 1
+	local prefix="$TEST_HOME/homebrew"
+	mkdir -p "$prefix/share/zsh-autosuggestions" \
+		"$prefix/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting" || return 1
+	printf '(( $+functions[compdef] )) || exit 1\nloaded_autosuggestions=1\n' \
+		>"$prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+	printf '[[ "$loaded_autosuggestions" == 1 ]] || exit 1\nloaded_highlighting=1\n' \
+		>"$prefix/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+	check env -i HOME="$TEST_HOME" PATH="$BIN:/usr/bin" HOMEBREW_PREFIX="$prefix" \
+		TERM=xterm-256color DOTFILES="$ROOT" "$(command -v zsh)" -f -i -c '
+			OSTYPE=darwin
+			source "$DOTFILES/home/.zshrc"
+			[[ "$EDITOR" == zed && "$loaded_highlighting" == 1 ]]
+		'
+}
+
+case_macos-post-setup() {
+	local bootstrap="$FIXTURE/dotfiles"
+	mkdir -p "$bootstrap/script" "$bootstrap/install" || return 1
+	cp "$ROOT/script/strap-after-setup" "$bootstrap/script/strap-after-setup" || return 1
+	ln -s "$BIN/tool" "$bootstrap/script/touchid-enable-pam-sudo" || return 1
+	ln -s "$BIN/tool" "$bootstrap/install/mac.sh" || return 1
+	ln -s tool "$BIN/chsh" || return 1
+	check env -i HOME="$TEST_HOME" PATH="$BIN" USER=test SHELL=/bin/bash \
+		CALLS="$CALLS" TEST_PLATFORM=Darwin FAIL_TOOL= \
+		"$BASH_BIN" "$bootstrap/script/strap-after-setup" || return 1
+	check [ "$(cat "$CALLS")" = $'touchid-enable-pam-sudo <--quiet>\nchsh <-s> </bin/zsh> <test>\nmac.sh' ]
+}
+
+case_git-force-push() {
+	setup 0 --skip-skills || return 1
+	check env -i HOME="$TEST_HOME" PATH="$BIN" GIT_CONFIG_NOSYSTEM=1 \
+		GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=commit.gpgsign GIT_CONFIG_VALUE_0=false \
+		"$BASH_BIN" -e -c '
+			git init --bare "$HOME/remote.git"
+			git clone "$HOME/remote.git" "$HOME/work"
+			cd "$HOME/work"
+			git commit --allow-empty -m initial
+			git push -u origin HEAD
+			git commit --amend --allow-empty -m amended
+			git pushf
+			git clone "$HOME/remote.git" "$HOME/other"
+			git -C "$HOME/other" commit --allow-empty -m remote-change
+			git -C "$HOME/other" push
+			git commit --amend --allow-empty -m amended-again
+			if git pushf; then exit 1; fi
+			git branch -m renamed
+			if git push; then exit 1; fi
+		' >"$FIXTURE/git.log" 2>&1 || { cat "$FIXTURE/git.log"; return 1; }
+}
+
 PASS=0
 FAIL=0
 ROWS=()
@@ -236,13 +365,21 @@ run_case() {
 }
 
 run_case links-backups-and-rerun
-run_case public-skills-ignore-global-ssh-rewrite
+run_case public-skills-use-https
+run_case retired-attributes-link
 run_case failed-file-list-stops-before-installing
 run_case platform-packages-and-skills
 run_case failed-installs-stop-before-linking
 run_case missing-npx-can-be-skipped
 run_case symlink-entrypoint-and-cli-errors
 run_case shared-agent-json-is-valid
+run_case zsh-mkcd
+run_case zsh-clone-failure
+run_case zsh-clone-destination
+run_case zsh-startup
+run_case zsh-macos-startup
+run_case macos-post-setup
+run_case git-force-push
 
 # shellcheck disable=SC2016 # Expanded by the Bash under test.
 printf 'bash: %s (%s)\n' "$BASH_BIN" "$("$BASH_BIN" -c 'printf %s "$BASH_VERSION"')"
